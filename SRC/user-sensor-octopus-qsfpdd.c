@@ -164,7 +164,7 @@ void read_sensor_pgood_remote(void) {
             sd[sensor_N].unavailable = 0;
 
             // Check if PGOOD value is less than cutoff
-            u8 sensor_cutoff = 0xf5;
+            u8 sensor_cutoff = 0xff;
             if (sd[sensor_N].last_sensor_reading < sensor_cutoff) {
                 unlock(1);
                 picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
