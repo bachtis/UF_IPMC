@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 2.8)
+
+project(IPMC_EXEC)
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_C_FLAGS "-lrt")
+set(CMAKE_CXX_FLAGS "-lrt")
+set(SRCS "picmg.c" "ipmc.c" "fan.c" "debug.c" "strings.c" "ipmi.c" "i2c.c" "timer.c" "event.c" "ws.c" "sensor.c" "main.c" "logger.c" "i2c-sensor.c" "toml.c" "user-sensor.c")
+set(HDRS "ipmi.h" "i2c.h" "picmg.h" "event.h" "sensor.h" "ws.h" "timer.h" "debug.h" "fan.h" "ipmc.h" "error.h" "strings.h" "logger.h" "i2c-sensor.h" "toml.h" "user-sensor.h")
+add_executable(${PROJECT_NAME} ${SRCS} ${HDRS})

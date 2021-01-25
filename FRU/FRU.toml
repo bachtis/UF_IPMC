@@ -1,0 +1,12 @@
+#IPMC FRU
+
+[FRU]
+#FRU data header
+format_version = 0x1
+int_use_offset = 0
+chassis_info_offset = 0
+board_offset = 0
+product_info_offset = 0
+multirecord_offset = 0
+pad = 0
+
