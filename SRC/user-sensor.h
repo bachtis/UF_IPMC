@@ -19,6 +19,7 @@
 */
 void user_sensor_state_poll( void );
 void user_module_sensor_init( void );
+void semaphore_initialize( void );
 void read_sensor_temp_dummy( void );
 void read_sensor_temp_1( void );
 void read_sensor_top_pok (void);

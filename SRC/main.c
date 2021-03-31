@@ -27,6 +27,7 @@
 #include "ipmc.h"
 #include "i2c.h"
 #include "i2c-sensor.h"
+#include "user-sensor.h"
 #include "picmg.h"
 #include "toml.h"
 
@@ -42,14 +43,14 @@ int main()
 	/* Initialize system */
 	ws_init();
 	timer_initialize();
+	semaphore_initialize();
 	i2c_initialize();
 	i2c_sensor_initialize();
 	module_init();
-	
 
         dbprintf( DBG_I2C | DBG_LVL1, "Hello World\n");
 	
-        time = lbolt;
+//      time = lbolt;
 
 //	picmg_m1_state( 0 );
 	
@@ -57,16 +58,17 @@ int main()
 	while( 1 )
 	{
 		/* Blink system activity LEDs once every second */
-        /*if( ( time + 2 ) < lbolt ) {
+        	/*if( ( time + 2 ) < lbolt ) {
 			time = lbolt;
 			gpio_toggle_activity_led();
-        }*/
+        	}*/
 		ws_process_work_list_0();
 		//usleep(500000);
 		ws_process_work_list_1();
 		//usleep(500000);
 		timer_process_callout_queue();
 	}
+
 	i2c_deinitialize();
 	i2c_sensor_deinitialize();
 }

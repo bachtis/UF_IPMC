@@ -28,6 +28,11 @@
 #include <linux/i2c.h>
 #include <assert.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 
 #define MAX_SENSOR_COUNT	20
 
@@ -52,28 +57,31 @@ void i2c_sensor_initialize( void )
 
 	/* Open the file. */
 	if (0 == (fp = fopen("/root/UF_IPMC/CONFIG/CONFIG.toml", "r"))) {
-		//return handle_error();
+		fp = fopen("/root/UF_IPMC/CONFIG/CONFIG.toml", "r");
 		logger("ERROR", "fopen() in i2c_sensor_initialize() (CONFIG.toml)");
 	}
 
 	/* Run the files through the parser. */
 	config = toml_parse_file(fp, errbuf, sizeof(errbuf));
 	if (0 == config) {
-		//return handle_error();
 		logger("ERROR", "toml_parse_file() in i2c_sensor_initialize() (CONFIG.toml)");
+		if (toml_parse_file(fp, errbuf, sizeof(errbuf)) == 0) {
+			exit(EXIT_FAILURE);
+		}
 	}
 
-	fclose(fp);
+	if (fclose(fp) < 0) {
+		fclose(fp);
+		perror("fclose() failed");
+	}
 
 	/* Locate the [I2C_SENSORS] table. */
 	if (0 == (adptr_snsr_num = toml_table_in(config, "I2C_SENSORS"))) {
-		//return handle_error();
 		logger("ERROR", "toml_table_in() 'I2C_SENSORS' in i2c_sensor_initialize()");
 	}
 
 	/* Extract 'i2c_sensor' config array. */
 	if (0 == (arr = toml_array_in(adptr_snsr_num, "i2c_sensor"))) {
-		//return handle_error();
 		logger("ERROR", "toml_array_in() 'i2c_sensor' in i2c_sensor_initialize()");
 	}
 
@@ -83,25 +91,22 @@ void i2c_sensor_initialize( void )
 	for (n=0; n<toml_array_nelem(arr); n++) {
 		/* Extract 'i2c_sensor[n]' config value. */
 		if (0 == (raw = toml_raw_at(arr, n))) {
-			//return handle_error();
 			logger("ERROR", "toml_raw_at() 'i2c_sensor[n]' in i2c_sensor_initialize()");
 		};
-									
+
 		/* Convert the raw value into an int. */
 		if (toml_rtoi(raw, &i2c_sensor[n])) {
-			//return handle_error();
 			logger("ERROR", "toml_rtoi() 'i2c_sensor[n]' in i2c_sensor_initialize()");
 		};
 
 		snprintf(I2C_ADAPTER_SNSR[n], 19, "/dev/i2c-%d", (int) i2c_sensor[n]);
 
-    	if ((i2c_fd_snsr[n] = open(I2C_ADAPTER_SNSR[n], O_RDWR | O_NONBLOCK)) < 0)
-		{
-			//perror(I2C_ADAPTER_SNSR[n]);
+    		if ((i2c_fd_snsr[n] = open(I2C_ADAPTER_SNSR[n], O_RDWR | O_NONBLOCK)) < 0) {
+			i2c_fd_snsr[n] = open(I2C_ADAPTER_SNSR[n], O_RDWR | O_NONBLOCK);
 			logger(I2C_ADAPTER_SNSR[n], strerror(errno));
 		}
-	    else{printf("/dev/i2c-%d opened \n", (int) i2c_sensor[n]);}
-	}		
+	    	else{printf("/dev/i2c-%d opened \n", (int) i2c_sensor[n]);}
+	}
 
 	toml_free(config);
 }
@@ -120,28 +125,31 @@ void i2c_sensor_deinitialize( void )
 
 	/* Open the file. */
 	if (0 == (fp = fopen("/root/UF_IPMC/CONFIG/CONFIG.toml", "r"))) {
-		//return handle_error();
+		fp = fopen("/root/UF_IPMC/CONFIG/CONFIG.toml", "r");
 		logger("ERROR", "fopen() in i2c_sensor_deinitialize() (CONFIG.toml)");
 	}
 
 	/* Run the files through the parser. */
 	config = toml_parse_file(fp, errbuf, sizeof(errbuf));
 	if (0 == config) {
-		//return handle_error();
 		logger("ERROR", "toml_parse_file() in i2c_sensor_deinitialize() (CONFIG.toml)");
+		if (toml_parse_file(fp, errbuf, sizeof(errbuf)) == 0) {
+			exit(EXIT_FAILURE);
+		}
 	}
 
-	fclose(fp);
+	if (fclose(fp) < 0) {
+		fclose(fp);
+		perror("fclose() failed");
+	}
 
 	/* Locate the [I2C_SENSORS] table. */
 	if (0 == (adptr_snsr_num = toml_table_in(config, "I2C_SENSORS"))) {
-		//return handle_error();
 		logger("ERROR", "toml_table_in() 'I2C_SENSORS' in i2c_sensor_deinitialize()");
 	}
 
 	/* Extract 'i2c_sensor' config array. */
 	if (0 == (arr = toml_array_in(adptr_snsr_num, "i2c_sensor"))) {
-		//return handle_error();
 		logger("ERROR", "toml_array_in() 'i2c_sensor' in i2c_sensor_deinitialize()");
 	}
 
@@ -152,25 +160,21 @@ void i2c_sensor_deinitialize( void )
 
 		/* Extract 'i2c_sensor[n]' config value. */
 		if (0 == (raw = toml_raw_at(arr, n))) {
-			//return handle_error();
 			logger("ERROR", "toml_raw_at() 'i2c_sensor[n]' in i2c_sensor_deinitialize()");
 		};
-	
+
 		/* Convert the raw value into an int. */
 		if (toml_rtoi(raw, &i2c_sensor[n])) {
-			//return handle_error();
 			logger("ERROR", "toml_rtoi() 'i2c_sensor[n]' in i2c_sensor_deinitialize()");
 		};
 
 		snprintf(I2C_ADAPTER_SNSR[n], 19, "/dev/i2c-%d", (int) i2c_sensor[n]);
 
-	
-		if ((close(i2c_fd_snsr[n])) < 0)
-		{
-			//perror(I2C_ADAPTER_SNSR[n]);
+		if ((close(i2c_fd_snsr[n])) < 0) {
+			close(i2c_fd_snsr[n]);
 			logger(I2C_ADAPTER_SNSR[n], strerror(errno));
 		}
-	}		
+	}
 }
 
 // Write to an I2C slave device's register:
@@ -182,12 +186,11 @@ int i2c_write(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 data) {
     struct i2c_msg msgs[1];
     struct i2c_rdwr_ioctl_data msgset[1];
 
-    if (ioctl(i2c_fd_snsr, I2C_FUNCS, &funcs) < 0)
-	{
-		//perror("ioctl(I2C_FUNCS) in i2c_write");
-		logger("ioctl(I2C_FUNCS) in i2c_write", strerror(errno));
-		return (-1);
-	}
+    if (ioctl(i2c_fd_snsr, I2C_FUNCS, &funcs) < 0) {
+				//perror("ioctl(I2C_FUNCS) in i2c_write");
+				logger("ioctl(I2C_FUNCS) in i2c_write", strerror(errno));
+				return (-1);
+    }
 
     assert(funcs & I2C_FUNC_I2C);
 
@@ -204,7 +207,7 @@ int i2c_write(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 data) {
 
     if (ioctl(i2c_fd_snsr, I2C_RDWR, &msgset) < 0) {
         //perror("ioctl(I2C_RDWR) in i2c_write");
-	logger("ioctl(I2C_RDWR) in i2c_write", strerror(errno));
+				logger("ioctl(I2C_RDWR) in i2c_write", strerror(errno));
         return (-1);
     }
 
@@ -219,12 +222,11 @@ int i2c_read(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 *result) {
     struct i2c_msg msgs[2];
     struct i2c_rdwr_ioctl_data msgset[1];
 
-    if (ioctl(i2c_fd_snsr, I2C_FUNCS, &funcs) < 0)
-	{
-		//perror("ioctl(I2C_FUNCS) in i2c_read");
-		logger("ioctl(I2C_FUNCS) in i2c_read", strerror(errno));
-		return (-1);
-	}
+    if (ioctl(i2c_fd_snsr, I2C_FUNCS, &funcs) < 0) {
+				//perror("ioctl(I2C_FUNCS) in i2c_read");
+				logger("ioctl(I2C_FUNCS) in i2c_read", strerror(errno));
+				return (-1);
+    }
 
     assert(funcs & I2C_FUNC_I2C);
 
@@ -250,7 +252,7 @@ int i2c_read(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 *result) {
     *result = 0;
     if (ioctl(i2c_fd_snsr, I2C_RDWR, &msgset) < 0) {
         //perror("ioctl(I2C_RDWR) in i2c_read");
-	logger("ioctl(I2C_RDWR) in i2c_read", strerror(errno));
+				logger("ioctl(I2C_RDWR) in i2c_read", strerror(errno));
         return (-1);
     }
 

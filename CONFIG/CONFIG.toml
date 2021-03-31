@@ -12,7 +12,7 @@ man_payload_status = 0			#enable/disable MANUAL management: 1 = ON, 0 = OFF.
 man_payload = 0				#payload: 1 = ON, 0 = OFF.
 
 [HANDLE_SWITCH_M]
-man_handle_status = 1			#enable/disable MANUAL management: 1 = ON, 0 = OFF.
+man_handle_status = 0			#enable/disable MANUAL management: 1 = ON, 0 = OFF.
 man_handle_switch = 1			#handle switch: 0 = CLOSED, 1 = OPENED.
 
 [POWER_DRAW]

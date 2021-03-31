@@ -81,8 +81,8 @@ positive_going_threshold_hysteresis_value = 0	#43 Positive-going Threshold Hyste
 negative_going_threshold_hysteresis_value = 0	#44 Negative-going Threshold Hysteresis value
 reserved2 = 0					#45 reserved. Write as 00h.
 reserved3 = 0					#46 reserved. Write as 00h.
-oem = 0							#47 OEM - Reserved for OEM use.
-id_str_typ_len = 0xC8			#48 id_str_typ_len Sensor ID String Type/Length Code, 8 chars in str
+oem = 0						#47 OEM - Reserved for OEM use.
+id_str_typ_len = 0xC8				#48 id_str_typ_len Sensor ID String Type/Length Code, 8 chars in str
 id_string_bytes = ["T", "O", "P", " ", "P", "O", "K", " "]	#ID String Bytes
 
 

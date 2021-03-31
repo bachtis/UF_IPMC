@@ -33,8 +33,8 @@
 #define POWER_STATE_S3		6
 #define POWER_STATE_S4		7
 
-#define IPMI_SENSOR_HOT_SWAP	0xf0	
-#define IPMI_SENSOR_MODULE_HOT_SWAP	0xf2	
+#define IPMI_SENSOR_HOT_SWAP	0xf0
+#define IPMI_SENSOR_MODULE_HOT_SWAP	0xf2
 #define IPMI_EVENT_TYPE_GENERIC_AVAILABILITY	0x6f
 
 //#define BF_MS_FIRST
@@ -134,7 +134,7 @@ response. */
 #define NETFN_OEM_REQ			0x2E
 #define NETFN_OEM_RESP			0x2F
 
-/* Controllerspecific OEM/Group 30h-3Fh 
+/* Controllerspecific OEM/Group 30h-3Fh
 - Vendor specific (16 Network Functions [8 pairs]). The Manufacturer ID
 associated with the controller implementing the command identifies the
 vendor or group that specifies the command functionality. While the
@@ -153,89 +153,89 @@ mechanisms. */
 /*======================================================================*/
 
 #define CC_NORMAL		0x00	/* Command Completed Normally. */
-#define CC_BUSY			0xC0	/* Node Busy. Command could not 
-					   be processed because command 
-					   processing resources are 
+#define CC_BUSY			0xC0	/* Node Busy. Command could not
+					   be processed because command
+					   processing resources are
 					   temporarily unavailable. */
-#define CC_INVALID_CMD		0xC1	/* Invalid Command. Used to 
-					   indicate an unrecognized 
+#define CC_INVALID_CMD		0xC1	/* Invalid Command. Used to
+					   indicate an unrecognized
 					   or unsupported command. */
 #define	CC_INVALID_CMD_FOR_LUN	0xC2	/* Command invalid for given LUN. */
-#define	CC_TIMEOUT		0xC3	/* Timeout while processing command. 
+#define	CC_TIMEOUT		0xC3	/* Timeout while processing command.
 					   Response unavailable. */
-#define CC_OUT_OF_SPACE		0xC4	/* Out of space. Command could not 
-					   be completed because of a lack 
-					   of storage space required to 
+#define CC_OUT_OF_SPACE		0xC4	/* Out of space. Command could not
+					   be completed because of a lack
+					   of storage space required to
 					   execute the given command operation. */
-#define	CC_RESERVATION		0xC5	/* Reservation Canceled or 
+#define	CC_RESERVATION		0xC5	/* Reservation Canceled or
 					   Invalid Reservation ID. */
 #define CC_RQST_DATA_TRUNCATED	0xC6	/* Request data truncated.*/
 #define	CC_RQST_DATA_LEN_INVALID 0xC7	/* Request data length invalid. */
 #define CC_DATA_LEN_EXCEEDED	0xC8	/* Request data field length limit exceeded.*/
-#define	CC_PARAM_OUT_OF_RANGE	0xC9	/* Parameter out of range. One or more 
+#define	CC_PARAM_OUT_OF_RANGE	0xC9	/* Parameter out of range. One or more
 					   parameters in the data field of the
-					   Request are out of range. This is 
-					   different from Invalid data field 
-					   (CCh) code in that it indicates 
-					   that the erroneous field(s) has a 
+					   Request are out of range. This is
+					   different from Invalid data field
+					   (CCh) code in that it indicates
+					   that the erroneous field(s) has a
 					   contiguous range of possible values. */
 #define	CC_CANT_RETURN_REQ_BYTES 0xCA	/* Cannot return number of requested data bytes. */
 #define CC_REQ_DATA_NOT_AVAIL	0xCB	/* Requested Sensor, data, or record not present. */
 #define CC_INVALID_DATA_IN_REQ	0xCC	/* Invalid data field in Request */
-#define CC_CMD_ILLEGAL		0xCD	/* Command illegal for specified 
+#define CC_CMD_ILLEGAL		0xCD	/* Command illegal for specified
 					   sensor or record type. */
 #define CC_CMD_RESP_NOT_PROVIDED 0xCE	/* Command response could not be provided. */
-#define CC_CANT_EXECUTE_DUP_REQ	0xCF	/* Cannot execute duplicated request. 
+#define CC_CANT_EXECUTE_DUP_REQ	0xCF	/* Cannot execute duplicated request.
 					   This completion code is for devices which
-					   cannot return the response that was returned 
+					   cannot return the response that was returned
 					   for the original instance of the
-					   request. Such devices should provide 
+					   request. Such devices should provide
 					   separate commands that allow the
-					   completion status of the original request 
+					   completion status of the original request
 					   to be determined. An Event Receiver
 					   does not use this completion code, but
 					   returns the 00h completion code in the
 					   response to (valid) duplicated requests. */
-#define	CC_SDR_IN_UPDATE_MODE	0xD0	/* Command response could not be provided. 
+#define	CC_SDR_IN_UPDATE_MODE	0xD0	/* Command response could not be provided.
 					   SDR Repository in update mode. */
-#define CC_FW_IN_UPDATE_MODE	0xD1	/* Command response could not be provided. 
+#define CC_FW_IN_UPDATE_MODE	0xD1	/* Command response could not be provided.
 					   Device in firmware update mode. */
-#define CC_INITIALIZATION	0xD2	/* Command response could not be provided. 
+#define CC_INITIALIZATION	0xD2	/* Command response could not be provided.
 					   BMC initialization or initialization
 					   agent in progress. */
-#define CC_DEST_UNAVAILABLE	0xD3	/* Destination unavailable. Cannot deliver 
+#define CC_DEST_UNAVAILABLE	0xD3	/* Destination unavailable. Cannot deliver
 					   request to selected destination. E.g. this
-					   code can be returned if a request message 
+					   code can be returned if a request message
 					   is targeted to SMS, but receive
-					   message queue reception is disabled for 
+					   message queue reception is disabled for
 					   the particular channel. */
-#define	CC_SECURITY_RESTRICTION	0xD4	/* Cannot execute command due to insufficient 
+#define	CC_SECURITY_RESTRICTION	0xD4	/* Cannot execute command due to insufficient
 					   privilege level or other security based
-					   restriction (e.g. disabled for firmware 
+					   restriction (e.g. disabled for firmware
 					   firewall). */
-#define	CC_NOT_SUPPORTED	0xD5	/* Cannot execute command. Command, or 
+#define	CC_NOT_SUPPORTED	0xD5	/* Cannot execute command. Command, or
 					   request parameter(s), not supported in
 					   present state. */
-#define	CC_PARAM_ILLEGAL	0xD6	/* Cannot execute command. Parameter is 
+#define	CC_PARAM_ILLEGAL	0xD6	/* Cannot execute command. Parameter is
 					   illegal because command sub-function
-					   has been disabled or is unavailable 
+					   has been disabled or is unavailable
 					   (e.g. disabled for firmware firewall). */
 #define CC_UNSPECIFIED_ERROR	0xFF	/* Unspecified error. */
 
 /* DEVICE-SPECIFIC (OEM) CODES 01h-7Eh */
 /*
- * 01h-7Eh Device specific (OEM) completion codes. This range is used for 
- * command specific codes that are also specific for a particular device 
- * and version. A-priori knowledge of the device command set is required 
- * for interpretation of these codes. 
- */ 
-#define CC_DELAYED_COMPLETION	0x7e	/* we use this to flag that the command 
+ * 01h-7Eh Device specific (OEM) completion codes. This range is used for
+ * command specific codes that are also specific for a particular device
+ * and version. A-priori knowledge of the device command set is required
+ * for interpretation of these codes.
+ */
+#define CC_DELAYED_COMPLETION	0x7e	/* we use this to flag that the command
 					   response will be sent later */
 /* COMMAND-SPECIFIC CODES 80h-BEh */
 /*
- * 80h-BEh Standard command-specific codes. This range is reserved for 
- * command specific completion codes for commands specified in this 
- * document. 
+ * 80h-BEh Standard command-specific codes. This range is reserved for
+ * command specific completion codes for commands specified in this
+ * document.
  */
 #define	CC_UNINITIALIZED_WATCHDOG	0x80 /* Attempt to start un-initialized watchdog */
 
@@ -245,7 +245,7 @@ mechanisms. */
 #define CC_NAK_ON_WRITE			0x83 /* NAK on Write */
 
 /* transport layer completion codes */
-#define XPORT_REQ_NOERR 	0 
+#define XPORT_REQ_NOERR 	0
 #define XPORT_REQ_ERR		1
 #define XPORT_RESP_NOERR	2
 #define XPORT_RESP_ERR		3
@@ -269,10 +269,10 @@ typedef struct ipmi_cmd_resp {
 /* CHANNEL NUMBERS */
 /* Each interface has a channel number that is used when configuring the channel
  * and for routing messages between channels. Only the channel number assignments
- * for the primary IPMB and the System Interface are fixed, the assignment of 
- * other channel numbers can vary on a per-platform basis. Software uses a Get 
- * Channel Info command to determine what types of channels are available and 
- * what channel number assignments are used on a given platform. 
+ * for the primary IPMB and the System Interface are fixed, the assignment of
+ * other channel numbers can vary on a per-platform basis. Software uses a Get
+ * Channel Info command to determine what types of channels are available and
+ * what channel number assignments are used on a given platform.
  */
 
 /* AMC REQ 3.151: Carrier IPMCs and MMCs shall implement IPMB-L as IPMI
@@ -288,8 +288,8 @@ typedef struct ipmi_cmd_resp {
 
 
 /* CHANNEL PROTOCOL TYPE */
-/* The protocol used for transferring IPMI messages on a given channel is 
- * identified using a channel protocol type number. 
+/* The protocol used for transferring IPMI messages on a given channel is
+ * identified using a channel protocol type number.
  */
 #define IPMI_CH_PROTOCOL_IPMB	0x1	/* used for IPMB, serial/modem Basic Mode, and LAN */
 #define IPMI_CH_PROTOCOL_ICMB	0x2	/* ICMB v1.0 */
@@ -302,9 +302,9 @@ typedef struct ipmi_cmd_resp {
 #define IPMI_CH_PROTOCOL_NONE	0xf	/* Invalid protocol type */
 
 /* CHANNEL MEDIUM TYPE */
-/* The Channel Medium Type number is a seven-bit value that identifies the 
+/* The Channel Medium Type number is a seven-bit value that identifies the
  * general class of medium that is being used for the channel.
- */ 
+ */
 #define IPMI_CH_MEDIUM_IPMB	0x1	/* IPMB (I2C) 				*/
 #define IPMI_CH_MEDIUM_ICMB10	0x2	/* ICMB v1.0 				*/
 #define IPMI_CH_MEDIUM_ICMB09	0x3	/* ICMB v0.9 				*/
@@ -386,17 +386,17 @@ typedef struct ipmi_ws {
 /*======================================================================*/
 
 /* General IPMB request format : used for IPMB, serial/modem Basic Mode, and LAN*/
-/* TODO 
+/* TODO
  * 1) check responder_slave_addr field
  * 2) remove LAN req/resp definitions, they are duplicate */
 
 typedef struct ipmi_ipmb_hdr {
 //	uchar	slave_addr;		/* Requester/Responder Slave Address. */
 #ifdef BF_MS_FIRST
-	uchar	netfn:6,		/* NetFn. For a response command, 
-					   the NetFn is always odd and one greater 
-					   than the NetFn provided in the original 
-					   request. The IPMI and IPMB specifications 
+	uchar	netfn:6,		/* NetFn. For a response command,
+					   the NetFn is always odd and one greater
+					   than the NetFn provided in the original
+					   request. The IPMI and IPMB specifications
 					   define the legal NetFns. */
 		lun:2;			/* The Requester/Responder LUN */
 #else
@@ -412,46 +412,46 @@ typedef struct ipmi_ipmb_request {
 				 	/* This is the IPMB address of the device that
 					   is expected to respond to the message. */
 #ifdef BF_MS_FIRST  /* bit fields assigned left to right (MS bits first) */
-	uchar	netfn:6, 		/* This contains the network function of 
-                                           the message. For a request command, the 
-                                           NetFn is always even. The IPMI and IPMB 
-                                           specifications define the legal NetFns. 
-                                           Of particular interest is NetFn 2Ch (Request) 
-                                           and 2Dh (Response) for the commands stated 
+	uchar	netfn:6, 		/* This contains the network function of
+                                           the message. For a request command, the
+                                           NetFn is always even. The IPMI and IPMB
+                                           specifications define the legal NetFns.
+                                           Of particular interest is NetFn 2Ch (Request)
+                                           and 2Dh (Response) for the commands stated
                                            in the PICMG v3 specification. */
-		responder_lun:2;	/* The Responder LUN (Logical Unit Number) 
-					   defines which unit is meant to respond to 
-					   the message (see the IPMI specification for 
+		responder_lun:2;	/* The Responder LUN (Logical Unit Number)
+					   defines which unit is meant to respond to
+					   the message (see the IPMI specification for
 					   further definition). */
 #else /* bit fields assigned right to left (LS bits first) */
 	uchar	responder_lun:2,
 		netfn:6;
 #endif
-	uchar	header_checksum;	/* 2s complement checksum of preceding 
+	uchar	header_checksum;	/* 2s complement checksum of preceding
 					   bytes in the connection header. */
-	uchar	requester_slave_addr;	/* Requester Slave Address. This is the IPMB 
+	uchar	requester_slave_addr;	/* Requester Slave Address. This is the IPMB
 					   address of the requesting device. */
 #ifdef BF_MS_FIRST
     uchar	req_seq:6,		/* Request Sequence/Requester LUN. The Request
-					   Sequence identifier is used by the device(s) 
+					   Sequence identifier is used by the device(s)
 					   to determine if duplicate requests/responses
 					   are received.*/
-       		requester_lun:2;	/* The Requester LUN provides 
+       		requester_lun:2;	/* The Requester LUN provides
 					   the LUN that should receive the response. */
 #else
 	uchar	requester_lun:2,
 		req_seq:6;
 #endif
-	uchar	command;		/* Command. This defines the command within 
+	uchar	command;		/* Command. This defines the command within
 					   the NetFn to execute. */
-	uchar	data[IPMB_REQ_MAX_DATA_LEN];		/* 7:N Data Bytes. The Command may be followed 
-					   by zero or more data bytes that are command 
-					   specific. The maximum N value by IPMI 
-					   definition is 31; thus, 25 bytes of 
+	uchar	data[IPMB_REQ_MAX_DATA_LEN];		/* 7:N Data Bytes. The Command may be followed
+					   by zero or more data bytes that are command
+					   specific. The maximum N value by IPMI
+					   definition is 31; thus, 25 bytes of
 					   request data are allowed in each request. */
-	uchar	data_checksum;		/* Data Checksum. 2s complement checksum 
-					   of preceeding bytes back to, but not 
-					   including, the Header Checksum. Note that this 
+	uchar	data_checksum;		/* Data Checksum. 2s complement checksum
+					   of preceeding bytes back to, but not
+					   including, the Header Checksum. Note that this
 					   position is bogus and is used as a placeholder
 					   to indicate that a checksum follows the data field.
 					   The location of the data_checksum depends on
@@ -462,60 +462,60 @@ typedef struct ipmi_ipmb_request {
 
 /* General IPMI response format */
 typedef struct ipmi_ipmb_response {
-//	uchar	requester_slave_addr;	
-					/* Requester Slave Address. This is the 
-					   IPMB address of the requesting device 
-					   and describes which device receives the 
+//	uchar	requester_slave_addr;
+					/* Requester Slave Address. This is the
+					   IPMB address of the requesting device
+					   and describes which device receives the
 					   response. */
 #ifdef BF_MS_FIRST
-	uchar	netfn:6,		/* NetFn/Requester LUN (6 bits/2 bits). 
+	uchar	netfn:6,		/* NetFn/Requester LUN (6 bits/2 bits).
 					   This contains the network function of
-					   the message. For a response command, 
-					   the NetFn is always odd and one greater 
-					   than the NetFn provided in the original 
-					   request. The IPMI and IPMB specifications 
+					   the message. For a response command,
+					   the NetFn is always odd and one greater
+					   than the NetFn provided in the original
+					   request. The IPMI and IPMB specifications
 					   define the legal NetFns. */
-		requester_lun:2;	/* The Requester LUN defines which unit 
+		requester_lun:2;	/* The Requester LUN defines which unit
 					   is meant to receive the response
-					   (see the IPMI specification for 
+					   (see the IPMI specification for
 					   further definition). */
 #else
 	uchar	requester_lun:2,
 		netfn:6;
 #endif
-	uchar	header_checksum;	/* Header Checksum. 2s complement checksum 
-					   of preceding bytes in the connection 
+	uchar	header_checksum;	/* Header Checksum. 2s complement checksum
+					   of preceding bytes in the connection
 					   header. */
-	uchar	responder_slave_addr;	/* Responder Slave Address. This is 
+	uchar	responder_slave_addr;	/* Responder Slave Address. This is
 					   the IPMB address of the device that is
 					   responding to the message. */
 #ifdef BF_MS_FIRST
-	uchar	req_seq:6,		/* Request Sequence/Responder LUN. 
+	uchar	req_seq:6,		/* Request Sequence/Responder LUN.
 					   The Request Sequence identifier is
-					   used by the device(s) to determine 
+					   used by the device(s) to determine
 					   if duplicate requests/responses are
 					   received. */
-		responder_lun:2;	/* The Responder LUN provides the LUN 
+		responder_lun:2;	/* The Responder LUN provides the LUN
 					   that sent the response. */
 #else
 	uchar	responder_lun:2,
       		req_seq:6;
 #endif
-	uchar	command;		/* Command. This defines the command 
+	uchar	command;		/* Command. This defines the command
 					   within the NetFn that was requested. */
-	uchar	completion_code;	/* Completion Code. This is a response 
+	uchar	completion_code;	/* Completion Code. This is a response
 					   code that defines whether the
 					   command executed successfully or not. */
-	uchar	data[IPMB_RESP_MAX_DATA_LEN];		/* 8:N Data Bytes. The Command may 
+	uchar	data[IPMB_RESP_MAX_DATA_LEN];		/* 8:N Data Bytes. The Command may
 					   require zero or more additional response
-					   bytes. The maximum N value by IPMI 
+					   bytes. The maximum N value by IPMI
 					   definition is 31; thus, 24 bytes of
-					   response data are allowed in each 
+					   response data are allowed in each
 					   response. */
-	uchar	data_checksum;		/* Data Checksum. 2s complement 
+	uchar	data_checksum;		/* Data Checksum. 2s complement
 					   checksum of preceeding bytes back to,
 					   but not including, the Header Checksum.
-					   Note that this position is bogus and 
+					   Note that this position is bogus and
 					   is used as a placeholder to indicate
 					   that a checksum follows the data field.
 					   The location of the data_checksum depends
@@ -526,7 +526,7 @@ typedef struct ipmi_ipmb_response {
 /* 			KCS/SMIC Interface 				*/
 /*======================================================================*/
 typedef struct ipmi_kcs_request {
-#ifdef BF_MS_FIRST  
+#ifdef BF_MS_FIRST
 	uchar	netfn:6, 		/* Network Function code. This provides
 					   the first level of functional routing
 					   for messages received by the BMC via
@@ -538,7 +538,7 @@ typedef struct ipmi_kcs_request {
 					   responses from the BMC. */
 
 		responder_lun:2;	/* Logical Unit Number. This is a sub-
-					   address that allows messages to be 
+					   address that allows messages to be
 					   routed to different logical units
 					   that reside behind the same physical
 					   interface. The LUN field occupies the
@@ -554,19 +554,19 @@ typedef struct ipmi_kcs_request {
 
 typedef struct ipmi_kcs_response {
 #ifdef BF_MS_FIRST
-	uchar	netfn:6,		/* Network Function. This is a return 
-					   of the NetFn code that was passed 
+	uchar	netfn:6,		/* Network Function. This is a return
+					   of the NetFn code that was passed
 					   in the Request Message. Except that
 					   an odd NetFn value is returned. */
 
-		requester_lun:2;	/* Logical Unit Number. This is a 
-					   return of the LUN that was passed 
+		requester_lun:2;	/* Logical Unit Number. This is a
+					   return of the LUN that was passed
 					   in the Request Message. */
 #else
 	uchar	requester_lun:2,
 		netfn:6;
 #endif
-	uchar	command;		/* Command. This is a return of the 
+	uchar	command;		/* Command. This is a return of the
 					   Cmd code that was passed in the
 					   Request Message. */
 	uchar	completion_code;
@@ -579,7 +579,7 @@ typedef struct ipmi_kcs_response {
 /*======================================================================*/
 typedef struct ipmi_bt_request {
 
-	uchar	length;			/* This is not actually part of the 
+	uchar	length;			/* This is not actually part of the
 					   message, but part of the framing
 					   for the BT Interface. This value
 					   is the 1-based count of message
@@ -588,7 +588,7 @@ typedef struct ipmi_bt_request {
 					   a command to the BMC would be 3
 					   to cover the NetFn/LUN, Seq, and
 					   Cmd bytes. */
-#ifdef BF_MS_FIRST  
+#ifdef BF_MS_FIRST
 	uchar	netfn:6, 		/* Network Function code. This provides
 					   the first level of functional routing
 					   for messages received by the BMC via
@@ -599,7 +599,7 @@ typedef struct ipmi_bt_request {
 					   and odd NetFn values are returned in
 					   responses from the BMC. */
 		responder_lun:2;	/* Logical Unit Number. This is a sub-
-					   address that allows messages to be 
+					   address that allows messages to be
 					   routed to different logical units
 					   that reside behind the same physical
 					   interface. The LUN field occupies the
@@ -614,29 +614,29 @@ typedef struct ipmi_bt_request {
 } IPMI_BT_REQUEST;
 
 typedef struct ipmi_bt_response {
-	uchar	length;			/* This is not actually part of the 
+	uchar	length;			/* This is not actually part of the
 					   message, but part of the framing
 					   for the BT Interface. This value
 					   is the 1-based count of message
 					   bytes following the length byte.
 					   The minimum length byte value for
-					   a response from the BMC would be 
-					   4 to cover the NetFn/LUN, Seq, 
+					   a response from the BMC would be
+					   4 to cover the NetFn/LUN, Seq,
 					   Cmd, and Completion Code bytes. */
 #ifdef BF_MS_FIRST
-	uchar	netfn:6,		/* Network Function. This is a return 
-					   of the NetFn code that was passed 
+	uchar	netfn:6,		/* Network Function. This is a return
+					   of the NetFn code that was passed
 					   in the Request Message. Except that
 					   an odd NetFn value is returned. */
 
-		requester_lun:2;	/* Logical Unit Number. This is a 
-					   return of the LUN that was passed 
+		requester_lun:2;	/* Logical Unit Number. This is a
+					   return of the LUN that was passed
 					   in the Request Message. */
 #else
 	uchar	requester_lun:2,
 		netfn:6;
 #endif
-	uchar	command;		/* Command. This is a return of the 
+	uchar	command;		/* Command. This is a return of the
 					   Cmd code that was passed in the
 					   Request Message. */
 	uchar	completion_code;
@@ -669,7 +669,7 @@ typedef struct ipmi_bt_response {
 				---------------------------------------
 				Payload type
 				Payload (per payload type)
-				
+
 					IPMI LAN Message
 					----------------
 					NetFn
@@ -677,7 +677,7 @@ typedef struct ipmi_bt_response {
 					Seq#
 					CMD
 					Data
-					
+
 					SOL
 					---
 */
@@ -687,11 +687,11 @@ typedef struct ipmi_bt_response {
 typedef struct ipmi_lan_request {
 	uchar	responder_slave_addr;	/* Responder's Slave Address. LS bit is 0
 					   for Slave Addresses and 1 for Software
-					   IDs. Upper 7-bits hold Slave Address 
+					   IDs. Upper 7-bits hold Slave Address
 					   or Software ID, respectively. This byte
-					   is always 20h when the BMC is the 
+					   is always 20h when the BMC is the
 					   responder. */
-#ifdef BF_MS_FIRST  
+#ifdef BF_MS_FIRST
 	uchar	netfn:6,
 		responder_lun:2;
 #else
@@ -699,23 +699,23 @@ typedef struct ipmi_lan_request {
 		netfn:6;
 #endif
 	uchar	checksum1;		/* 2's complement checksum of preceding
-					   bytes in the connection header or 
+					   bytes in the connection header or
 					   between the previous checksum. 8-bit
-					   checksum algorithm: Initialize 
-					   checksum to 0. For each byte, 
-					   checksum = (checksum + byte) modulo 
-					   256. Then checksum = - checksum. 
+					   checksum algorithm: Initialize
+					   checksum to 0. For each byte,
+					   checksum = (checksum + byte) modulo
+					   256. Then checksum = - checksum.
 					   When the checksum and the bytes are
-					   added together, modulo 256, the 
+					   added together, modulo 256, the
 					   result should be 0. */
-	
-	uchar	requester_address;	/* Requester's Address. LS bit is 0 for 
+
+	uchar	requester_address;	/* Requester's Address. LS bit is 0 for
 					   Slave Addresses and 1 for Software IDs.
-					   Upper 7-bits hold Slave Address or 
-					   Software ID, respectively. This byte 
-					   is always 20h when the BMC is the 
+					   Upper 7-bits hold Slave Address or
+					   Software ID, respectively. This byte
+					   is always 20h when the BMC is the
 					   requester. */
-#ifdef BF_MS_FIRST  
+#ifdef BF_MS_FIRST
 	uchar	requester_seq_num:6,	/* Sequence number, generated by the requester. */
 		requester_lun:2;	/* Requester's LUN */
 #else
@@ -729,7 +729,7 @@ typedef struct ipmi_lan_request {
 
 typedef struct ipmi_lan_response {
 	uchar	requester_addr;
-#ifdef BF_MS_FIRST  
+#ifdef BF_MS_FIRST
 	uchar	netfn:6,
 		requester_lun:2;
 #else
@@ -738,7 +738,7 @@ typedef struct ipmi_lan_response {
 #endif
 	uchar	checksum1;
 	uchar	responder_address;
-#ifdef BF_MS_FIRST  
+#ifdef BF_MS_FIRST
 	uchar	requester_seq_num:6,	/* Sequence number, generated by the requester. */
 		responder_lun:2;	/* Responder's LUN */
 #else
@@ -788,7 +788,7 @@ typedef struct ipmi_terminal_mode_hdr {
 		netfn:6;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	seq:6, 
+	uchar	seq:6,
 		bridge:2;
 #else
 	uchar	bridge:2,
@@ -799,16 +799,16 @@ typedef struct ipmi_terminal_mode_hdr {
 
 typedef struct ipmi_terminal_mode_request {
 #ifdef BF_MS_FIRST
-	uchar	netfn:6, 		/* This contains the network function of 
-                                           the message. For a request command, the 
-                                           NetFn is always even. The IPMI and IPMB 
-                                           specifications define the legal NetFns. 
-                                           Of particular interest is NetFn 2Ch (Request) 
-                                           and 2Dh (Response) for the commands stated 
+	uchar	netfn:6, 		/* This contains the network function of
+                                           the message. For a request command, the
+                                           NetFn is always even. The IPMI and IPMB
+                                           specifications define the legal NetFns.
+                                           Of particular interest is NetFn 2Ch (Request)
+                                           and 2Dh (Response) for the commands stated
                                            in the PICMG v3 specification. */
-		responder_lun:2;	/* The Responder LUN (Logical Unit Number) 
-					   defines which unit is meant to respond to 
-					   the message (see the IPMI specification for 
+		responder_lun:2;	/* The Responder LUN (Logical Unit Number)
+					   defines which unit is meant to respond to
+					   the message (see the IPMI specification for
 					   further definition). */
 #else
 	uchar	responder_lun:2,
@@ -816,11 +816,11 @@ typedef struct ipmi_terminal_mode_request {
 #endif
 #ifdef BF_MS_FIRST
 	uchar	req_seq:6, 		/* The Request Sequence identifier is
-					   used by the device(s) to determine 
+					   used by the device(s) to determine
 					   if duplicate requests/responses are
 					   received. */
 		bridge:2;		/* Used to identify whether the message
-					   should be routed to the BMC's bridged 
+					   should be routed to the BMC's bridged
 					   message tracking functionalty or not.
 					   See Table 14-12, Terminal Mode Message
 					   Bridge Field */
@@ -828,13 +828,13 @@ typedef struct ipmi_terminal_mode_request {
 	uchar	bridge:2,
 		req_seq:6;
 #endif
-	uchar	command;		/* Command. This defines the command within 
+	uchar	command;		/* Command. This defines the command within
 					   the NetFn to execute. */
 	uchar	data[TERM_MODE_REQ_MAX_DATA_LEN];
-					/* 7:N Data Bytes. The Command may be followed 
-					   by zero or more data bytes that are command 
-					   specific. The maximum N value by IPMI 
-					   definition is 31; thus, 25 bytes of 
+					/* 7:N Data Bytes. The Command may be followed
+					   by zero or more data bytes that are command
+					   specific. The maximum N value by IPMI
+					   definition is 31; thus, 25 bytes of
 					   request data are allowed in each request. */
 } IPMI_TERMINAL_MODE_REQUEST;
 
@@ -847,7 +847,7 @@ typedef struct ipmi_terminal_mode_response {
 		netfn:6;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	req_seq:6, 
+	uchar	req_seq:6,
 		bridge:2;
 #else
 	uchar	bridge:2,
@@ -870,8 +870,8 @@ typedef struct ipmi_terminal_mode_response {
 	   retained in the response data for compatibility with other use
 	   contexts for this command. */
 
-#define DEACTIVATE_FRU(a) 
-#define ACTIVATE_FRU(a) 
+#define DEACTIVATE_FRU(a)
+#define ACTIVATE_FRU(a)
 #define NUM_LUN		1
 
 /*======================================================================*/
@@ -903,15 +903,15 @@ Broadcast Get Device ID 	App 	01h 	O/M 	M 	M
  * functions that the controller supports that are in addition to the mandatory
  * IPM and Application commands.
  */
-#define DEV_SUP_CHASSIS		0x80	/* [7] Chassis Device (device functions 
+#define DEV_SUP_CHASSIS		0x80	/* [7] Chassis Device (device functions
 					   as chassis device per ICMB spec.) */
-#define DEV_SUP_BRIDGE		0x40	/* [6] Bridge (device responds to Bridge 
+#define DEV_SUP_BRIDGE		0x40	/* [6] Bridge (device responds to Bridge
 					   NetFn commands) */
-#define DEV_SUP_IPMB_EVENT_GEN	0x20	/* [5] IPMB Event Generator (device generates 
-					   event messages [platform event request 
+#define DEV_SUP_IPMB_EVENT_GEN	0x20	/* [5] IPMB Event Generator (device generates
+					   event messages [platform event request
 					   messages] onto the IPMB) */
-#define DEV_SUP_IPMB_EVENT_RCV	0x10	/* [4] IPMB Event Receiver (device accepts 
-					   event messages [platform event request 
+#define DEV_SUP_IPMB_EVENT_RCV	0x10	/* [4] IPMB Event Receiver (device accepts
+					   event messages [platform event request
 					   messages] from the IPMB) */
 #define DEV_SUP_FRU_INVENTORY	0x08	/* [3] FRU Inventory Device */
 #define DEV_SUP_SEL		0x04	/* [2] SEL Device */
@@ -943,11 +943,11 @@ typedef struct get_device_id_cmd_resp {
 		device_sdr_provided:1;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	device_available:1,	/* [7] Device available: 
-					   0=normal operation, 
-					   1= device firmware, SDR Repository 
-					   update or self-initialization in progress. 
-					   [Firmware / SDR Repository updates can 
+	uchar	device_available:1,	/* [7] Device available:
+					   0=normal operation,
+					   1= device firmware, SDR Repository
+					   update or self-initialization in progress.
+					   [Firmware / SDR Repository updates can
 					   be differentiated by issuing a Get SDR
 					   command and checking the completion code.] */
 		major_fw_rev:7;		/* [6:0] Major Firmware Revision, binary encoded. */
@@ -955,70 +955,70 @@ typedef struct get_device_id_cmd_resp {
 	uchar	major_fw_rev:7,
 		device_available:1;
 #endif
-	uchar	minor_fw_rev;		/* Firmware Revision 2: 
+	uchar	minor_fw_rev;		/* Firmware Revision 2:
 					   Minor Firmware Revision. BCD encoded. */
-	uchar	ipmi_version;		/* IPMI Version. Holds IPMI Command 
+	uchar	ipmi_version;		/* IPMI Version. Holds IPMI Command
 					   Specification Version. BCD encoded.
-					   00h = reserved. Bits 7:4 hold the Least 
+					   00h = reserved. Bits 7:4 hold the Least
 					   Significant digit of the revision, while
-					   bits 3:0 hold the Most Significant bits. 
+					   bits 3:0 hold the Most Significant bits.
 					   E.g. a value of 51h indicates revision 1.5. */
-	uchar	add_dev_support;	/* Additional Device Support (formerly 
+	uchar	add_dev_support;	/* Additional Device Support (formerly
 					   called IPM Device Support). Lists the
-					   IPMI logical device commands and 
-					   functions that the controller supports 
+					   IPMI logical device commands and
+					   functions that the controller supports
 					   that are in addition to the mandatory
 					   IPM and Application commands.
-					   [7] Chassis Device (device functions 
+					   [7] Chassis Device (device functions
 					   as chassis device per ICMB spec.)
-					   [6] Bridge (device responds to Bridge 
+					   [6] Bridge (device responds to Bridge
 					   NetFn commands)
-					   [5] IPMB Event Generator (device generates 
-					   event messages [platform event request 
+					   [5] IPMB Event Generator (device generates
+					   event messages [platform event request
 					   messages] onto the IPMB)
-					   [4] IPMB Event Receiver (device accepts 
-					   event messages [platform event request 
+					   [4] IPMB Event Receiver (device accepts
+					   event messages [platform event request
 					   messages] from the IPMB)
 					   [3] FRU Inventory Device
 					   [2] SEL Device
 					   [1] SDR Repository Device
 					   [0] Sensor Device */
-	uchar	manuf_id[3];		/* 8:10 Manufacturer ID, LS Byte first. 
-					   The manufacturer ID is a 20-bit value 
-					   that is derived from the IANA Private 
-					   Enterprise ID. Most significant four 
-					   bits = reserved (0000b). 
-					   000000h = unspecified. 
-					   0FFFFFh = reserved. 
+	uchar	manuf_id[3];		/* 8:10 Manufacturer ID, LS Byte first.
+					   The manufacturer ID is a 20-bit value
+					   that is derived from the IANA Private
+					   Enterprise ID. Most significant four
+					   bits = reserved (0000b).
+					   000000h = unspecified.
+					   0FFFFFh = reserved.
 					   This value is binary encoded.
-					   E.g. the ID for the IPMI forum is 7154 
+					   E.g. the ID for the IPMI forum is 7154
 					   decimal, which is 1BF2h, which would
-					   be stored in this record as F2h, 1Bh, 
-					   00h for bytes 8 through 10, respectively. */ 
-	uchar	product_id[2];		/* 11:12 Product ID, LS Byte first. 
-					   This field can be used to provide a 
-					   number that identifies a particular 
-					   system, module, add-in card, or board 
-					   set. The number is specified according 
-					   to the manufacturer given by Manufacturer 
+					   be stored in this record as F2h, 1Bh,
+					   00h for bytes 8 through 10, respectively. */
+	uchar	product_id[2];		/* 11:12 Product ID, LS Byte first.
+					   This field can be used to provide a
+					   number that identifies a particular
+					   system, module, add-in card, or board
+					   set. The number is specified according
+					   to the manufacturer given by Manufacturer
 					   ID. 0000h = unspecified. FFFFh = reserved. */
 	uchar	aux_fw_rev[4];		/* (13:16) Auxiliary Firmware Revision
-					   Information. This field is optional. 
-					   If present, it holds additional information 
-					   about the firmware revision, such as boot 
-					   block or internal data structure version 
+					   Information. This field is optional.
+					   If present, it holds additional information
+					   about the firmware revision, such as boot
+					   block or internal data structure version
 					   numbers. The meanings of the numbers are
-					   specific to the vendor identified 
+					   specific to the vendor identified
 					   by Manufacturer ID. When the
-					   vendor-specific definition is not 
-					   known, generic utilities should 
-					   display each byte as 2-digit 
-					   hexadecimal numbers, with byte 13 
+					   vendor-specific definition is not
+					   known, generic utilities should
+					   display each byte as 2-digit
+					   hexadecimal numbers, with byte 13
 					   displayed first as the most significant
 					   byte. */
 
 } GET_DEVICE_ID_CMD_RESP;
-	
+
 /*----------------------------------------------------------------------*/
 /*			Cold Reset Command				*/
 /*----------------------------------------------------------------------*/
@@ -1039,15 +1039,15 @@ typedef struct get_device_id_cmd_resp {
 #define SELFTEST_IPMB_SIGNAL_LINES_DEAD		0x10	/* [4] 1b = IPMB signal lines do not respond */
 #define SELFTEST_SDR_REPOSITORY_EMPTY		0x08	/* [3] 1b = SDR Repository empty */
 #define SELFTEST_INTERNAL_BMC_FRU_CORRUPTED	0x04	/* [2] 1b = Internal Use Area of BMC FRU corrupted */
-#define SELFTEST_BOOT_BLOCK_FW_CORRUPTED	0x20	/* [1] 1b = controller update boot block 
+#define SELFTEST_BOOT_BLOCK_FW_CORRUPTED	0x20	/* [1] 1b = controller update boot block
 							   firmware corrupted */
-#define SELFTEST_CNTR_OP_FW_CORRUPTED		0x01	/* [0] 1b = controller operational firmware 
+#define SELFTEST_CNTR_OP_FW_CORRUPTED		0x01	/* [0] 1b = controller operational firmware
 							   corrupted */
 
 #define SELFTEST_RESULT_NO_ERROR		0x55	/* No error. All Self Tests Passed */
 #define SELFTEST_RESULT_NOT_IMPLEMENTED		0x56	/* Self Test function not implemented
 							   in this controller. */
-#define SELFTEST_RESULT_CORRUPT_OR_INACCESIBLE	0x57	/* Corrupted or inaccessible 
+#define SELFTEST_RESULT_CORRUPT_OR_INACCESIBLE	0x57	/* Corrupted or inaccessible
 							   data or devices */
 #define SELFTEST_RESULT_FATAL_HARDWARE_ERROR	0x58	/* Fatal Hardware Error */
 
@@ -1057,28 +1057,28 @@ typedef struct get_device_id_cmd_resp {
 typedef struct get_self_test_results_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
 	uchar	result1;		/* 55h = No error. All Self Tests Passed.
-					   56h = Self Test function not 
+					   56h = Self Test function not
 					   implemented in this controller.
-					   57h = Corrupted or inaccessible 
+					   57h = Corrupted or inaccessible
 					   data or devices
-					   58h = Fatal hardware error 
+					   58h = Fatal hardware error
 					   (system should consider BMC
-					   inoperative). This will indicate 
-					   that the controller hardware 
-					   (including associated devices 
-					   such as sensor hardware or RAM) 
+					   inoperative). This will indicate
+					   that the controller hardware
+					   (including associated devices
+					   such as sensor hardware or RAM)
 					   may need to be repaired or replaced.
 					   FFh = reserved.
-					   all other: Device-specific 
-					   internal failure. Refer to the 
-					   particular devices specification 
+					   all other: Device-specific
+					   internal failure. Refer to the
+					   particular devices specification
 					   for definition. */
 	uchar	result2;		/* For byte 2 = 55h, 56h, FFh: 00h
 					   For byte 2 = 58h, all other: Device-specific
-					   For byte 2 = 57h: self-test 
-					   error bitfield. Note: returning 
-					   57h does not imply that all 
-					   tests were run, just that 
+					   For byte 2 = 57h: self-test
+					   error bitfield. Note: returning
+					   57h does not imply that all
+					   tests were run, just that
 					   a given test has failed. I.e. 1b
 					   means failed, 0b means unknown. */
 	uchar	result3;		/* [7] 1b = Cannot access SEL device
@@ -1086,7 +1086,7 @@ typedef struct get_self_test_results_cmd_resp {
 					   [5] 1b = Cannot access BMC FRU device
 					   [4] 1b = IPMB signal lines do not respond
 					   [3] 1b = SDR Repository empty
-					   [2] 1b = Internal Use Area of BMC FRU corrupted 
+					   [2] 1b = Internal Use Area of BMC FRU corrupted
 					   [1] 1b = controller update boot block firmware corrupted
 					   [0] 1b = controller operational firmware corrupted */
 } GET_SELF_TEST_RESULTS_CMD_RESP;
@@ -1094,7 +1094,7 @@ typedef struct get_self_test_results_cmd_resp {
 /*======================================================================*/
 /*
  *  BMC Watchdog Timer Commands
-	
+
  	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Reset Watchdog Timer	 	App 	22h	M	M	M
@@ -1114,18 +1114,18 @@ typedef struct get_self_test_results_cmd_resp {
 /* Response data */
 typedef struct reset_watchdog_timer_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	/* Generic plus the following command-specific completion codes: 80h 
+	/* Generic plus the following command-specific completion codes: 80h
 	 * Attempt to start un-initialized watchdog (CC_UNINITIALIZED_WATCHDOG).
-	 * It is recommended that a BMC implementation return this error 
+	 * It is recommended that a BMC implementation return this error
 	 * completion code to indicate to software that a Set Watchdog Timer
 	 * command has not been issued to initialize the timer since the last
 	 * system power on, reset, or BMC reset. Note that since many systems
-	 * may initialize the watchdog timer during BIOS operation, this 
-	 * condition may only be seen by software if a BMC gets re-initialized 
-	 * during system operation (as might be the case if a firmware update 
+	 * may initialize the watchdog timer during BIOS operation, this
+	 * condition may only be seen by software if a BMC gets re-initialized
+	 * during system operation (as might be the case if a firmware update
 	 * occurred, for example).
 	 */
-	
+
 } RESET_WATCHDOG_TIMER_CMD_RESP;
 
 /*----------------------------------------------------------------------*/
@@ -1135,7 +1135,7 @@ typedef struct set_watchdog_timer_cmd_req {
 	uchar	command;
 	/* timer use */
 #ifdef BF_MS_FIRST
-	uchar	dont_log:1,		/* [7] - 1b = dont log 
+	uchar	dont_log:1,		/* [7] - 1b = dont log
 					   By default, the BMC will automatically log
 					   the corresponding sensor-specific watchdog
 					   sensor event when a timer expiration occurs.
@@ -1145,30 +1145,30 @@ typedef struct set_watchdog_timer_cmd_req {
 					   re-enabled) whenever a timer expiration occurs.
 					   This is also cleared after every system
 					   hard reset. */
-		dont_stop_timer:1,	/* [6] - 1b = dont stop timer 
-					   on Set Watchdog Timer command 
-					   (new for IPMI v1.5) new parameters 
-					   take effect immediately. If timer 
+		dont_stop_timer:1,	/* [6] - 1b = dont stop timer
+					   on Set Watchdog Timer command
+					   (new for IPMI v1.5) new parameters
+					   take effect immediately. If timer
 					   is already running, countdown value
 					   will get set to given value and
-					   countdown will continue from that 
+					   countdown will continue from that
 					   point. If timer is already stopped,
-					   it will remain stopped. If the 
+					   it will remain stopped. If the
 					   pre-timeout interrupt bit is set,
 					   it will get cleared.
-					       - 0b = timer stops automatically 
+					       - 0b = timer stops automatically
 					   when Set Watchdog Timer command is
 					   received. */
-		/* Potential race conditions exist with implementations of this option. 
-		 * If the Set Watchdog Timer command is sent just before a pre-timeout 
-		 * interrupt or timeout is set to occur, the timeout could occur before 
+		/* Potential race conditions exist with implementations of this option.
+		 * If the Set Watchdog Timer command is sent just before a pre-timeout
+		 * interrupt or timeout is set to occur, the timeout could occur before
 		 * the command is executed. To avoid this condition, it is recommended that
-		 * software set this value no closer than 3 counts before the pre-timeout 
+		 * software set this value no closer than 3 counts before the pre-timeout
 		 * or timeout value is reached.*/
 		:3,			/* [5:3] - reserved */
-		timer_use:3;		/* [2:0] - timer use (logged on expiration 
+		timer_use:3;		/* [2:0] - timer use (logged on expiration
 					   when dont log bit = 0b)
-					   Indicates the current use assigned 
+					   Indicates the current use assigned
 					   to the watchdog timer.
 					   000b = reserved
 					   001b = BIOS FRB2
@@ -1193,16 +1193,16 @@ typedef struct set_watchdog_timer_cmd_req {
 #define WD_TIMEOUT_ACTION_HARD_RESET	0x1	/* Hard Reset */
 #define WD_TIMEOUT_ACTION_POWER_DOWN	0x2	/* Power Down */
 #define WD_TIMEOUT_ACTION_POWER_CYCLE	0x3	/* Power Cycle */
-		
+
 #ifdef BF_MS_FIRST
 	uchar	:1,			/* [7] - reserved */
-		pre_timeout_intr:3,	/* [6:4] - pre-timeout interrupt (logged 
+		pre_timeout_intr:3,	/* [6:4] - pre-timeout interrupt (logged
 					   on expiration when dont log bit = 0b)
 					   000b = none
 					   001b = SMI
 					   010b = NMI / Diagnostic Interrupt
-					   011b = Messaging Interrupt (this is 
-					   the same interrupt as allocated to 
+					   011b = Messaging Interrupt (this is
+					   the same interrupt as allocated to
 					   the messaging interface)
 					   100b,111b = reserved */
 		:1,			/* [3] - reserved */
@@ -1252,7 +1252,7 @@ typedef struct get_watchdog_timer_cmd_resp {
 		dont_stop_timer:1,	/* [6] - 1b = timer is started (running)
 					         0b = timer is stopped */
 		:3,			/* [5:3] - reserved */
-		timer_use:3;		/* [2:0] - timer use (logged on expiration 
+		timer_use:3;		/* [2:0] - timer use (logged on expiration
 					   when dont log bit = 0b)
 					   000b = reserved
 					   001b = BIOS FRB2
@@ -1271,13 +1271,13 @@ typedef struct get_watchdog_timer_cmd_resp {
 	/* Timer Actions */
 #ifdef BF_MS_FIRST
 	uchar	:1,			/* [7] - reserved */
-		pre_timeout_intr:3,	/* [6:4] - pre-timeout interrupt (logged 
+		pre_timeout_intr:3,	/* [6:4] - pre-timeout interrupt (logged
 					   on expiration when dont log bit = 0b)
 					   000b = none
 					   001b = SMI
 					   010b = NMI / Diagnostic Interrupt
-					   011b = Messaging Interrupt (this would be 
-					   the same interrupt as allocated to 
+					   011b = Messaging Interrupt (this would be
+					   the same interrupt as allocated to
 					   the messaging interface)
 					   100b,111b = reserved */
 		:1,			/* [3] - reserved */
@@ -1298,7 +1298,7 @@ typedef struct get_watchdog_timer_cmd_resp {
 					   The timeout use expiration flags retain their
 					   state across system resets and power cycles,
 					   as long as the BMC remains powered.
-					   (1b = timer expired while associated 
+					   (1b = timer expired while associated
 					   use was selected.)
 					   [7] - reserved
 					   [6] - reserved
@@ -1313,23 +1313,23 @@ typedef struct get_watchdog_timer_cmd_resp {
 	uchar	present_countdown_lsb;	/* Present countdown value, lsbyte (100 ms/count) */
 	uchar	present_countdown_msb;	/* Present countdown value, msbyte */
 
-		/* The initial countdown value and present countdown values 
+		/* The initial countdown value and present countdown values
 		 * should match immediately after the countdown is initialized
 		 * via a Set Watchdog Timer command and after a Reset Watchdog
 		 * Timer has been executed.
-		 * Note that internal delays in the BMC may require software to 
-		 * delay up to 100ms before seeing the countdown value change 
+		 * Note that internal delays in the BMC may require software to
+		 * delay up to 100ms before seeing the countdown value change
 		 * and be reflected in the Get Watchdog Timer command.
 		 */
 } GET_WATCHDOG_TIMER_CMD_RESP;
 
 /*======================================================================*/
-/* 
+/*
  * BMC Device and Messaging Commands
  *
  * For ATCA, if any of the IPMI-defined System Interfaces are implemented,
  * the O/M commands are mandatory.
- * 
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Set BMC Global Enables 		App 	2Eh 	M 	O/M 	O/M
@@ -1343,7 +1343,7 @@ typedef struct get_watchdog_timer_cmd_resp {
 	Get BT Interface Capabilities	App 	36h 	M 	O/M 	O/M
 	Master Write-Read 		App 	52h 	M 	O/M 	O/M
 	Get System GUID 		App 	37h 	O 	O 	O
-	Get Channel Authentication Capabilities 
+	Get Channel Authentication Capabilities
 					App 	38h 	O 	M 	O
 	Get Session Challenge 		App 	39h 	O 	M 	O
 	Activate Session 		App 	3Ah 	O 	M 	O
@@ -1368,7 +1368,7 @@ typedef struct get_watchdog_timer_cmd_resp {
 #define	IPMI_CMD_SEND_MESSAGE	0x33
 /*
 The Send Message command is used for bridging IPMI messages between channels,
-and between the system management software (SMS) and a given channel. 
+and between the system management software (SMS) and a given channel.
 Refer to 6.13, BMC Message Bridging, for information on how the Send Message
 command is used.
 For IPMI v2.0 the Send Message command has been updated to include the ability
@@ -1382,7 +1382,7 @@ and configured). */
 typedef struct send_message_cmd_req {
 	uchar	command;
 #ifdef BF_MS_FIRST
-	uchar	tracking:2,	/* [7:6] 
+	uchar	tracking:2,	/* [7:6]
 		    - 00b = No tracking. The BMC reformats the message for the
 		    selected channel but does not track the originating channel,
 		    sequence number, or address information. This option is
@@ -1390,7 +1390,7 @@ typedef struct send_message_cmd_req {
 		    interface to another media.
 		    Software will typically use no tracking when it delivers
 		    sends a message from the system interface to another channel,
-		    such as IPMB. In this case, software will format the 
+		    such as IPMB. In this case, software will format the
 		    encapsulated message so that when it appears on the other
 		    channel, it will appear to have been directly originated by
 		    BMC LUN 10b. See 6.12.1, BMC LUN 10b Routing.
@@ -1410,19 +1410,19 @@ typedef struct send_message_cmd_req {
 		    data to the selected channel in place of the IPMI Message data.
 		    Note that if the channel uses sessions, the first byte of the
 		    Message Data field must be a Session Handle. The BMC should
-		    return a non-zero completion code if an attempt is made to 
-		    use this option for a given channel and the option is not 
+		    return a non-zero completion code if an attempt is made to
+		    use this option for a given channel and the option is not
 		    supported. It is recommended that completion code CCh be
 		    returned for this condition.
 		    - 11b = reserved */
 		encryption:1,	/* [5]
 		    - 1b = Send message with encryption. BMC will return an error
 		    completion code if this encryption is unavailable.
-		    - 0b = Encryption not required. The message will be sent 
+		    - 0b = Encryption not required. The message will be sent
 		    unencrypted if that option is available under the given session.
 		    Otherwise, the message will be sent encrypted. */
 		authentication:1, /* [4]
-		    - 1b = Send message with authentication. BMC will return an 
+		    - 1b = Send message with authentication. BMC will return an
 		    error completion code if this authentication is unavailable.
 		    - 0b = Authentication not required. Note behavior is dependent
 		    on whether authentication is used is depending on whether
@@ -1433,11 +1433,11 @@ typedef struct send_message_cmd_req {
 		    IPMI v2.0/RMCP+ sessions will send the message unauthenticated
 		    if that option is available under the session. Otherwise,
 		    the message will be sent with authentication. */
-		channel_number:4;	/* [3:0] channel number to send message to. 
-		    Each interface has a channel number that is used when 
+		channel_number:4;	/* [3:0] channel number to send message to.
+		    Each interface has a channel number that is used when
 		    configuring the channel and for routing messages between
-		    channels. Only the channel number assignments for the 
-		    primary IPMB and the System Interface are fixed, the 
+		    channels. Only the channel number assignments for the
+		    primary IPMB and the System Interface are fixed, the
 		    assignment of other channel numbers can vary on a per-platform
 		    basis. Software uses a Get Channel Info command to determine
 		    what types of channels are available and what channel number
@@ -1450,18 +1450,18 @@ typedef struct send_message_cmd_req {
 		tracking:2;
 #endif
 	uchar	message_data;	/* 2:N Message Data. Format dependent on target channel
-			   type. See Table 22-10, Message Data for Send Message 
+			   type. See Table 22-10, Message Data for Send Message
 			   Command */
 } SEND_MESSAGE_CMD_REQ;
 
 typedef struct send_message_cmd_resp {
 	uchar completion_code;	/* generic, plus additional command-specific
 	    completion codes:
-	    - 80h = Invalid Session Handle. The session handle does not match 
+	    - 80h = Invalid Session Handle. The session handle does not match
 	    up with any currently active sessions for this channel.
-	    
+
 	    If channel medium = IPMB, SMBus, or PCI Management Bus:
-	    (This status is important for applications that need to access 
+	    (This status is important for applications that need to access
 	    low-level I2C or SMBus devices and should be implemented.)
 	    - 81h = Lost Arbitration
 	    - 82h = Bus Error
@@ -1471,7 +1471,7 @@ typedef struct send_message_cmd_resp {
 	    to originate requests from IPMB or PCI Management Bus to other
 	    channels such as LAN or serial/modem. It is not present in the
 	    response to a Send Message command delivered via the System Interface.
-	    NOTE: The BMC does not parse messages that are encapsulated in a 
+	    NOTE: The BMC does not parse messages that are encapsulated in a
 	    Send Message command. Therefore, it does not know what privilege
 	    level should associated with an encapsulated message. Thus, messages
 	    that are sent to a session using the Send Message command are always
@@ -1491,7 +1491,7 @@ holds a Session Handle.
 /*======================================================================*/
 /*
  * Chassis Device Commands
- * 
+ *
  	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Get Chassis Capabilities 	Chassis 00h 	M 	M	O
@@ -1505,22 +1505,22 @@ holds a Session Handle.
 	Set System Boot Options 	Chassis 08h 	O 	O 	O
 	Get System Boot Options 	Chassis 09h 	O 	O 	O
 	Get POH Counter 		Chassis 0Fh 	O 	O 	O
-	
+
 */
 /*======================================================================*/
 
 
 /*======================================================================*/
-/* 
+/*
  *  Event Commands
- *  
+ *
  	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Set Event Receiver  		S/E 	00h 	M 	M 	M
 	Get Event Receiver 		S/E 	01h 	M 	M 	M
 	Platform Event  		S/E 	02h 	M 	M 	M
 	(a.k.a. Event Message)
- * 
+ *
  *  Using NETFN_EVENT_REQ/NETFN_EVENT_RESP
  */
 /*======================================================================*/
@@ -1538,8 +1538,8 @@ holds a Session Handle.
 typedef struct set_event_receiver_cmd_req {
 	uchar	command;
        /*Event Receiver Slave Address. 0FFh disables Event Message Generation */
-	uchar	evt_receiver_slave_addr;	/* [7:1] - IPMB (I2C) Slave Address 
-						   [0] - always 0b when [7:1] hold 
+	uchar	evt_receiver_slave_addr;	/* [7:1] - IPMB (I2C) Slave Address
+						   [0] - always 0b when [7:1] hold
 						         I2C slave address */
 #ifdef BF_MS_FIRST
 	uchar	:6,				/* [7:2] - reserved */
@@ -1563,19 +1563,19 @@ typedef struct event_config {
 /*----------------------------------------------------------------------*/
 /*			Get Event Receiver command			*/
 /*----------------------------------------------------------------------*/
-/* This global command is used to retrieve the present setting for the 
+/* This global command is used to retrieve the present setting for the
  * Event Receiver Slave Address and LUN. */
 
 typedef struct get_event_receiver_cmd_resp {
 	uchar completion_code;			/* Completion Code. */
 	uchar	evt_receiver_slave_addr;	/* Event Receiver Slave Address.
-						   0FFh indicates Event Message 
-						   Generation has been disabled. 
+						   0FFh indicates Event Message
+						   Generation has been disabled.
 						   Otherwise
 						   [7:1] IPMB (I2C) Slave Address
 						   [0] always 0b when [7:1] hold
 						   I2C slave address */
-#ifdef BF_MS_FIRST						   
+#ifdef BF_MS_FIRST
 	uchar	:6,				/* [7:2] - reserved */
 		evt_receiver_lun:2;		/* [1:0] - Event Receiver LUN */
 #else
@@ -1590,9 +1590,9 @@ typedef struct get_event_receiver_cmd_resp {
 typedef struct platform_event_message_cmd_req {
 	uchar	command;
 	uchar EvMRev;		/* Event Message Revision. This field is
-				   used to identify different revisions of 
+				   used to identify different revisions of
 				   the Event Message format. The revision
-				   number shall be 04h for Event Messages 
+				   number shall be 04h for Event Messages
 				   that comply with (Intelligent Platform Management
 				   Interface Specification, Second Generation,
 				   v2.0, Document Revision 1.0, February 12, 2004)
@@ -1600,30 +1600,30 @@ typedef struct platform_event_message_cmd_req {
 				   It is recommended that software be able to
 				   interpret both versions. */
 
-	uchar sensor_type;	/* Sensor Type: Indicates the event class or 
-				   type of sensor that generated the Event Message. 
-				   The Sensor Type Codes are specified in Table 42-3, 
+	uchar sensor_type;	/* Sensor Type: Indicates the event class or
+				   type of sensor that generated the Event Message.
+				   The Sensor Type Codes are specified in Table 42-3,
 				   Sensor Type Codes. */
 
 	uchar sensor_number;	/* Sensor #. A unique number (within a given
-				   sensor device) representing the sensor 
-				   within the management controller that 
+				   sensor device) representing the sensor
+				   within the management controller that
 				   generated the Event Message. Sensor numbers
 				   are used for both identification and access
-				   of sensor information, such as getting and 
+				   of sensor information, such as getting and
 				   setting sensor thresholds. */
 #ifdef BF_MS_FIRST
 	uchar	event_dir:1,	/* Event Dir. Indicates the event transition
-				   direction. (0 = Assertion Event, 
+				   direction. (0 = Assertion Event,
 				   1 = Deassertion Event) */
 		event_type:7;	/* This field indicates the type of threshold
 				   crossing or state transition (trigger) that
 				   produced the event. This is encoded using
-				   the Event/Reading Type Code. See Section 
+				   the Event/Reading Type Code. See Section
 				   42, Sensor and Event Code Tables. */
-	/* The remainder of the Event Message data according to the class of 
-	 * the Event Type for the sensor (threshold, discrete, or OEM). The 
-	 * contents and format of this field is specified in Table 29-6, Event 
+	/* The remainder of the Event Message data according to the class of
+	 * the Event Type for the sensor (threshold, discrete, or OEM). The
+	 * contents and format of this field is specified in Table 29-6, Event
 	 * Request Message Event Data Field Contents, */
 #else
 	uchar	event_type:7,
@@ -1659,7 +1659,7 @@ typedef struct generic_event_msg {
 /*======================================================================*/
 /*
  *  PEF and Alerting Mandatory Commands
- *  
+ *
  	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Get PEF Capabilities 		S/E 	10h 	M 	M 	M
@@ -1670,7 +1670,7 @@ typedef struct generic_event_msg {
 	Get Last Processed Event ID 	S/E 	15h 	M 	M 	M
 	Alert Immediate 		S/E 	16h 	O 	O 	O
 	PET Acknowledge 		S/E 	17h 	O 	O 	O
- * 
+ *
  *  Using NETFN_EVENT_REQ/NETFN_EVENT_RESP
  */
 /*======================================================================*/
@@ -1689,15 +1689,15 @@ typedef struct generic_event_msg {
 /*----------------------------------------------------------------------*/
 typedef struct get_pef_capabilities_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	pef_version;		/* PEF Version (BCD encoded, LSN first, 
+	uchar	pef_version;		/* PEF Version (BCD encoded, LSN first,
 					   51h for this specification. 51h ==
 					   version 1.5) */
-	uchar	action_support;		/* Action Support - These are the 
-					   supported actions that the BMC 
+	uchar	action_support;		/* Action Support - These are the
+					   supported actions that the BMC
 					   can take on event messages that
-					   it receives or has internally 
+					   it receives or has internally
 					   generated.
-					   
+
 					   [7:6] - reserved
 					   [5] - 1b = diagnostic interrupt
 					   [4] - 1b = OEM action
@@ -1721,7 +1721,7 @@ typedef struct get_pef_capabilities_cmd_resp {
 
 #define PEF_ACTION_PRIORITY_POWER_DOWN	1	/* (optional) */
 #define PEF_ACTION_PRIORITY_POWER_CYCLE	2	/* (optional) Will not be executed
-						   if a power down action was also 
+						   if a power down action was also
 						   selected. */
 #define PEF_ACTION_PRIORITY_RESET	3	/* (mandatory) Will not be executed
 						   if a power down or power cycle
@@ -1733,15 +1733,15 @@ typedef struct get_pef_capabilities_cmd_resp {
 #define PEF_ACTION_PRIORITY_ALERT	5	/* (mandatory if alerting is s
 						   upported) Send alerts in order
 						   based on the selected Alert Policy.
-						   Alert actions will be deferred 
+						   Alert actions will be deferred
 						   until after the power down has
 						   completed. There is an additional
 						   prioritization within alerts being
-						   sent: based on the Alert Policy 
+						   sent: based on the Alert Policy
 						   Table entries for the alert. This
 						   is described further in Section
 						   17.11, Alert Policy Table. */
-#define PEF_ACTION_PRIORITY_OEM 	6	/* (optional) Priority determined 
+#define PEF_ACTION_PRIORITY_OEM 	6	/* (optional) Priority determined
 						   by OEM.*/
 
 typedef struct pef_capabilities {
@@ -1762,27 +1762,27 @@ typedef struct pef_capabilities {
 /*----------------------------------------------------------------------*/
 typedef struct arm_pef_postpone_timer_cmd_req {
 	uchar	command;
-	uchar	pef_postpone_timeout;	/* [7:0] - PEF Postpone Timeout, 
+	uchar	pef_postpone_timeout;	/* [7:0] - PEF Postpone Timeout,
 					   in seconds. 01h == 1 second.
-					   00h = disable Postpone Timer 
-					   (PEF will immediately handle events, 
-					   if enabled). The BMC automatically 
+					   00h = disable Postpone Timer
+					   (PEF will immediately handle events,
+					   if enabled). The BMC automatically
 					   disables the timer whenever the
-					   system enters a sleep state, is powered 
+					   system enters a sleep state, is powered
 					   down, or reset.
-					   01h - FDh = arm timer. Timer will 
-					   automatically start counting down 
-					   from given value when the last-processed 
+					   01h - FDh = arm timer. Timer will
+					   automatically start counting down
+					   from given value when the last-processed
 					   event Record ID is not equal to the last
 					   received events Record ID.
-					   FEh = Temporary PEF disable. The PEF 
-					   Postpone timer does not countdown from 
-					   the value. The BMC automatically re-enables 
-					   PEF (if enabled in the PEF configuration 
+					   FEh = Temporary PEF disable. The PEF
+					   Postpone timer does not countdown from
+					   the value. The BMC automatically re-enables
+					   PEF (if enabled in the PEF configuration
 					   parameters) and sets the PEF Postpone timeout
-					   to 00h whenever the system enters a sleep 
-					   state, is powered down, or reset. Software 
-					   can cancel this disable by setting this 
+					   to 00h whenever the system enters a sleep
+					   state, is powered down, or reset. Software
+					   can cancel this disable by setting this
 					   parameter to 00h or 01h-FDh.
 					   FFh = get present countdown value */
 } ARM_PEF_POSTPONE_TIMER_CMD_REQ;
@@ -1800,20 +1800,20 @@ typedef struct set_pef_config_params_cmd_req {
 	uchar	param_selector;		/* Parameter selector
 					   [7] - reserved
 					   [6:0] - Parameter selector */
-	uchar	config_param_data;	/* 2:N Configuration parameter data, 
+	uchar	config_param_data;	/* 2:N Configuration parameter data,
 					   per Table 24-6, PEF Configuration Parameters. */
 } SET_PEF_CONFIG_PARAMS_CMD_REQ;
 
 typedef struct set_pef_config_params_cmd_resp {
-	uchar	completion_code;	/* Completion Code. Generic plus the 
+	uchar	completion_code;	/* Completion Code. Generic plus the
 					   following command-specific completion
 					   codes:
 					   80h = parameter not supported.
-					   81h = attempt to set the set in progress 
+					   81h = attempt to set the set in progress
 					   value (in parameter #0) when not in
-					   the set complete state. (This completion 
-					   code provides a way to recognize that 
-					   another party has already claimed the 
+					   the set complete state. (This completion
+					   code provides a way to recognize that
+					   another party has already claimed the
 					   parameters)
 					   82h = attempt to write read-only parameter */
 } SET_PEF_CONFIG_PARAMS_CMD_RESP;
@@ -1831,7 +1831,7 @@ typedef struct get_pef_config_params_cmd_req {
 	uchar	param_selector:7,
 	rev_selector:1;
 #endif
-	uchar	set_selector;		/* Set Selector (00h if parameter does not 
+	uchar	set_selector;		/* Set Selector (00h if parameter does not
 					   require a Set Selector) */
 	uchar	block_selector;		/* Block Selector (00h if parameter does not
 					   require a block number) */
@@ -1845,16 +1845,16 @@ typedef struct get_pef_config_params_cmd_resp {
 	uchar	param_rev;		/* [7:0] - Parameter revision. */
 	/* Format: MSN = present revision. LSN = oldest revision parameter is
 	 * backward compatible with. 11h for parameters in this specification.
-	 * The following data bytes are not returned when the get parameter 
+	 * The following data bytes are not returned when the get parameter
 	 * revision only bit is 1b. */
-	uchar	config_param_data;	/* 3:N Configuration parameter data, 
-					   per Table 30-6, PEF Configuration 
+	uchar	config_param_data;	/* 3:N Configuration parameter data,
+					   per Table 30-6, PEF Configuration
 					   Parameters */
 	/*  If the rollback feature is implemented, the BMC makes a copy of the
-	 *  existing parameters when the set in progress state becomes asserted 
-	 *  (See the Set In Progress parameter #0). While the set in progress 
-	 *  state is active, the BMC will return data from this copy of the 
-	 *  parameters, plus any uncommitted changes that were made to the data. 
+	 *  existing parameters when the set in progress state becomes asserted
+	 *  (See the Set In Progress parameter #0). While the set in progress
+	 *  state is active, the BMC will return data from this copy of the
+	 *  parameters, plus any uncommitted changes that were made to the data.
 	 *  Otherwise, the BMC returns parameter data from non-volatile storage. */
 } GET_PEF_CONFIG_PARAMS_CMD_RESP;
 
@@ -1895,18 +1895,18 @@ typedef struct pef_set_in_progress {
 	Otherwise, the change shall take effect when the write occurs. */
 #ifdef BF_MS_FIRST
 	uchar 	:6,		/* [7:2] - reserved */
-		set_complete:2;	/* [1:0] 
+		set_complete:2;	/* [1:0]
 	- 00b = set complete. If a system reset or transition to powered down state
 	occurs while set in progress is active, the BMC will go to the set complete
-	state. If rollback is implemented, going directly to set complete without 
+	state. If rollback is implemented, going directly to set complete without
 	first doing a commit write will cause any pending write data to be discarded.
 	- 01b = set in progress. This flag indicates that some utility or other
 	software is presently doing writes to parameter data. It is a notification flag
-	only, it is not a resource lock. The BMC does not provide any interlock 
+	only, it is not a resource lock. The BMC does not provide any interlock
 	mechanism that would prevent other software from writing parameter data while.
 	- 10b = commit write (optional). This is only used if a rollback is implemented.
-	The BMC will save the data that has been written since the last time the set 
-	in progress and then go to the set in progress state. An error completion 
+	The BMC will save the data that has been written since the last time the set
+	in progress and then go to the set in progress state. An error completion
 	code willbe returned if this option is not supported.
 	- 11b = reserved */
 #else
@@ -1918,16 +1918,16 @@ typedef struct pef_set_in_progress {
 typedef struct pef_control {
 #ifdef BF_MS_FIRST
 	uchar	:4,	/* [7:4] - reserved */
-		pef_alert_startup_delay_enable:1,	
+		pef_alert_startup_delay_enable:1,
 		/* [3] - PEF Alert Startup Delay disable. (optional)
 		   1b = enable PEF Alert Startup delay
 		   0b = disable PEF startup delay. */
 		pef_startup_delay_enable:1,
 		/* [2] - PEF Startup Delay disable. (optional)
 		   An implementation that supports this bit should also provide
-		   a mechanism that allows the user to Disable PEF in case the 
+		   a mechanism that allows the user to Disable PEF in case the
 		   filter entries are programmed to cause an infinite loop
-		   of PEF actions (such as system resets or power cycles) when 
+		   of PEF actions (such as system resets or power cycles) when
 		   the PEF startup delay is disabled. If this bit is not
 		   implemented the PEF startup delay must always be enabled.
 		   1b = enable PEF startup delay on manual (pushbutton) system
@@ -1958,8 +1958,8 @@ typedef struct pef_action_global_control {
 	uchar	:2,				/* [7:6] - reserved */
 		enable_diagnostic_interrupt:1,	/* [5] - 1b = enable diagnostic interrupt */
 		enable_oem_action:1,		/* [4] - 1b = enable OEM action */
-		enable_power_cycle_action:1,	/* [3] - 1b = enable power cycle 
-						   action (No effect if power is 
+		enable_power_cycle_action:1,	/* [3] - 1b = enable power cycle
+						   action (No effect if power is
 						   already off) */
 		enable_reset_action:1,		/* [2] - 1b = enable reset action */
 		enable_power_down_action:1,	/* [1] - 1b = enable power down action */
@@ -1970,7 +1970,7 @@ typedef struct pef_action_global_control {
 		enable_reset_action:1,
 	   	enable_power_cycle_action:1,
       		enable_oem_action:1,
-		enable_diagnostic_interrupt:1;		  
+		enable_diagnostic_interrupt:1;
 #endif
 } PEF_ACTION_GLOBAL_CONTROL;
 
@@ -2002,7 +2002,7 @@ typedef struct pef_alert_startup_delay {
 	Enable/disable of the delay can also be optionally configured using the
 	PEF Control parameter, above. An implementation can separately
 	implement this parameter and/or the enable/disable bit. */
-	uchar delay;		 /* [7:0] - PEF Alert Startup Delay in 
+	uchar delay;		 /* [7:0] - PEF Alert Startup Delay in
 				   seconds, +/- 10%. 1-based.
 				   00h = no delay. */
 } PEF_ALERT_STARTUP_DELAY;
@@ -2033,29 +2033,29 @@ typedef struct pef_event_filter_table_data1 {
 #define PEF_FILTER_CONFIG_MANUF		2	/*  manufacturer pre-configured filter */
 #define PEF_FILTER_CONFIG_SW		0	/* software configurable filter */
 
-#define PEF_EVT_SEVERITY_UNSPECIFIED		0x00 
-#define PEF_EVT_SEVERITY_MONITOR		0x01  
-#define PEF_EVT_SEVERITY_INFORMATION		0x02  
-#define PEF_EVT_SEVERITY_OK			0x04  
-#define PEF_EVT_SEVERITY_NON_CRITICAL_COND	0x08  
-#define PEF_EVT_SEVERITY_CRITICAL_COND		0x10 
-#define PEF_EVT_SEVERITY_NON_RECOVERABLE	0x20 
+#define PEF_EVT_SEVERITY_UNSPECIFIED		0x00
+#define PEF_EVT_SEVERITY_MONITOR		0x01
+#define PEF_EVT_SEVERITY_INFORMATION		0x02
+#define PEF_EVT_SEVERITY_OK			0x04
+#define PEF_EVT_SEVERITY_NON_CRITICAL_COND	0x08
+#define PEF_EVT_SEVERITY_CRITICAL_COND		0x10
+#define PEF_EVT_SEVERITY_NON_RECOVERABLE	0x20
 
 typedef struct pef_event_filter_table_entry {
 #ifdef BF_MS_FIRST
 	uchar	enable_filter:1,	/* 1b = enable filter / 0b = disable filter */
 		filter_config:2;	/* 11b = reserved
-					   10b = manufacturer pre-configured filter. 
+					   10b = manufacturer pre-configured filter.
 					   (PEF_FILTER_CONFIG_MANUF)
 					   The filter entry has been configured by
 					   the system integrator and should not be
 					   altered by software. Software is allowed
 					   to enable or disable the filter, however.
 					   01b = reserved
-					   00b = software configurable filter. 
+					   00b = software configurable filter.
 					   (PEF_FILTER_CONFIG_SW)
-					   The filter entry is available for 
-					   configuration by system management 
+					   The filter entry is available for
+					   configuration by system management
 					   software. */
 #else
 	uchar	:5,			/* reserved */
@@ -2063,7 +2063,7 @@ typedef struct pef_event_filter_table_entry {
 		enable_filter:1;
 #endif
 	uchar	event_filter_action;	/* PEF_ACTION_nn
-					   All actions are optional for an 
+					   All actions are optional for an
 					   implementation, with the exception of
 					   Alert which is mandatory if alerting
 					   is supported for one or more channels.
@@ -2085,9 +2085,9 @@ typedef struct pef_event_filter_table_entry {
 	uchar	policy_number:4,
 		grp_control_selector:3;
 #endif
-	uchar	event_severity;		/* This field can be used to fill in 
+	uchar	event_severity;		/* This field can be used to fill in
 					   the Event Severity field in a PET alert.
-					   The severity values are based on the 
+					   The severity values are based on the
 					   DMI severity values used for the
 					   generic sensor event/reading type code.
 					   In the case that more than one
@@ -2098,35 +2098,35 @@ typedef struct pef_event_filter_table_entry {
 
 	uchar 	generator_id_1;		/* Slave Address or Software ID from
 					   Event Message. FFh = match any */
-	uchar	generator_id_2;		/* Channel Number / LUN to match. 
-					   FFh = match any see section 32, 
+	uchar	generator_id_2;		/* Channel Number / LUN to match.
+					   FFh = match any see section 32,
 					   SEL Record Formats. */
 	uchar	sensor_type;		/* FFh = match any */
 	uchar	sensor_number;		/* FFh = match any */
 	uchar	event_trigger;		/* FFh = match any */
-	
-	/* The following bit field is used to match different values of the 
+
+	/* The following bit field is used to match different values of the
 	   least significant nibble of the Event Data 1 field. This enables
 	   a filter to provide a match on multiple event offset values.
 	   Bit positions 15 through 0 correspond to the offset values Fh - 0h,
 	   respectively. A 1 in a given bit position will cause a match if the
-	   value in bits 3:0 of the Event Data 1 hold the corresponding value 
+	   value in bits 3:0 of the Event Data 1 hold the corresponding value
 	   for the bit position. Multiple mask bits can be set to 1, enabling
 	   a match to multiple values. A match must be made with this field in
-	   order to have a match for the filter. 
-	   
+	   order to have a match for the filter.
+
 	   The least significant nibble of event data 1 typically holds an event
 	   offset value. This offset selects among different possible events for
 	   a sensor. For example, a button sensor supports a set of sensor-
 	   specific event offsets: 0 for Power Button pressed, 1 for Sleep Button
-	   pressed, and 2 for Reset Button pressed. 
-	   
+	   pressed, and 2 for Reset Button pressed.
+
 	   When an event is generated, it could have a 0, 1, or 2 in the event
 	   offset field depending on what button press occurred.
-	   
+
 	   The Event Offset Mask makes it simple to have a filter match a subset
 	   of the possible event offset values. Each bit in the mask corresponds
-	   to a different offset values starting with bit 0 in the mask 
+	   to a different offset values starting with bit 0 in the mask
 	   corresponding to offset 0. For example, if it is desired to have a
 	   filter match offsets 0 and 2, but not 1, the mask would be configured
 	   to 000_0000_0000_0101b.
@@ -2136,39 +2136,39 @@ typedef struct pef_event_filter_table_entry {
 
 	/* The following value is applied to the entire Event Data 1 byte. The
 	   field is Used to indicate wildcarded or compared bits. This field
-	   must be used in conjunction with Compare 2. To match any Event Data 
-	   field value, just set the corresponding AND Mask, Compare 1, and 
-	   Compare 2 fields to 00h. (See Section 17.8, Event Data 1 Event 
+	   must be used in conjunction with Compare 2. To match any Event Data
+	   field value, just set the corresponding AND Mask, Compare 1, and
+	   Compare 2 fields to 00h. (See Section 17.8, Event Data 1 Event
 	   Offset Mask for more information).
 	   Note that the Event Data 1 AND mask, Compare 1 mask, and Compare 2
-	   masks will typically be set to wild-card the least significant of 
+	   masks will typically be set to wild-card the least significant of
 	   Event Data 1 in order to allow the Event Data 1 Event Mask field to
 	   determine matches to the event offset.
 
 	   Bits 7:0 all have the following definition:
 	   0 = Wildcard bit. (drops this bit position in the Event Data byte out of
 	   the comparison process) Corresponding bit position must be a 1 in
-	   Compare 1, and a 0 in Compare 2. 
+	   Compare 1, and a 0 in Compare 2.
 	   (Note - setting a 0 in this bit, a 1 and Compare 1 and a 1 in
 	   Compare 2 guarantees that youll never have a match.)
 	   1 = use bit for further exact or non-exact comparisons based on
 	   Compare 1 and Compare 2 values. */
 	uchar	event_data1_and_mask;
 
-	/* The following field is used to indicate whether each bit positions 
-	   comparison is an exact comparison or not. (See Section 17.8, Event 
-	   Data 1 Event Offset Mask for more information). Here, test value 
+	/* The following field is used to indicate whether each bit positions
+	   comparison is an exact comparison or not. (See Section 17.8, Event
+	   Data 1 Event Offset Mask for more information). Here, test value
 	   refers to the Event Data value after the AND Mask has been applied.
 
 	   Bits 7:0 all have the following definition:
-	   
+
 	   1 = match bit in test value exactly to correspond bit position in
 	   Compare 2
-	   
+
 	   0 = contributes to match if corresponding bit in test value matches
 	   corresponding bit in Compare 2. */
 	uchar	event_data1_compare1;
-	
+
 	/* For the following field, (See Section 17.8, Event Data 1 Event Offset
 	   Mask for more information), here, test value refers to the Event
 	   Data value after the AND Mask has been applied.
@@ -2185,7 +2185,7 @@ typedef struct pef_event_filter_table_entry {
 	uchar	event_data3_and_mask;
 	uchar	event_data3_compare1;
 	uchar	event_data3_compare2;
-	 
+
 } PEF_EVENT_FILTER_TABLE_ENTRY;
 
 typedef struct pef_mask {
@@ -2202,9 +2202,9 @@ typedef struct pef_event_filter_table {
 #else
 	uchar	filter_number:7;
 #endif
-	PEF_EVENT_FILTER_TABLE_ENTRY	filter_data;	/* data 2:21 - filter data (20 bytes) 
-				   This field to be filled in from the filter 
-				   data for this filter number. See 
+	PEF_EVENT_FILTER_TABLE_ENTRY	filter_data;	/* data 2:21 - filter data (20 bytes)
+				   This field to be filled in from the filter
+				   data for this filter number. See
 				   PEF_EVENT_FILTER_TABLE_ENTRY struct */
 } PEF_EVENT_FILTER_TABLE;
 
@@ -2213,7 +2213,7 @@ typedef struct pef_num_alert_policy_entries {
 	not need to be supported if Alerting is not supported. */
 #ifdef BF_MS_FIRST
 	uchar	:1,				/* [7] - reserved */
-		num_alert_policy_entries:7; 	/* [6:0] - number of alert policy 
+		num_alert_policy_entries:7; 	/* [6:0] - number of alert policy
 						   entries. 0 = alerting not supported. */
 #else
 	uchar	num_alert_policy_entries:7;
@@ -2228,35 +2228,35 @@ typedef struct pef_alert_policy_table {
 #else
 	uchar	alert_policy_entry_number:7;
 #endif
-	uchar	data;		/* data 2:4 - 3 byte entry data 
-   				   This field to be filled in from alert policy 
+	uchar	data;		/* data 2:4 - 3 byte entry data
+   				   This field to be filled in from alert policy
 				   tables for this alert policy entry number */
 } PEF_ALERT_POLICY_TABLE;
 
 typedef struct pef_alert_policy_table_entry {
-	/* Policy Number / Policy: This value identifies the entries belonging 
+	/* Policy Number / Policy: This value identifies the entries belonging
 	   to a particular policy set. When an Alert Action is taken, the BMC
 	   will scan the Alert Policy Table and will attempt to generate alerts
 	   based on the entries that form the policy set. */
 #ifdef BF_MS_FIRST
 	uchar	policy_number:4,	/* [7:4] - policy number. 1 based. 0000b = reserved. */
-		entry_enabled:1,	/* [3] - 0b = this entry is disabled. 
+		entry_enabled:1,	/* [3] - 0b = this entry is disabled.
 					   Skip to next entry in policy, if any.
 					   1b = this entry is enabled. */
 		policy:3;	/* [2:0] - policy
 				   0h = always send alert to this destination.
-				   1h = if alert to previous destination was successful, 
+				   1h = if alert to previous destination was successful,
 				        do not send alert to this destination.
 				        Proceed to next entry in this policy set.
-				   2h = if alert to previous destination was successful, 
-				        do not send alert to this destination. Do not 
+				   2h = if alert to previous destination was successful,
+				        do not send alert to this destination. Do not
 					process any more entries in this policy set.
 				   3h = if alert to previous destination was successful,
 				        do not send alert to this destination. Proceed
 				       	to next entry in this policy set that is to
 				        a different channel.
 				   4h = if alert to previous destination was successful,
-				        do not send alert to this destination. Proceed to next 
+				        do not send alert to this destination. Proceed to next
 				        entry in this policy set that is to a
 				        different destination type. */
 #else
@@ -2264,11 +2264,11 @@ typedef struct pef_alert_policy_table_entry {
 		entry_enabled:1,
 		policy_number:4;
 #endif
-	/* Channel / Destination Channel that the alert is to be sent over. 
+	/* Channel / Destination Channel that the alert is to be sent over.
 	   Channel determines which set of destination addresses or phone numbers
 	   is used. Destination addresses and/or phone numbers are set via
 	   the LAN and/or serial/modem configuration parameter commands. The
-	   Alert Type (e.g. PET, TAP, Dial Page, etc.) is specified in the 
+	   Alert Type (e.g. PET, TAP, Dial Page, etc.) is specified in the
 	   configuration parameters associated with the specified destination. */
 #ifdef BF_MS_FIRST
 	uchar	channel_number:4,	/* [7:4] = Channel Number. */
@@ -2281,20 +2281,20 @@ typedef struct pef_alert_policy_table_entry {
 #endif
 #ifdef BF_MS_FIRST
 	uchar	alert_string_event_specific:1,	/* [7] - Event-specific Alert String
-			    1b = Alert String look-up is event specific. 
+			    1b = Alert String look-up is event specific.
 			        The following Alert String Set / Selector subfield
-				is interpreted as an Alert String Set Number that 
+				is interpreted as an Alert String Set Number that
 				is used in conjunction with the Event Filter Number
 				to lookup the Alert String from the PEF Configuration
 				Parameters.
 			    0b = Alert String is not event specific. The following
 			        Alert String Set / Selector sub-field is interpreted
 				as an Alert String Selector that provides a direct
-				pointer to the desired Alert String from the PEF 
+				pointer to the desired Alert String from the PEF
 				Configuration Parameters. */
-		alert_string_selector:7;  /* [6:0] - Alert String Set / Selector. 
-				This value identifies one or more Alert Strings in the 
-				Alert String table. When used as an Alert String Set 
+		alert_string_selector:7;  /* [6:0] - Alert String Set / Selector.
+				This value identifies one or more Alert Strings in the
+				Alert String table. When used as an Alert String Set
 				Number, it is used in conjunction with the Event Filter
 			       	Number to uniquely identify an Alert String. When used
 			       	as an Alert String Selector it directly selects an Alert
@@ -2303,17 +2303,17 @@ typedef struct pef_alert_policy_table_entry {
 			       	String to be Event Specific - meaning the string selection
 			       	is determined by both the Event Policy Entry and Event
 				Filter, or, the string can be selected by the Event Policy
-			       	alone. An Alert String can be pointed to by multiple policy 
-				entries. The Alert Policy Entry identifies a particular 
+			       	alone. An Alert String can be pointed to by multiple policy
+				entries. The Alert Policy Entry identifies a particular
 				channel and destination for an alert. This in turn,
 				identifies the alert type. Thus, the binding of an Alert
 			       	Policy Entry and an Alert String effectively provides
 			       	a mechanism for allowing different Alert Strings to be
 			       	selected based on the alert destination, or the type of
-			       	alert destination. For example, a single Alert String 
-				could be shared among all Alert Policy Entries for 
+			       	alert destination. For example, a single Alert String
+				could be shared among all Alert Policy Entries for
 				Dial Page destinations, while event-specific Alert
-			       	Strings could be used for alerts to LAN destinations. */	
+			       	Strings could be used for alerts to LAN destinations. */
 #else
 	uchar	alert_string_selector:7,
 		alert_string_event_specific:1;
@@ -2326,7 +2326,7 @@ typedef struct pef_system_guid {
 #ifdef BF_MS_FIRST
 	uchar	:7,			/* [7:1] - reserved */
 		system_guid_follows:1;	/* [0] 1b = BMC uses following value in PET Trap.
-				               0b = BMC ignores following value and uses 
+				               0b = BMC ignores following value and uses
 				               value returned from Get System GUID command
 				               instead. */
 #else
@@ -2358,7 +2358,7 @@ typedef struct pef_alert_string_keys {
 #else
 	uchar	string_selector:7;
 #endif
-	/* 		
+	/*
 	PEF uses the following Event Filter Number and the Alert String Key
 	fields to look up the string associated with a particular event. String 0 is a
 	special, volatile string reserved for use by the Alert Immediate command.
@@ -2406,22 +2406,22 @@ typedef struct pef_alert_strings {
 	String 0 is a special, volatile string reserved for use by the Alert
 	Immediate command.
 
-	data 1 - Set Selector = string selector. 
+	data 1 - Set Selector = string selector.
 	*/
 #ifdef BF_MS_FIRST
 	uchar	:1,			/* [7] - reserved. */
-		string_selector:7;	/* [6:0] - string selector. 
+		string_selector:7;	/* [6:0] - string selector.
 					   0 = selects volatile string
 					   01h-7Fh = non-volatile string selectors */
 #else
 	uchar	string_selector:7;
 #endif
-	/* 
+	/*
 	data 2 - Block Selector = string block number to set, 1 based. Blocks
 	are 16 bytes.
 	*/
 	uchar	block_selector;
-	uchar	data[16];	/* data 3:N - String data. Null terminated 
+	uchar	data[16];	/* data 3:N - String data. Null terminated
 				   8-bit ASCII string. 16-bytes max. per block. */
 } PEF_ALERT_STRINGS;
 
@@ -2457,9 +2457,9 @@ typedef struct pef_group_control_table {
 			regardless of whether the same operation has been
 			requested for all control groups and all enabled control
 			membership for the given chassis. */
-		immed_delayed:1,	/* [4] - Immediate/Delayed. 
-			Selects whether the BMC requests an immediate or delayed 
-			control operation. Note: whether this operation is 
+		immed_delayed:1,	/* [4] - Immediate/Delayed.
+			Selects whether the BMC requests an immediate or delayed
+			control operation. Note: whether this operation is
 			initiated at the time the command is received is
 			dependent on the request/force bit, see above.
 			0b = immediate control. BMC sends command that requests an
@@ -2467,7 +2467,7 @@ typedef struct pef_group_control_table {
 			1b = delayed control. BMC sends control command to request a
 			delayed control operation. This is conditioned by the
 			request/force bit. */
-		channel_number:4;	/* [3:0] - Channel Number (channel number for 
+		channel_number:4;	/* [3:0] - Channel Number (channel number for
 			ICMB that group control operation is to be delivered over) */
 #else
 	uchar	channel_number:4,
@@ -2486,7 +2486,7 @@ typedef struct pef_group_control_table {
 		enable_member_id_0_check:1,	/* [4] - 0b = enable member ID check.
 						   1b = disable member ID check. */
 		member_id_0:4;	/* [3:0] - member ID. ID of this chassis within
-				   specified group. (value is ignored if Group 
+				   specified group. (value is ignored if Group
 				   ID 0 = FFh) */
 #else
 	uchar	member_id_0:4,
@@ -2511,12 +2511,12 @@ typedef struct pef_group_control_table {
 		:3;
 #endif
 	/* data 7: */
-	uchar	group_id_2;	/* Group ID 2 (1-based) 
+	uchar	group_id_2;	/* Group ID 2 (1-based)
 				   00h = unspecified
 				   FFh = all groups */
 	/* data 8: */
 #ifdef BF_MS_FIRST
-	uchar	:3,		/* Member ID 2 (0-based) 
+	uchar	:3,		/* Member ID 2 (0-based)
 				   [7:5] - reserved */
 		enable_member_id_2_check:1,	/* [4] - 0b = enable member ID check.
 						   1b = disable member ID check. */
@@ -2551,7 +2551,7 @@ typedef struct pef_group_control_table {
 	uchar	:1,		/* [7] - reserved */
 		num_retries:3,	/* [6:4] - number of times to retry sending the
 				   command to perform the group operation [For
-				   ICMB, the BMC broadcasts a Group Chassis 
+				   ICMB, the BMC broadcasts a Group Chassis
 				   Control command] (1-based) */
 		operation:4;	/* [3:0] - operation
 
@@ -2609,7 +2609,7 @@ typedef struct	set_last_processed_event_id_cmd_req {
 	uchar	command;
 #ifdef BF_MS_FIRST
 	uchar	:7,		/* [7:1] - reserved. */
-		record_id:1;	/* [0] - 0b = set Record ID for last record 
+		record_id:1;	/* [0] - 0b = set Record ID for last record
 				   processed by software.
 				   1b = set Record ID for last record processed by BMC. */
 #else
@@ -2622,7 +2622,7 @@ typedef struct	set_last_processed_event_id_cmd_req {
 
 typedef struct	set_last_processed_event_id_cmd_resp {
 	uchar	completion_code;	/* Completion Code
-					   81h = cannot execute command, 
+					   81h = cannot execute command,
 					   SEL erase in progress */
 } SET_LAST_PROCESSED_EVENT_ID_CMD_RESP;
 
@@ -2631,19 +2631,19 @@ typedef struct	set_last_processed_event_id_cmd_resp {
 /*----------------------------------------------------------------------*/
 typedef struct get_last_processed_event_id_cmd_resp {
 	uchar	completion_code;	/* Completion Code
-					   81h = cannot execute command, 
+					   81h = cannot execute command,
 					   SEL erase in progress */
 	uchar	most_recent_timestamp[4]; /* 2:5 Most recent addition timestamp. LS byte first. */
-	uchar	record_id[2];		/* 6:7 Record ID for last record in SEL. 
+	uchar	record_id[2];		/* 6:7 Record ID for last record in SEL.
 					   Returns FFFFh if SEL is empty. */
 	uchar	last_sw_proc_evt_rec_id[2];	/* 8:9 Last SW Processed Event Record ID. */
-	uchar	last_bmc_proc_evt_rec_id[2];	/* 10:11 Last BMC Processed Event Record ID. 
+	uchar	last_bmc_proc_evt_rec_id[2];	/* 10:11 Last BMC Processed Event Record ID.
 						   Returns 0000h when event has been
-						   processed but could not be logged 
-						   because the SEL is full or logging 
+						   processed but could not be logged
+						   because the SEL is full or logging
 						   has been disabled. */
 } GET_LAST_PROCESSED_EVENT_ID_CMD_RESP;
- 
+
 typedef struct events_processed {
 	short last_sw_proc_evt_rec_id;
 	short last_bmc_proc_evt_rec_id;
@@ -2672,7 +2672,7 @@ typedef struct events_processed {
 	Get Sensor Reading 		S/E 	2Dh 	M 	M 	M
 	Set Sensor Type 		S/E 	2Eh 	O 	O 	O
 	Get Sensor Type 		S/E 	2Fh 	O 	O 	O
- * 
+ *
  *  Using NETFN_EVENT_REQ/NETFN_EVENT_RESP
  */
 /*======================================================================*/
@@ -2702,30 +2702,30 @@ typedef struct get_device_sdr_info_cmd {
 	uchar	command;
 	uchar operation;	/* Operation (optional)
 				   [7:1] - reserved
-				   [0] - 1b = Get SDR count. This returns 
+				   [0] - 1b = Get SDR count. This returns
 				   the total number of SDRs in the device.
-				   0b = Get Sensor count. This returns the 
+				   0b = Get Sensor count. This returns the
 				   number of sensors implemented on LUN this
 				   command was addressed to */
 } GET_DEVICE_SDR_INFO_CMD;
 
 typedef struct get_device_sdr_info_resp {
 	uchar	completion_code;/* Completion Code */
-	uchar	num;		/* For Operation = Get Sensor Count (or if 
+	uchar	num;		/* For Operation = Get Sensor Count (or if
 				   byte 1 not present in request):
-				   - Number of sensors in device for LUN this 
+				   - Number of sensors in device for LUN this
 				   command was addressed to.
 				   For Operation = Get SDR Count:
 				   - Total Number of SDRs in the device. */
 #ifdef BF_MS_FIRST
 	uchar	flags:1,	/* Flags:
 				   Dynamic population
-				   [7] - 0b = static sensor population. 
+				   [7] - 0b = static sensor population.
 				   The number of sensors handled by this
-				   device is fixed, and a query shall return 
+				   device is fixed, and a query shall return
 				   records for all sensors.
 				   1b = dynamic sensor population. This device
-				   may have its sensor population vary during 
+				   may have its sensor population vary during
 				   run time (defined as any time other that
 				   when an install operation is in progress). */
 		:3,		/* [6:4] - reserved */
@@ -2739,12 +2739,12 @@ typedef struct get_device_sdr_info_resp {
 		:3,
 		flags:1;
 #endif
-//	uchar sensor_population_change_indicator[4];	
-				/* 4:7 Sensor Population Change Indicator. 
+//	uchar sensor_population_change_indicator[4];
+				/* 4:7 Sensor Population Change Indicator.
 				   LS byte first.
 				   Four byte timestamp, or counter. Updated or
-				   incremented each time the sensor population 
-				   changes. This field is not provided if the 
+				   incremented each time the sensor population
+				   changes. This field is not provided if the
 				   flags indicate a static sensor population.*/
 } GET_DEVICE_SDR_INFO_RESP;
 
@@ -2758,7 +2758,7 @@ typedef struct get_device_sdr_cmd {
 				   Offset into record field. Use 0000h
 				   for reservation ID otherwise. */
 	uchar reservation_id_msb;	/* Reservation ID. MS Byte. */
-	uchar record_id_lsb;	/* Record ID of record to Get, LS Byte. 
+	uchar record_id_lsb;	/* Record ID of record to Get, LS Byte.
 				   0000h returns the first record. */
 	uchar record_id_msb;	/* Record ID of record to Get, MS Byte */
 	uchar offset;		/* Offset into record */
@@ -2769,7 +2769,7 @@ typedef struct get_device_sdr_cmd {
 typedef struct get_device_sdr_resp {
 	uchar completion_code;	/* Completion Code. Generic, plus following
 				   command specific:
-				   80h = record changed. This status is 
+				   80h = record changed. This status is
 				   returned if any of the record contents
 				   have been altered since the last time the
 				   Requester issued the request with 00h for
@@ -2793,15 +2793,15 @@ typedef struct reserve_device_sdr_repository_resp {
 /*----------------------------------------------------------------------*/
 
 /* System Software use of Sensor Scanning bits & Entity Info
-System software must ignore any sensor that has the sensor scanning bit 
-disabled - if system software didnt disable the sensor. This provides an 
+System software must ignore any sensor that has the sensor scanning bit
+disabled - if system software didnt disable the sensor. This provides an
 alternate mechanism to allow the management controller to automatically
 adjust the sensor population without requiring a corresponding change of the
 sensor data records. For example, suppose the management controller has a way
 of automatically knowing that a particular temperature sensor will be absent in
 a given system configuration if a given processor is also absent. The management
-controller could elect to automatically disable scanning for that temperature 
-sensor. System management software would ignore that sensor even if it was 
+controller could elect to automatically disable scanning for that temperature
+sensor. System management software would ignore that sensor even if it was
 reported in the SDRs.
 
 Note that this is an alternate mechanism that may be useful in some circumstances.
@@ -2810,11 +2810,11 @@ that information with presence detection for the entity.
 
 If there is a presence detection sensor for a given entity, then system management
 software should ignore all other sensors associated with that entity. Some sensors
-have intrinsic support for this. For example, a sensor-specific Processor sensor 
+have intrinsic support for this. For example, a sensor-specific Processor sensor
 has a Processor Presence bit. If that bit is implemented, and the processor is
-absent, any other sensors and non-presence related bits associated with that 
+absent, any other sensors and non-presence related bits associated with that
 processor can be ignored. If the sensor type doesnt have an intrinsic presence
-capability, you can implement an Entity Presence sensor. This sensor solely 
+capability, you can implement an Entity Presence sensor. This sensor solely
 reports whether a given Entity is present or not.
 
 */
@@ -2855,7 +2855,7 @@ more information. */
 		unavailable:1,
 		sensor_scanning_enabled:1,
 		event_messages_enabled:1;
-#endif		
+#endif
 /* These bytes are optional:
 (Byte 4) For threshold-based sensors
 Present threshold comparison status
@@ -2885,7 +2885,7 @@ For discrete reading sensors
 [2] - 1b = state 10 asserted
 [1] - 1b = state 9 asserted
 [0] - 1b = state 8 asserted
-*/	    
+*/
 } GET_SENSOR_READING_RESP;
 
 /*----------------------------------------------------------------------*/
@@ -2900,7 +2900,7 @@ typedef struct get_sensor_reading_factors_cmd {
 
 typedef struct get_sensor_reading_factors_resp {
 	uchar completion_code;	/* Completion Code */
-	uchar next_reading;	/* Next reading. This field indicates the 
+	uchar next_reading;	/* Next reading. This field indicates the
 				   next reading for which a different set of
 sensor reading factors is defined. If the reading byte passed in the request
 does not match exactly to a table entry, the nearest entry will be returned, and
@@ -2921,7 +2921,7 @@ obtained starting with any reading byte value. */
 #endif
 	uchar	B_lsb;		/* [7:0] - B: LS 8 bits */
 #ifdef BF_MS_FIRST
-	uchar	B_msb:2,	/* [7:6] - B: MS 2 bits 
+	uchar	B_msb:2,	/* [7:6] - B: MS 2 bits
 				   Unsigned, 10-bit Basic Sensor Accuracy
 				   in 1/100 percent scaled up by
 				   unsigned Accuracy exponent. */
@@ -2958,32 +2958,32 @@ obtained starting with any reading byte value. */
 	Get FRU Inventory Area Info 	Storage 10h 	M 	M 	M
 	Read FRU Data 			Storage 11h 	M 	M 	M
 	Write FRU Data 			Storage 12h 	M 	M 	M
- *    	
+ *
  *    Using NETFN_NVSTORE_REQ/NETFN_NVSTORE_RESP
  */
 /*======================================================================*/
-/* 
+/*
 This section based on - IPMI - Platform Management FRU Information
 Storage Definition document v1.0
 Document Revision 1.1
 September 27, 1999
 
 The FRU Information is used to primarily to provide inventory information
-about the boards that the FRU Information Device is located on. It is a goal 
-that all major field replaceable units (FRUs) have an EEPROM or FRU Information 
+about the boards that the FRU Information Device is located on. It is a goal
+that all major field replaceable units (FRUs) have an EEPROM or FRU Information
 Device from which, at a minimum, the part number or version number can be read
-through software. It is also a goal that the FRUs serial number be software 
+through software. It is also a goal that the FRUs serial number be software
 readable.
 
-The format divides the FRU Information Device (or EEPROM) into six different 
+The format divides the FRU Information Device (or EEPROM) into six different
 areas:
 
 1) Common Header
-The Common Header is mandatory for all FRU Information Device implementations. 
-It holds version information for the overall information format specification 
-and offsets to the other information areas. The other areas may or may not be 
+The Common Header is mandatory for all FRU Information Device implementations.
+It holds version information for the overall information format specification
+and offsets to the other information areas. The other areas may or may not be
 present based on the application of the device. An area is specified as Null
-or not present when the Common Header has a value of 00h for the starting 
+or not present when the Common Header has a value of 00h for the starting
 offset for that area.
 
 2) Internal Use Area
@@ -2992,7 +2992,7 @@ other devices that exist on the same FRU as the FRU Information Device. The
 Internal Use Area is usually used to provide private non-volatile storage for a
 management controller.
 
-3) Chassis Info Area 
+3) Chassis Info Area
 This area is used to hold Serial Number, Part Number, and other information
 about the system chassis. A system can have multiple FRU Information Devices
 within a chassis, but only one device should provide the Chassis Info Area.
@@ -3003,7 +3003,7 @@ But many systems, particularly low-end systems, do not incorporate such
 locations. Therefore, it is common to find the Chassis Info Area included in the
 FRU information for the baseboard.
 
-4) Board Info Area 
+4) Board Info Area
 This area provides Serial Number, Part Number, and other information about
 the board that the FRU Information Device is located on.
 
@@ -3023,51 +3023,51 @@ extending the FRU Information Specification to cover new information types
 without impacting the existing area definitions.
 
 The management controller provides Read/Write FRU Inventory Data commands for
-accessing the nonvolatile storage contents via the controllers messaging 
+accessing the nonvolatile storage contents via the controllers messaging
 interface.
 */
 /*
-The Common Header area is the starting point for accessing FRU information data. 
+The Common Header area is the starting point for accessing FRU information data.
 The Common Header area always starts at offset 00h. The Common Header is present
 for all FRU Information Devices in the system. The data in this header provides
 the offsets to the other information areas in the device. A checksum is included
 to allow the integrity of the header data to be verified.
 
-The Chassis Info, Board Info, and Product Info areas each contain a number of 
-variable length fields. Each of these fields is preceded by a type/length byte 
+The Chassis Info, Board Info, and Product Info areas each contain a number of
+variable length fields. Each of these fields is preceded by a type/length byte
 that indicates the length of the field and the type of encoding that is used for
-the field. The leading fields in each area serve predefined functions. These 
+the field. The leading fields in each area serve predefined functions. These
 fields can be followed by custom fields that are defined by manufacturing or
 by the OEM. The same variable length field format is used within records in the
 MultiRecord Area.
 
 An application that accesses the information starts by verifying that the format
-version information for the FRU Information Device is a version that the 
-application supports. It does this be extracting the format version information 
-from Common Header area. Next, the application extracts the starting offset for 
-the desired area from the Common Header. The application then accesses the 
-header information specified at the beginning of the area. If the area format 
-version is correct, the application can proceed an access the data. (Note for 
+version information for the FRU Information Device is a version that the
+application supports. It does this be extracting the format version information
+from Common Header area. Next, the application extracts the starting offset for
+the desired area from the Common Header. The application then accesses the
+header information specified at the beginning of the area. If the area format
+version is correct, the application can proceed an access the data. (Note for
 the MultiRecord area, the Common Header offset points both the start of the area
 and to the first Record in the MultiRecord area.)
 
-Since the fields within an area (or Record) can be variable or fixed length, 
-the application must walk the fields sequentially. The application traverses 
-all fields by walking individual fields until the end-of-fields type/length 
-byte (value C1h) is encountered. 
+Since the fields within an area (or Record) can be variable or fixed length,
+the application must walk the fields sequentially. The application traverses
+all fields by walking individual fields until the end-of-fields type/length
+byte (value C1h) is encountered.
 (Note: Only pre-defined fields are allowed to be fixed length without type/length
-bytes. All custom fields are specified as variable length fields with type/length 
+bytes. All custom fields are specified as variable length fields with type/length
 bytes.)
 
-Each area/record starts with a fixed number of pre-defined fields. This is 
+Each area/record starts with a fixed number of pre-defined fields. This is
 followed by a variable number of optional custom fields. If a field is not used,
-a NULL or Empty version of the field is used as a placeholder. Thus, an 
+a NULL or Empty version of the field is used as a placeholder. Thus, an
 application can rely on the Nth field as always having the same meaning. (Note:
 this is guaranteed for pre-defined fields only.)
 
-An application could present predefined fields with labels according to their 
+An application could present predefined fields with labels according to their
 function and formatted according to the type specified in the type/length field.
-The application could present custom fields with a generic label (e.g. Custom 
+The application could present custom fields with a generic label (e.g. Custom
 Field 1) followed by the field data formatted according to the type specified
 in the type/length field (e.g. Hex, ASCII, Binary).
 
@@ -3086,7 +3086,7 @@ typedef struct fru_common_header {
 #ifdef BF_MS_FIRST
 	uchar	:4,			/* Common Header Format Version
 					   7:4 - reserved, write as 0000b */
-		format_version:4;	/* 3:0 - format version number = 1h 
+		format_version:4;	/* 3:0 - format version number = 1h
 					   for this specification. */
 #else
 	uchar	format_version:4,
@@ -3094,18 +3094,18 @@ typedef struct fru_common_header {
 #endif
 	uchar	int_use_offset;		/* Internal Use Area Starting Offset
 					   (in multiples of 8 bytes). 00h
-					   indicates that this area is not 
+					   indicates that this area is not
 					   present. */
 	uchar	chassis_info_offset;	/* Chassis Info Area Starting
 					   Offset (in multiples of 8 bytes). 00h
-					   indicates that this area is not 
+					   indicates that this area is not
 					   present. */
-	uchar	board_offset;		/* Board Area Starting Offset (in 
+	uchar	board_offset;		/* Board Area Starting Offset (in
 					   multiples of 8 bytes). 00h indicates
 					   that this area is not present. */
 	uchar	product_info_offset;	/* Product Info Area Starting
 					   Offset (in multiples of 8 bytes).
-					   00h indicates that this area is not 
+					   00h indicates that this area is not
 					   present. */
 	uchar	multirecord_offset;	/* MultiRecord Area Starting Offset
 					   (in multiples of 8 bytes). 00h
@@ -3132,7 +3132,7 @@ typedef struct multirecord_area_header {
 	uchar	record_len;	/* Record Length. */
 	uchar	record_cksum;	/* Record Checksum. Holds the zero checksum of
 				   the record. */
-	uchar	header_cksum;	/* Header Checksum. Holds the zero checksum of 
+	uchar	header_cksum;	/* Header Checksum. Holds the zero checksum of
 				   the header. */
 	uchar	manuf_id[3];	/* Manufacturer ID. LS Byte first. Write as the
 				   three byte ID assigned to PICMG. For this
@@ -3143,12 +3143,12 @@ typedef struct multirecord_area_header {
 				   the value 0h shall be used. */
 } MULTIRECORD_AREA_HEADER;
 
-	
+
 typedef struct fru_internal_use_area {
 #ifdef BF_MS_FIRST
 	uchar	:4,			/* Internal Use Format Version
 					   7:4 - reserved, write as 0000b */
-		format_version:4;	/* 3:0 - format version number = 1h 
+		format_version:4;	/* 3:0 - format version number = 1h
 					   for this specification. */
 #else
 	uchar	format_version:4,
@@ -3164,7 +3164,7 @@ typedef struct fru_chassis_info_area_hdr {
 #ifdef BF_MS_FIRST
 	uchar	:4,			/* Chassis Info Area Format Version
 					   7:4 - reserved, write as 0000b */
-		format_version:4;	/* 3:0 - format version number = 1h 
+		format_version:4;	/* 3:0 - format version number = 1h
 					   for this specification. */
 #else
 	uchar	format_version:4,
@@ -3177,14 +3177,14 @@ typedef struct fru_chassis_info_area_hdr {
 } FRU_CHASSIS_INFO_AREA_HDR;
 
 /* The rest is variable length data
-	uchar	part_num_type:4,	- Chassis Part Number type/length 
+	uchar	part_num_type:4,	- Chassis Part Number type/length
 		part_num_len;
-	uchar	part_num[N];		- Chassis Part Number bytes 
+	uchar	part_num[N];		- Chassis Part Number bytes
 	uchar	serial_num_type:4,	- Chassis Serial Number type/length
 		serial_num_len;
-	uchar	serial_num[M];		- Chassis Serial Number bytes 
+	uchar	serial_num[M];		- Chassis Serial Number bytes
 
-	uchar	custom_data[xx]		- Custom Chassis Info fields, if any. 
+	uchar	custom_data[xx]		- Custom Chassis Info fields, if any.
 					  Each field must be preceeded
 					  with type/length byte.
 		C1h 			- (type/length byte encoded to indicate no more info fields).
@@ -3196,7 +3196,7 @@ typedef struct board_area_format_hdr {
 #ifdef BF_MS_FIRST
 	uchar	:4,			/* Board Area Format Version
 					   7:4 - reserved, write as 0000b */
-		format_version:4;		/* 3:0 - format version number = 1h 
+		format_version:4;		/* 3:0 - format version number = 1h
 					   for this specification. */
 #else
 	uchar	format_version:4,
@@ -3225,7 +3225,7 @@ typedef struct board_area_format_hdr {
 	uchar	part_num[M];		- Board Part Number bytes
 	uchar	fru_file_id_type:4,	- FRU File ID type/length byte
 		fru_file_id_len;
-	uchar	fru_file_id[R];		- FRU File ID bytes 
+	uchar	fru_file_id[R];		- FRU File ID bytes
 
 The FRU File version field is a pre-defined field
 provided as a manufacturing aid for verifying the file that was used
@@ -3233,7 +3233,7 @@ during manufacture or field update to load the FRU information. The
 content is manufacturer-specific. This field is also provided in the
 Product Info area. Either or both fields may be null.
 
-	uchar	custom_data[xx];	- Additional custom Mfg. Info fields. 
+	uchar	custom_data[xx];	- Additional custom Mfg. Info fields.
 					  Defined by manufacturing. Each
 					  field must be preceded by a type/length byte
 		C1h; 			- (type/length byte encoded to indicate no more info fields).
@@ -3245,7 +3245,7 @@ typedef struct product_area_format_hdr {
 #ifdef BF_MS_FIRST
 	uchar	:4,			/* Product Area Format Version
 					   7:4 - reserved, write as 0000b */
-		format_version:4;		/* 3:0 - format version number = 1h 
+		format_version:4;		/* 3:0 - format version number = 1h
 					   for this specification. */
 #else
 	uchar	format_version:4,
@@ -3258,7 +3258,7 @@ typedef struct product_area_format_hdr {
 
 /* The rest is variable length data
 	uchar	manuf_name_type:4,	- Manufacturer Name type/length byte
-		manuf_name-len;	
+		manuf_name-len;
 	uchar	manuf_name[N];		- Manufacturer Name bytes
 	uchar	prod_name_type:4,	- Product Name type/length byte
 	uchar	prod_name[M];		- Product Name bytes
@@ -3276,7 +3276,7 @@ typedef struct product_area_format_hdr {
 	uchar	asset_tag[Q];		- Asset Tag
 	uchar	fru_file_id_type:4,	- FRU File ID type/length byte
 		fru_file_id_len;
-	uchar	fru_file_id[R];		- FRU File ID bytes. 
+	uchar	fru_file_id[R];		- FRU File ID bytes.
 
 The FRU File version field is a pre-defined field
 provided as a manufacturing aid for verifying the file that was used
@@ -3284,14 +3284,14 @@ during manufacture or field update to load the FRU information. The
 content is manufacturer-specific. This field is also provided in the
 Board Info area. Either or both fields may be null.
 
-	uchar	custom_data[xx];	- Custom product info area fields, 
+	uchar	custom_data[xx];	- Custom product info area fields,
 					  if any (must be preceded with
 					  type/length byte)
 		C1h;			- (type/length byte encoded to indicate
 	       				  no more info fields).
 	uchar	unused[Y];		- 00h - any remaining unused space
 	uchar	checksum;		- Product Info Area Checksum (zero checksum)
-*/	
+*/
 #define IPMI_STO_CMD_GET_FRU_INVENTORY_AREA_INFO 0x10	/* Get FRU Inventory Area Info */
 #define IPMI_STO_CMD_READ_FRU_DATA		0x11	/* Read FRU Data */
 #define IPMI_STO_CMD_WRITE_FRU_DATA		0x12	/* Write FRU Data */
@@ -3315,7 +3315,7 @@ typedef struct get_fru_inventory_area_info_cmd_resp {
 	uchar fru_inventory_area_size_msb;	/* FRU Inventory area size in bytes, MS Byte */
 #ifdef BF_MS_FIRST
 	uchar	:7,			/* [7:1] - reserved */
-		access_method:1;		/* [0] 0b = Device is accessed by bytes, 
+		access_method:1;		/* [0] 0b = Device is accessed by bytes,
 					   1b = Device is accessed by words */
 #else
 	uchar	access_method:1,
@@ -3331,8 +3331,8 @@ typedef struct read_fru_data_cmd_req {
 	uchar	command;
 	uchar fru_dev_id;	/* FRU Device ID. FFh = reserved. */
 	uchar fru_inventory_offset_lsb;	/* FRU Inventory Offset to read, LS Byte */
-	uchar fru_inventory_offset_msb;	/* FRU Inventory Offset to read, MS Byte 
-					   Offset is in bytes or words per 
+	uchar fru_inventory_offset_msb;	/* FRU Inventory Offset to read, MS Byte
+					   Offset is in bytes or words per
 					   device access type returned in the
 					   Get FRU Inventory Area Info command. */
 	uchar count_to_read;	/*  Count to read --- count is 1 based */
@@ -3342,7 +3342,7 @@ typedef struct read_fru_data_cmd_resp {
 	uchar completion_code;	/* Completion code. Generic, plus following
 				   command specific:
 				   81h = FRU device busy. The requested cannot
-				   be completed because the implementation of 
+				   be completed because the implementation of
 				   the logical FRU device is in a state where
 				   the FRU information is temporarily unavailable.
 				   This could be due to a condition such as a
@@ -3350,9 +3350,9 @@ typedef struct read_fru_data_cmd_resp {
 				   as a device on a shared bus.
 				   Software can elect to retry the operation
 				   after at least 30 milliseconds if this code
-				   is returned. Note that it is highly 
-				   recommended that management controllers 
-				   incorporate builtin retry mechanisms. 
+				   is returned. Note that it is highly
+				   recommended that management controllers
+				   incorporate builtin retry mechanisms.
 				   Generic IPMI software cannot be relied
 				   upon to take advantage of this completion code. */
 	uchar count_returned;	/* Count returned --- count is 1 based */
@@ -3374,14 +3374,14 @@ typedef struct write_fru_data_cmd_req {
 typedef struct write_fru_data_cmd_resp {
 	uchar completion_code;	/* Completion code. Generic, plus following
 				   command specific:
-				   80h = write-protected offset. Cannot 
+				   80h = write-protected offset. Cannot
 				   complete write because one or more bytes of
 				   FRU data are to a write-protected offset in
 				   the FRU device. Note that an implementation
 				   may have allowed a partial write of the
 				   data to occur.
-				   81h = FRU device busy. Refer to the 
-				   preceding table for the Read FRU Command 
+				   81h = FRU device busy. Refer to the
+				   preceding table for the Read FRU Command
 				   for the description of this completion code. */
 	uchar count_written;	/* Count written --- count is 1 based */
 } WRITE_FRU_DATA_CMD_RESP;
@@ -3406,7 +3406,7 @@ typedef struct write_fru_data_cmd_resp {
 	Enter SDR Repository Update Mode Storage 2Ah 	O 	O 	O
 	Exit SDR Repository Update Mode Storage 2Bh 	M 	M 	M
 	Run Initialization Agent 	Storage 2Ch 	O 	O 	O
- *    	
+ *
  *    Using NETFN_NVSTORE_REQ/NETFN_NVSTORE_RESP
  */
 /*======================================================================*/
@@ -3433,22 +3433,22 @@ typedef struct get_sdr_repository_info_cmd_resp {
 	uchar completion_code;	/* Completion Code */
 	uchar sdr_version;	/* SDR Version - version number of the SDR
 				   command set for the SDR Device.
-				   51h for this specification. (BCD encoded 
+				   51h for this specification. (BCD encoded
 				   with bits 7:4 holding the Least Significant
 				   digit of the revision and bits 3:0 holding
 				   the Most Significant bits.) */
-	uchar record_count_lsb;	/* Record count LS Byte - number of records 
+	uchar record_count_lsb;	/* Record count LS Byte - number of records
 				   in the SDR Repository */
 	uchar record_count_msb;	/* Record count MS Byte - number of records
 				   in the SDR Repository */
-	uchar free_space_lsb;	/* 5:6 Free Space in bytes, LS Byte first. 
+	uchar free_space_lsb;	/* 5:6 Free Space in bytes, LS Byte first.
 				   0000h indicates full, FFFEh indicates
 				   64KB-2 or more available. FFFFh indicates
 				   unspecified. */
 	uchar free_space_msb;
-	uchar most_recent_addition_timestamp[4];	
+	uchar most_recent_addition_timestamp[4];
 	/* 7:10 Most recent addition timestamp. LS byte first. */
-	uchar	most_recent_erase[4];	/* 11:14 Most recent erase (delete or 
+	uchar	most_recent_erase[4];	/* 11:14 Most recent erase (delete or
 					   clear) timestamp. LS byte first. */
 	uchar operation_support;	/* Operation Support
 	[7] - Overflow Flag. 1=SDR could not be written due to lack of space in the
@@ -3463,7 +3463,7 @@ typedef struct get_sdr_repository_info_cmd_resp {
 	[1] - 1b=Reserve SDR Repository command supported
 	[0] - 1b=Get SDR Repository Allocation Information command supported */
 } GET_SDR_REPOSITORY_INFO_CMD_RESP;
-	
+
 /*----------------------------------------------------------------------*/
 /*			Reserve SDR Repository command			*/
 /*----------------------------------------------------------------------*/
@@ -3475,6 +3475,15 @@ typedef struct reserve_sdr_repository_cmd_resp {
 } RESERVE_SDR_REPOSITORY_CMD_RESP;
 
 /*----------------------------------------------------------------------*/
+/*          Clear SDR Repository command            */
+/*----------------------------------------------------------------------*/
+
+typedef struct clear_sdr_repository_cmd_resp {
+  uchar completion_code;  /* Completion Code */
+  uchar erasure_progress; /* erasure progress */
+} CLEAR_SDR_REPOSITORY_CMD_RESP;
+
+/*----------------------------------------------------------------------*/
 /*			Get SDR command					*/
 /*----------------------------------------------------------------------*/
 
@@ -3482,7 +3491,7 @@ typedef struct get_sdr_cmd_req {
 	uchar	command;
 	uchar reservation_id_lsb; /* Reservation ID. LS Byte. Only required for
 				   partial reads with a nonzero Offset into
-				   record field. Use 0000h for reservation 
+				   record field. Use 0000h for reservation
 				   ID otherwise. */
 	uchar reservation_id_msb; /* Reservation ID. MS Byte. */
 	uchar record_id_lsb;	/* Record ID of record to Get, LS Byte */
@@ -3509,8 +3518,8 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 /*======================================================================*/
 /*
  * 	Sensor Type Codes and Data
- * 	(Table 42-3) 
- * 
+ * 	(Table 42-3)
+ *
  */
 
 #define ST_TEMPERATURE				0x01	// Temperature
@@ -3524,13 +3533,13 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define STO_PS_DRIVE_BAY_INTRUSION		0x01	// Drive Bay Instrusion
 #define STO_PS_IO_CARD_AREA_INTRUSION		0x02	// I/O Card area intrusion
 #define STO_PS_PROCESSOR_AREA_INTRUSION		0x03	// Processor area intrusion
-#define STO_PS_LAN_LEASH_LOST			0x04	/* LAN Leash Lost (system 
+#define STO_PS_LAN_LEASH_LOST			0x04	/* LAN Leash Lost (system
 							   is unplugged from LAN)
 		The Event Data 2 field can be used to identify which network
 		controller the leash was lost on where 00h corresponds to the
 		first (or only) network controller. */
 #define STO_PS_UNAUTHORIZED_DOCKING		0x05	// Unauthorized dock/undock
-#define STO_PS_FAN_AREA_INTRUSION		0x06	/* FAN area intrusion 
+#define STO_PS_FAN_AREA_INTRUSION		0x06	/* FAN area intrusion
 		(supports detection of hot plug fan tampering) */
 
 /* Sensor Type: Platform Security Violation Attempt */
@@ -3547,9 +3556,9 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define STO_PROC_IERR				0x00	// IERR
 #define STO_PROC_THERMAL_TRIP			0x01	// Thermal Trip
 #define STO_PROC_FRB1_BIST_FAILURE		0x02	// FRB1/BIST failure
-#define STO_PROC_FRB2_POST_FAILURE		0x03	/* FRB2/Hang in POST failure 
-		(used hang is believed to be due or related to a processor 
-		failure. Use System Firmware Progress sensor for other BIOS 
+#define STO_PROC_FRB2_POST_FAILURE		0x03	/* FRB2/Hang in POST failure
+		(used hang is believed to be due or related to a processor
+		failure. Use System Firmware Progress sensor for other BIOS
 		hangs.) */
 #define STO_PROC_FRB3_STARTUP_INIT_FAILURE	0x04	// FRB3/Processor Startup/Initialization failure (CPU didnt start)
 #define STO_PROC_CONFIG_ERROR			0x05	// Configuration Error
@@ -3557,14 +3566,14 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define STO_PROC_PROCESSOR_PRESENCE_DETECTED	0x07	// Processor Presence detected
 #define STO_PROC_PROCESSOR_DISABLED		0x08	// Processor disabled
 #define STO_PROC_TERMINATOR_PRESENCE_DETECTED	0x09	// Terminator Presence Detected
-#define STO_PROC_PROCESSOR_AUTOMATICALLY_THROTTLED	0x0A	
+#define STO_PROC_PROCESSOR_AUTOMATICALLY_THROTTLED	0x0A
 		/* Processor Automatically Throttled (processor throttling triggered
 		 * by a hardware-based mechanism operating independent from
 		 * system software, such as automatic thermal throttling or throttling
 		 * to limit power consumption.) */
 
 /* Sensor Type: Power Supply */
-#define ST_POWER_SUPPLY				0x08	
+#define ST_POWER_SUPPLY				0x08
 		/* Power Supply (also used for power converters [e.g.
 		 * DC-to-DC converters] and VRMs [voltage regulator modules]). */
 #define STO_PSU_PRESENCE_DETECTED		0x00	// Presence detected
@@ -3573,10 +3582,10 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define STO_PSU_INPUT_LOST			0x03	// Power Supply input lost (AC/DC)
 #define STO_PSU_INPUT_LOST_OR_OUT_OF_RANGE	0x04	// Power Supply input lost or out-of-range
 #define STO_PSU_INPUT_OUT_OF_RANGE		0x05	// Power Supply input out-of-range, but present
-#define STO_PSU_CONFIG_ERROR			0x06	// Configuration error. 
+#define STO_PSU_CONFIG_ERROR			0x06	// Configuration error.
 	/* The Event Data 3 field provides a more detailed definition of the error:
 	   7:4 = Reserved for future definition, set to 0000b
-	   3:0 = Error Type, one of 
+	   3:0 = Error Type, one of
 	   	0h = Vendor mismatch, for power supplies that include this
 		status. (Typically, the system OEM defines the vendor
 		compatibility criteria that drives this status).
@@ -3593,37 +3602,37 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 		Others = Reserved for future definition */
 
 /* Sensor Type: Power Unit */
-#define ST_POWER_UNIT				0x09	// Power Unit 
+#define ST_POWER_UNIT				0x09	// Power Unit
 
 #define ST0_PU_POWER_OFF			0x00	// Power Off / Power Down
 #define ST0_PU_POWER_CYCLE			0x01	// Power Cycle
 #define ST0_PU_240VA_POWER_DOWN			0x02	// 240VA Power Down
 #define ST0_PU_INTERLOCK_POWER_DOWN		0x03	// Interlock Power Down
 #define ST0_PU_AC_LOST				0x04	// AC lost
-#define ST0_PU_SOFT_POWER_CONTROL_FAILURE	0x05	// Soft Power Control Failure (unit did 
+#define ST0_PU_SOFT_POWER_CONTROL_FAILURE	0x05	// Soft Power Control Failure (unit did
 							// not respond to request to turn on)
 #define ST0_PU_FAILURE_DETECTED			0x06	// Power Unit Failure detected
 #define ST0_PU_PREDICTIVE_FAILURE		0x07	// Predictive Failure
 
 /* Sensor Type: Cooling Device */
-#define ST_COOLING_DEVICE			0x0A	// Cooling Device 
+#define ST_COOLING_DEVICE			0x0A	// Cooling Device
 
 /* Sensor Type: Other units-based Sensor */
 #define ST_OTHER_UNITS_BASED_SENSOR		0x0B	// Other Units-based Sensor (per units given in SDR)
 
 /* Sensor Type: Memory */
-#define ST_MEMORY				0x0C	// Memory 
+#define ST_MEMORY				0x0C	// Memory
 #define STO_MEM_CORRECTABLE_ECC			0x00	// Correctable ECC / other correctable memory error
 #define STO_MEM_UNCORRECTABLE_ECC		0x01	// Uncorrectable ECC / other uncorrectable memory error
 #define STO_MEM_PARITY_ERROR			0x02	// Parity
 #define STO_MEM_SCRUB_FAILED			0x03	// Memory Scrub Failed (stuck bit)
 #define STO_MEM_DEVICE_DISABLED			0x04	// Memory Device Disabled
 #define STO_MEM_CORRECTABLE_ERR_LIMIT		0x05	// Correctable ECC / other correctable memory error logging limit reached
-#define STO_MEM_PRESENCE_DETECTED		0x06	
+#define STO_MEM_PRESENCE_DETECTED		0x06
 	/* Presence detected. Indicates presence of entity associated with
 	 * the sensor. Typically the entity will be a memory module or other
 	 * entity representing a physically replaceable unit of memory. */
-#define STO_MEM_CONFIG_ERROR			0x07	
+#define STO_MEM_CONFIG_ERROR			0x07
 	/* Configuration error. Indicates a memory configuration error for the
 	 * entity associated with the sensor. This can include when a given
 	 * implementation of the entity is not supported by the system (e.g.,
@@ -3631,7 +3640,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	 * that the entity is part of an unsupported memory configuration
 	 * (e.g. the configuration is not supported because the memory
 	 * module doesnt match other memory modules). */
-#define STO_MEM_SPARE				0x08	
+#define STO_MEM_SPARE				0x08
 	/* Spare. Indicates entity associated with the sensor represents a
 	 * spare unit of memory.
 	 * The Event Data 3 field can be used to provide an event extension
@@ -3655,7 +3664,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   code, with the following definition:
 	   Event Data 2 */
 #define SYS_FW_ERROR_UNSPECIFIED	   	0x00	// Unspecified.
-#define SYS_FW_ERROR_NO_MEM	   		0x01	// No system memory is physically 
+#define SYS_FW_ERROR_NO_MEM	   		0x01	// No system memory is physically
 							// installed in the system.
 #define SYS_FW_ERROR_NO_USABLE_MEM	   	0x02	// No usable system memory, all installed memory has
 							// experienced an unrecoverable failure.
@@ -3668,15 +3677,15 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define SYS_FW_ERROR_VIDEO_CTRL_FAILURE		0x09	// Unrecoverable video controller failure
 #define SYS_FW_ERROR_NO_VIDEO			0x0A	// No video device detected
 #define SYS_FW_ERROR_BIOS_CORRUPTION		0x0B	// Firmware (BIOS) ROM corruption detected
-#define SYS_FW_ERROR_CPU_VOLTAGE_MISMATCH	0x0C	// CPU voltage mismatch 
+#define SYS_FW_ERROR_CPU_VOLTAGE_MISMATCH	0x0C	// CPU voltage mismatch
 							// (processors that share same supply
 							// have mismatched voltage requirements)
 #define SYS_FW_ERROR_CPU_SPEED_MATCHING_FAILURE	0x0D	// CPU speed matching failure
 							// 0Eh to FFh reserved
-							
-						
-#define STO_SFP_SYSTEM_FIRMWARE_HANG		0x01	// System Firmware Hang 
-	/* (uses same Event Data 2 definition as 
+
+
+#define STO_SFP_SYSTEM_FIRMWARE_HANG		0x01	// System Firmware Hang
+	/* (uses same Event Data 2 definition as
 	   following System Firmware Progress offset) */
 #define STO_SFP_SYSTEM_FIRMWARE_PROGRESS	0x02	// System Firmware Progress
 	/* The Event Data 2 field can be used to provide an event extension
@@ -3695,14 +3704,14 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define SYS_FW_PROGRESS_CACHE_INIT	   	0x0A	// Cache initialization
 #define SYS_FW_PROGRESS_SM_BUS_INIT	   	0x0B	// SM Bus initialization
 #define SYS_FW_PROGRESS_KBD_CNTRL_INIT	   	0x0C	// Keyboard controller initialization
-#define SYS_FW_PROGRESS_BMC_INIT	   	0x0D	// Embedded controller/management 
+#define SYS_FW_PROGRESS_BMC_INIT	   	0x0D	// Embedded controller/management
 							// controller initialization
 #define SYS_FW_PROGRESS_DOCKING_INIT	   	0x0E	// Docking station attachment
 #define SYS_FW_PROGRESS_ENABLING_DOCKING 	0x0F	// Enabling docking station
 #define SYS_FW_PROGRESS_EJECTING_DOCKING	0x10	// Docking station ejection
 #define SYS_FW_PROGRESS_DISABLING_DOCKING	0x11	// Disabling docking station
 #define SYS_FW_PROGRESS_OS_WAKEUP_VECTOR_CALL	0x12	// Calling operating system wake-up vector
-#define SYS_FW_PROGRESS_OS_BOOT	   		0x13	// Starting operating system boot process, 
+#define SYS_FW_PROGRESS_OS_BOOT	   		0x13	// Starting operating system boot process,
 							// e.g. calling Int 19h
 #define SYS_FW_PROGRESS_MB_INIT	   		0x14	// Baseboard or motherboard initialization
 #define SYS_FW_PROGRESS_RESERVED	   	0x15	// reserved
@@ -3714,13 +3723,13 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 
 
 /* Sensor Type: Event Logging Disabled */
-#define ST_EVENT_LOGGING_DISABLED		0x10	// Event Logging Disabled 
+#define ST_EVENT_LOGGING_DISABLED		0x10	// Event Logging Disabled
 #define STO_ELD_CORR_MEM_ERR_LOG_DISABLED	0x00	// Correctable Memory Error Logging Disabled
 	/* Event Data 2
-	   [7:0] - Memory module/device (e.g. DIMM/SIMM/RIMM) identification, 
+	   [7:0] - Memory module/device (e.g. DIMM/SIMM/RIMM) identification,
 	   relative to the entity that the sensor is associated with (if SDR
 	   provided for this sensor). */
-#define STO_ELD_EVENT_TYPE_LOG_DISABLED		0x01	// Event Type Logging Disabled. 
+#define STO_ELD_EVENT_TYPE_LOG_DISABLED		0x01	// Event Type Logging Disabled.
 	/* Event Logging is disabled for following event/reading type and
 	   offset has been disabled.
 	   Event Data 2
@@ -3732,7 +3741,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   [3:0] - Event Offset */
 #define STO_ELD_LOG_AREA_RESET_OR_CLEARED	0x02	// Log Area Reset/Cleared
 #define STO_ELD_ALL_EVENT_LOG_DISABLED		0x03	// All Event Logging Disabled
-#define STO_ELD_SEL_FULL			0x04	// SEL Full. 
+#define STO_ELD_SEL_FULL			0x04	// SEL Full.
 	/* If this is used to generate an event, it is recommended
 	   that this be generated so that this will be logged as the last entry
 	   in the SEL. If the SEL is very small, an implementation can elect
@@ -3743,9 +3752,9 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   command to determine whether the SEL is full or not. Since Get
 	   SEL Info is a mandatory command, this provides a cross-platform
 	   way to get that status. */
-#define STO_ELD_SEL_ALMOST_FULL			0x05	// SEL Almost Full. 
+#define STO_ELD_SEL_ALMOST_FULL			0x05	// SEL Almost Full.
 	/* If Event Data 3 is not provided, then by default
-	   this event represents the SEL has reached a point of being 75% 
+	   this event represents the SEL has reached a point of being 75%
 	   or more full. For example, if the SEL supports 215 entries, the
 	   75% value would be 161.25 entries. Therefore, the event would be
 	   generated on the 162nd entry. Note that if this event itself is
@@ -3772,7 +3781,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define STO_WD_PRE_TIMEOUT_INTR			0x07	// OS Watchdog pre-timeout Interrupt, non-NMI
 
 /* Sensor Type: System Event */
-#define ST_SYSTEM_EVENT				0x12	// System Event 
+#define ST_SYSTEM_EVENT				0x12	// System Event
 
 #define STO_SE_SYS_RECONFIG			0x00	// System Reconfigured
 #define STO_SE_OEM_SYS_BOOT_EVENT		0x01	// OEM System Boot Event
@@ -3785,9 +3794,9 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   Event Data 2
 	   [7:4] - Log Entry Action */
 #define LOG_ENTRY_ADDED				0x0	// entry added
-#define LOG_ENTRY_NOT_IPMI_MAP			0x1	// entry added because event 
+#define LOG_ENTRY_NOT_IPMI_MAP			0x1	// entry added because event
 							// did not map to standard IPMI event
-#define LOG_ENTRY_WITH_SEL_ENTRIES		0x2	// entry added along with one or more 
+#define LOG_ENTRY_WITH_SEL_ENTRIES		0x2	// entry added along with one or more
 							// corresponding SEL entries
 #define LOG_ENTRY_CLEARED			0x3	// log cleared
 #define LOG_ENTRY_LOG_DISABLED			0x4	// log disabled
@@ -3808,7 +3817,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   [7:6] - reserved */
 
 /* Sensor Type: Critical Interrupt */
-#define ST_CRITICAL_INTERRUPT			0x13	// Critical Interrupt 
+#define ST_CRITICAL_INTERRUPT			0x13	// Critical Interrupt
 
 #define STO_CI_FRONT_PANEL		0x0 	// Front Panel NMI / Diagnostic Interrupt
 #define STO_CI_BUS_TIMEOUT		0x1 	// Bus Timeout
@@ -3823,20 +3832,20 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define STO_CI_BUS_FATAL_ERROR		0xA	// Bus Fatal Error
 
 /* Sensor Type: Button / Switch */
-#define ST_BUTTON_SWITCH		0x14	// Button / Switch 
+#define ST_BUTTON_SWITCH		0x14	// Button / Switch
 
 #define STO_BS_POWER_BUTTON_PRESSED	0x0	// Power Button pressed
 #define STO_BS_SLEEP_BUTTON_PRESSED	0x1	// Sleep Button pressed
 #define STO_BS_RESET_BUTTON_PRESSED	0x2	// Reset Button pressed
-#define STO_BS_FRU_LATCH_OPEN		0x3	// FRU latch open 
+#define STO_BS_FRU_LATCH_OPEN		0x3	// FRU latch open
 	/* (Switch indicating FRU latch is in unlatched position and FRU
 	   is mechanically removable) */
-#define STO_BS_FRU_SERVICE_REQ_BUTTON	0x4	// FRU service request button 
+#define STO_BS_FRU_SERVICE_REQ_BUTTON	0x4	// FRU service request button
 						// (1 = pressed, service, e.g.
 						// removal/replacement, requested)
 
 /* Sensor Type: Module / Board */
-#define ST_MODULE_BOARD			0x15	// Module / Board 
+#define ST_MODULE_BOARD			0x15	// Module / Board
 
 /* Sensor Type: Microcontroller / Coprocessor */
 #define ST_UCONTROLLER_COPROCESSOR	0x16	// Microcontroller / Coprocessor
@@ -3851,7 +3860,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define ST_CHIP_SET			0x18	// Chip Set
 #define STO_CS_SOFT_POWER_CNTRL_FAILURE	0x00	// Soft Power Control Failure
 	/* (chip set did not respond to BMC request to change system power state).
-	   This offset is similar to offset 05h for a power unit, except that the 
+	   This offset is similar to offset 05h for a power unit, except that the
 	   power unit event is only related to a failure to power up, while this
 	   event corresponds to any system power state change directly requested
 	   via the BMC. */
@@ -3868,7 +3877,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   05h = S5 / G2 soft-off
 	   06h = S4 / S5 soft-off, particular S4 / S5 state cannot be determined
 	   07h = G3 / Mechanical Off
-	   08h = Sleeping in an S1, S2, or S3 states (used when particular 
+	   08h = Sleeping in an S1, S2, or S3 states (used when particular
 	   S1, S2, S3 state cannot be determined)
 	   09h = G1 sleeping (S1-S4 state cannot be determined)
 	   0Ah = S5 entered by override
@@ -3888,7 +3897,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   05h = S5 / G2 soft-off
 	   06h = S4 / S5 soft-off, particular S4 / S5 state cannot be determined
 	   07h = G3 / Mechanical Off
-	   08h = Sleeping in an S1, S2, or S3 states (used when particular 
+	   08h = Sleeping in an S1, S2, or S3 states (used when particular
 	   S1, S2, S3 state cannot be determined)
 	   09h = G1 sleeping (S1-S4 state cannot be determined)
 	   0Ah = S5 entered by override
@@ -3898,7 +3907,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   */
 
 /* Sensor Type: Other FRU */
-#define ST_OTHER_FRU				0x1A	// Other FRU 
+#define ST_OTHER_FRU				0x1A	// Other FRU
 
 
 /* Sensor Type: Cable / Interconnect */
@@ -3939,18 +3948,18 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 
 
 /* Sensor Type: OS Critical Stop */
-#define ST_OS_CRITICAL_STOP			0x20	// OS Critical Stop 
+#define ST_OS_CRITICAL_STOP			0x20	// OS Critical Stop
 #define STO_OCS_STOP_DURING_LOAD_INIT		0x0	// Stop during OS load / initialization
 #define STO_OCS_RUN_TIME_STOP			0x1	// Run-time Stop
 
 
 /* Sensor Type: Slot / Connector */
-#define ST_SLOT_CONNECTOR			0x21	// Slot / Connector 
+#define ST_SLOT_CONNECTOR			0x21	// Slot / Connector
 #define STO_SC_FAULT_STATUS_ASSERTED		0x0	// Fault Status asserted
 #define STO_SC_IDENTIFY_STATUS_ASSERTED		0x1	// Identify Status asserted
 #define STO_SC_SLOT_DEVICE_INSTALLED		0x2	// Slot / Connector Device installed/attached
 							// [This can include dock events]
-#define STO_SC_SLOT_READY_FOR_INSTALL		0x3	
+#define STO_SC_SLOT_READY_FOR_INSTALL		0x3
 	/* Slot / Connector Ready for Device Installation - Typically, this
 	   means that the slot power is off. The Ready for Installation,
 	   Ready for Removal, and Slot Power states can transition
@@ -3960,9 +3969,9 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 #define STO_SC_SLOT_DEVICE_REMOVAL_REQUEST	0x6	//Slot / Connector Device Removal Request
 	/* This is typically connected to a switch that becomes asserted to request
 	   removal of the device) */
-#define STO_SC_INTERLOCK_ASSERTED		0x7	// Interlock asserted 
-	/* This is typically connected to a switch that mechanically 
-	   enables/disables power to the slot, or locks the slot in the 
+#define STO_SC_INTERLOCK_ASSERTED		0x7	// Interlock asserted
+	/* This is typically connected to a switch that mechanically
+	   enables/disables power to the slot, or locks the slot in the
 	   Ready for Installation / Ready for Removal states - depending
 	   on the slot implementation. The asserted state indicates that the
 	   lock-out is active.  */
@@ -3986,24 +3995,24 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   10 SCSI (parallel)
 	   11 SATA / SAS
 	   all other = reserved
-	   
+
 	   Event Data 3
 	   7:0 Slot/Connector Number */
 
 /* Sensor Type: System ACPI Power State */
 #define ST_SYSTEM_ACPI_POWER_STATE		0x22	// System ACPI Power State
 #define STO_SAPS_S0_G0_WORKING			0x0	// S0 / G0 working
-#define STO_SAPS_S1_SLEEPING_WITH_CONTEXT	0x1	// S1 sleeping with system h/w 
+#define STO_SAPS_S1_SLEEPING_WITH_CONTEXT	0x1	// S1 sleeping with system h/w
 							// & processor context maintained
 #define STO_SAPS_S2_SLEEPING_CONTEXT_LOST	0x2	// S2 sleeping, processor context lost
 #define STO_SAPS_S3_SLEEPING_MEM_RETAINED	0x3	// S3 sleeping, processor & h/w context
 							// lost, memory retained.
 #define STO_SAPS_S4_SUSPEND_TO_DISK		0x4	// S4 non-volatile sleep / suspend-to disk
 #define STO_SAPS_S5_G2_SOFT_OFF			0x5	// S5 / G2 soft-off
-#define STO_SAPS_S4_S5_SOFT_OFF			0x6	// S4 / S5 soft-off, particular 
+#define STO_SAPS_S4_S5_SOFT_OFF			0x6	// S4 / S5 soft-off, particular
 							// S4 / S5 state cannot be determined
 #define STO_SAPS_G3_MECHANICAL_OFF		0x7	// G3 / Mechanical Off
-#define STO_SAPS_SLEEPING_UNKNOWN_S_STATE	0x8	// Sleeping in an S1, S2, or S3 states 
+#define STO_SAPS_SLEEPING_UNKNOWN_S_STATE	0x8	// Sleeping in an S1, S2, or S3 states
 	/* (used when particular S1, S2, S3 state cannot be determined) */
 #define STO_SAPS_G1_SLEEPING			0x9	// G1 sleeping (S1-S4 state cannot be determined)
 #define STO_SAPS_S5_ENTERED_BY_OVERRIDE		0xA	// S5 entered by override
@@ -4013,7 +4022,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 
 
 /* Sensor Type: Watchdog 2 */
-#define ST_WATCHDOG_2				0x23	// Watchdog 2 
+#define ST_WATCHDOG_2				0x23	// Watchdog 2
 	/* This sensor is recommended for new IPMI v1.0 and later implementations. */
 #define STO_WD2_TIMER_EXPIRED			0x0	// Timer expired, status only (no action, no interrupt)
 #define STO_WD2_HARD_RESET			0x1	// Hard Reset
@@ -4042,7 +4051,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   all other = reserved */
 
 /* Sensor Type: Platform Alert */
-#define ST_PLATFORM_ALERT			0x24	// Platform Alert 
+#define ST_PLATFORM_ALERT			0x24	// Platform Alert
 	/* This sensor can be used for returning the state and generating
 	   events associated with alerts that have been generated by the
 	   platform mgmt. subsystem */
@@ -4054,20 +4063,20 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 
 /* Sensor Type: Entity Presence */
 #define ST_ENTITY_PRESENCE			0x25	// Entity Presence
-	/* This sensor type provides a mechanism that allows a management 
+	/* This sensor type provides a mechanism that allows a management
 	   controller to direct system management software to ignore a set
 	   of sensors based on detecting that presence of an entity. This
-	   sensor type is not typically used for event generation - but to 
+	   sensor type is not typically used for event generation - but to
 	   just provide a present reading. */
-#define STO_EP_ENTITY_PRESENT			0x0	// Entity Present. 
-	/* This indicates that the Entity identified by the Entity ID for the 
-	   sensor is present. */
-#define STO_EP_ENTITY_ABSENT			0x1	// Entity Absent. 
+#define STO_EP_ENTITY_PRESENT			0x0	// Entity Present.
 	/* This indicates that the Entity identified by the Entity ID for the
-	   sensor is absent. If the entity is absent, system management 
+	   sensor is present. */
+#define STO_EP_ENTITY_ABSENT			0x1	// Entity Absent.
+	/* This indicates that the Entity identified by the Entity ID for the
+	   sensor is absent. If the entity is absent, system management
 	   software should consider all sensors associated with that Entity
 	   to be absent as well - and ignore those sensors. */
-#define STO_EP_ENTITY_DISABLED			0x2	// Entity Disabled. 
+#define STO_EP_ENTITY_DISABLED			0x2	// Entity Disabled.
 	/* The Entity is present, but has been disabled. A deassertion of
 	   this event indicates that the Entity has been enabled. */
 
@@ -4077,7 +4086,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 
 
 /* Sensor Type: LAN */
-#define ST_LAN					0x27	// LAN 
+#define ST_LAN					0x27	// LAN
 #define STO_LAN_HEARTBEAT_LOST			0x0	// LAN Heartbeat Lost
 #define STO_LAN_HEARTBEAT			0x1	// LAN Heartbeat
 
@@ -4091,7 +4100,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 
 
 /* Sensor Type: Battery */
-#define ST_BATTERY				0x29	// Battery 
+#define ST_BATTERY				0x29	// Battery
 #define STO_BAT_BATTERY_LOW			0x0	// battery low (predictive failure)
 #define STO_BAT_BATTERY_FAILED			0x1	// battery failed
 #define STO_BAT_BATTERY_PRESENT			0x2	// battery presence detected
@@ -4121,19 +4130,19 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   configuration change. */
 
 /* Sensor Type: Version Change */
-#define ST_VERSION_CHANGE			0x2B	// Version Change 
-#define STO_VC_HARDWARE_CHANGE			0x0	
+#define ST_VERSION_CHANGE			0x2B	// Version Change
+#define STO_VC_HARDWARE_CHANGE			0x0
 	/* Hardware change detected with associated Entity. Informational.
 	   This offset does not imply whether the hardware change was
 	   successful or not. Only that a change occurred. */
-#define STO_VC_SW_CHANGE			0x1	
+#define STO_VC_SW_CHANGE			0x1
 	/* Firmware or software change detected with associated Entity.
 	   Informational. Success or failure not implied. */
-#define STO_VC_HW_INCOMPATIBILITY		0x2	
+#define STO_VC_HW_INCOMPATIBILITY		0x2
 	/* Hardware incompatibility detected with associated Entity. */
-#define STO_VC_SW_INCOMPATIBILITY		0x3	
+#define STO_VC_SW_INCOMPATIBILITY		0x3
 	/* Firmware or software incompatibility detected with associated Entity. */
-#define STO_VC_UNSUPPORTED_HW			0x4	
+#define STO_VC_UNSUPPORTED_HW			0x4
 	/* Entity is of an invalid or unsupported hardware version. */
 #define STO_VC_UNSUPPORTED_SW_VERSION		0x5
 	/* Entity contains an invalid or unsupported firmware or software version. */
@@ -4178,7 +4187,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	  jumper, cable change, etc.) */
 
 /* Sensor Type: FRU State */
-#define ST_FRU_STATE				0x2C 	// FRU State 
+#define ST_FRU_STATE				0x2C 	// FRU State
 #define STO_FS_FRU_NOT_INSTALLED		0x0	// FRU Not Installed
 #define STO_FS_FRU_INACTIVE			0x1	// FRU Inactive (in standby or hot spare state)
 #define STO_FS_FRU_ACTIVATION_REQUESTED		0x2	// FRU Activation Requested
@@ -4206,7 +4215,7 @@ typedef struct exit_sdr_repository_update_mode_cmd_resp {
 	   3:0 Previous state offset value (return offset for same state
 	   as present state if previous state is unknown)
 	   All other = reserved. */
-	   
+
 /* Sensor Type: OEM Reserved C0h-FFh */
 /*
 The IPMI specification does provide for the possibility of discrete sensors with OEM-defined
@@ -4244,43 +4253,43 @@ in this range (F0h and F1h) to the hot swap and IPMB-0 sensors, respectively.
 
 typedef struct full_sensor_record {
 	/* SENSOR RECORD HEADER */
-	uchar record_id[2];	/* 1:2 Record ID - The Record ID is used by 
+	uchar record_id[2];	/* 1:2 Record ID - The Record ID is used by
 				   the Sensor Data Repository device for record
-				   organization and access. It is not related 
+				   organization and access. It is not related
 				   to the sensor ID. */
 	uchar sdr_version;	/* 3 SDR Version - Version of the Sensor Model
-				   specification that this record is compatible 
-				   with. 51h for this specification. BCD 
-				   encoded with bits 7:4 holding the Least 
+				   specification that this record is compatible
+				   with. 51h for this specification. BCD
+				   encoded with bits 7:4 holding the Least
 				   Significant digit of the revision and bits
 				   3:0 holding the Most Significant bits. */
-	uchar record_type;	/* 4 Record Type - Record Type Number = 01h, 
+	uchar record_type;	/* 4 Record Type - Record Type Number = 01h,
 				   Full Sensor Record */
-	uchar record_len;	/* 5 Record Length - Number of remaining 
+	uchar record_len;	/* 5 Record Length - Number of remaining
 				   record bytes following. */
 	/* RECORD KEY BYTES */
 #ifdef BF_MS_FIRST
 	uchar	owner_id:7,	/* 6 Sensor Owner ID - [7:1] - 7-bit I2C Slave
 				   Address, or 7-bit system software ID */
-		id_type:1;	/* [0] - 0b = ID is IPMB Slave Address, 
+		id_type:1;	/* [0] - 0b = ID is IPMB Slave Address,
 				   1b = system software ID */
 #else
 	uchar	id_type:1,
 		owner_id:7;
-		
+
 #endif
 #ifdef BF_MS_FIRST
-	uchar	channel_num:4,	/* 7 Sensor Owner LUN - 
+	uchar	channel_num:4,	/* 7 Sensor Owner LUN -
 				   [7:4] - Channel Number. The Channel Number
 				   can be, used to specify access to sensors that
-				   are located on management controllers that 
+				   are located on management controllers that
 				   are connected to the BMC via channels other
-				   than the primary IPMB. (Note: In IPMI v1.5 
+				   than the primary IPMB. (Note: In IPMI v1.5
 				   the ordering of bits 7:2 of this byte have
 				   changed to support the 4-bit channel number.) */
 		rsv1:2,		/* [3:2] - reserved */
 		sensor_owner_lun:2; /* [1:0] - Sensor Owner LUN. LUN in the Sensor
-				   Owner that is used to send/receive IPMB 
+				   Owner that is used to send/receive IPMB
 				   messages to access the sensor. 00b if system
 				   software is Sensor Owner. */
 #else
@@ -4289,7 +4298,7 @@ typedef struct full_sensor_record {
 		channel_num:4;
 #endif
 	uchar sensor_number;	/* 8 Sensor Number - Unique number identifying
-				   the sensor behind a given slave address and 
+				   the sensor behind a given slave address and
 				   LUN. Code FFh reserved. */
 	/* RECORD BODY BYTES */
 	uchar entity_id;	/* 9 Entity ID - Indicates the physical entity
@@ -4297,26 +4306,26 @@ typedef struct full_sensor_record {
 				   associated with the sensor. See Table 43-13,
 				   Entity ID Codes. */
 #ifdef BF_MS_FIRST
-	uchar	entity_type:1,	/* 10 Entity Instance - 
+	uchar	entity_type:1,	/* 10 Entity Instance -
 				   [7] - 0b = treat entity as a physical entity
 				   per Entity ID table (ENTITY_TYPE_PHYSICAL)
-				   1b = treat entity as a logical container entity. 
-				   For example, if this bit is set, and the Entity 
+				   1b = treat entity as a logical container entity.
+				   For example, if this bit is set, and the Entity
 				   ID is Processor, the container entity would
-				   be considered to represent a logical 
-				   Processor Group rather than a physical 
-				   processor. This bit is typically used in 
+				   be considered to represent a logical
+				   Processor Group rather than a physical
+				   processor. This bit is typically used in
 				   conjunction with an Entity Association record.
 				   (ENTITY_TYPE_LOGICAL) */
-		entity_instance_num:7; /* [6:0] - Instance number for entity. 
+		entity_instance_num:7; /* [6:0] - Instance number for entity.
 				   (See section 39.1, System- and Device-relative
 				   Entity Instance Values for more information)
-				   00h-5Fh system-relative Entity Instance. 
-				   The Entity Instance number must be unique 
-				   for each different entity of the same type 
+				   00h-5Fh system-relative Entity Instance.
+				   The Entity Instance number must be unique
+				   for each different entity of the same type
 				   Entity ID in the system.
 				   60h-7Fh device-relative Entity Instance.
-				   The Entity Instance number must only be 
+				   The Entity Instance number must only be
 				   unique relative to the management controller
 				   providing access to the Entity. */
 #else
@@ -4325,11 +4334,11 @@ typedef struct full_sensor_record {
 #endif
 #ifdef BF_MS_FIRST
 	uchar	rsv2:1,		/* 11 Sensor Initialization - [7] - reserved. Write as 0b. */
-		init_scanning:1,	/* [6] - Init Scanning 1b = enable scanning 
+		init_scanning:1,	/* [6] - Init Scanning 1b = enable scanning
 				   (this bit=1 implies that the sensor accepts
-				   the enable/disable scanning bit in the 
+				   the enable/disable scanning bit in the
 				   Set Sensor Event Enable command). */
-		init_events:1,	/* [5] - Init Events 1b = enable events (per 
+		init_events:1,	/* [5] - Init Events 1b = enable events (per
 				   Sensor Event Message Control Support bits
 				   in Sensor Capabilities field, and per the
 				   Event Mask fields, below). */
@@ -4338,16 +4347,16 @@ typedef struct full_sensor_record {
 		init_hysteresis:1, /* [3] - Init Hysteresis 1b = initialize sensor
 				   hysteresis (per Sensor Hysteresis Support
 				   bits in the Sensor Capabilities field, below). */
-		init_sensor_type:1, /* [2] - Init Sensor Type 1b = initialize 
+		init_sensor_type:1, /* [2] - Init Sensor Type 1b = initialize
 				   Sensor Type and Event / Reading Type code. */
 
-		/* Sensor Default (power up) State 
+		/* Sensor Default (power up) State
 		   -------------------------------
 		   Reports how this sensor comes up on device power
 		   up and hardware/cold reset.
 		   The Initialization Agent does not use this
 		   bit. This bit solely reports to software
-		   how the sensor comes prior to being 
+		   how the sensor comes prior to being
 		   initialized by the Initialization Agent. */
 		powerup_evt_generation:1, /* [1] - 0b = event generation disabled,
 				   1b = event generation enabled */
@@ -4364,29 +4373,29 @@ typedef struct full_sensor_record {
 		rsv2:1;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	ignore_sensor:1,	/* 12 Sensor Capabilities - [7] 
-				   1b = Ignore sensor if Entity is not present 
+	uchar	ignore_sensor:1,	/* 12 Sensor Capabilities - [7]
+				   1b = Ignore sensor if Entity is not present
 				   or disabled.
 				   0b = dont ignore sensor */
 		/* Sensor Auto Re-arm Support
 		   --------------------------
-		   Indicates whether the sensor requires manual rearming, or 
+		   Indicates whether the sensor requires manual rearming, or
 		   automatically rearms itself when the event clears. manual
 		   implies that the get sensor event status and rearm sensor
 		   events commands are supported */
 		sensor_manual_support:1,	/* [6] - 0b = no (manual), 1b = yes (auto) */
-				    
+
 		/* Sensor Hysteresis Support
 		   ------------------------- */
-		sensor_hysteresis_support:2, /* [5:4] 
+		sensor_hysteresis_support:2, /* [5:4]
 					00b = No hysteresis, or hysteresis built-in
 				       	      but not specified.
 					01b = hysteresis is readable.
 					10b = hysteresis is readable and settable.
-					11b = Fixed, unreadable, hysteresis. 
+					11b = Fixed, unreadable, hysteresis.
 					      Hysteresis fields values implemented
 					      in the sensor. */
-					
+
 		/* Sensor Threshold Access Support
 		   ------------------------------- */
 		sensor_threshold_access:2,	/* [3:2]
@@ -4394,7 +4403,7 @@ typedef struct full_sensor_record {
 					01b = thresholds are readable, per Reading
 				              Mask, below.
 					10b = thresholds are readable and settable
-				              per Reading Mask and Settable Threshold 
+				              per Reading Mask and Settable Threshold
 					      Mask, respectively.
 					11b = Fixed, unreadable, thresholds. Which
 				              thresholds are supported is
@@ -4402,13 +4411,13 @@ typedef struct full_sensor_record {
 					      threshold value fields report the
 					      values that are hard-coded in the
 					      sensor. */
-				     
+
 		/* Sensor Event Message Control Support
-		   ------------------------------------ 
-		   Indicates whether this sensor generates Event Messages, and 
+		   ------------------------------------
+		   Indicates whether this sensor generates Event Messages, and
 		   if so, what type of Event Message control is offered. */
-		event_msg_control:2;	/* [1:0] - 
-				   00b = per threshold/discrete-state event 
+		event_msg_control:2;	/* [1:0] -
+				   00b = per threshold/discrete-state event
 				   enable/disable control (implies that entire
 				   sensor and global disable are also supported)
 				   01b = entire sensor only (implies that global
@@ -4422,29 +4431,29 @@ typedef struct full_sensor_record {
 		sensor_manual_support:1,
 		ignore_sensor:1;
 #endif
-	uchar sensor_type;	/* 13 Sensor Type - Code representing the sensor 
+	uchar sensor_type;	/* 13 Sensor Type - Code representing the sensor
 				   type. From Table 42-3, Sensor Type Codes.
 				   E.g. Temperature, Voltage, Processor, etc. */
-	uchar event_type_code;	/* 14 Event / Reading Type Code - Event/Reading 
+	uchar event_type_code;	/* 14 Event / Reading Type Code - Event/Reading
 				   Type Code. From Table 42-1, Event/Reading
 				   Type Code Ranges. */
 	unsigned short event_mask;	/* 15 & 16 Assertion Event Mask / Lower
 				   Threshold Reading Mask - This field reports
-				   the assertion event generation or threshold 
+				   the assertion event generation or threshold
 				   event generation capabilities for a discrete
-				   or threshold-based sensor, respectively. 
+				   or threshold-based sensor, respectively.
 				   This field is also used by the init agent to
 				   enable assertion event generation when the Init
-				   Events bit in the Sensor Capabilities field 
+				   Events bit in the Sensor Capabilities field
 				   is set and the Sensor Event Message Control
-				   Support field indicates that the sensor has 
+				   Support field indicates that the sensor has
 				   per threshold/discrete state event enable
 				   control. */
 	/* Assertion Event Mask (for non- threshold-based sensors)
 	   -------------------------------------------------------
 	   The Event Mask bytes are a bit mask that specifies support for 15 successive
 	   events starting with the event specified by Event/Reading Type Code. LS byte
-	   first. 
+	   first.
 	   [15] - reserved. Write as 0.
 	   [14:0] - Event offsets 14 through 0, respectively.
 	   1b = assertion event can be generated by this sensor
@@ -4471,7 +4480,7 @@ typedef struct full_sensor_record {
 #define AE_LOWER_NON_RECOVERABLE_THRESHOLD_COMPARISON_RETURNED	0x4000	/* bit 14 */
 #define AE_LOWER_CRITICAL_THRESHOLD_IS_COMPARISON_RETURNED	0x2000  /* bit 13 */
 #define AE_LOWER_NON_CRITICAL_THRESHOLD_IS_COMPARISON_RETURNED	0x1000  /* bit 12 */
-	
+
 #define AE_UPPER_NON_RECOVERABLE_GOING_HIGH_SUPPORTED		0x0800  /* bit 11 */
 #define AE_UPPER_NON_RECOVERABLE_GOING_LOW_SUPPORTED		0x0400  /* bit 10 */
 
@@ -4483,7 +4492,7 @@ typedef struct full_sensor_record {
 
 #define AE_LOWER_NON_RECOVERABLE_GOING_HIGH_SUPPORTED		0x0020	/* bit 5 */
 #define AE_LOWER_NON_RECOVERABLE_GOING_LOW_SUPPORTED		0x0010
-	
+
 #define AE_LOWER_CRITICAL_GOING_HIGH_SUPPORTED			0x0008	/* bit 3 */
 #define AE_LOWER_CRITICAL_GOING_LOW_SUPPORTED			0x0004
 
@@ -4492,7 +4501,7 @@ typedef struct full_sensor_record {
 
 	/* Deassertion Event Mask / Upper Threshold Reading Mask
 	   ----------------------------------------------------- */
-	unsigned short deassertion_event_mask;	/* 17 & 18 - Deassertion Event Mask 
+	unsigned short deassertion_event_mask;	/* 17 & 18 - Deassertion Event Mask
 					   (for non- threshold-based sensors)
 	The Event Mask bytes are a bit mask that specifies support for 15 successive
 	events starting with the event specified by Event/Reading Type Code. LS byte
@@ -4522,11 +4531,11 @@ typedef struct full_sensor_record {
 	[0] - 1b = deassertion event for lower non-critical going low supported
 	*/
 
-	/* Discrete Reading Mask / Settable Threshold Mask, Readable Threshold Mask 
+	/* Discrete Reading Mask / Settable Threshold Mask, Readable Threshold Mask
 	   ------------------------------------------------------------------------ */
-	unsigned short reading_mask;	/* 19 & 20 - Reading Mask (for non- threshold 
-				   based sensors). Indicates what discrete 
-	readings can be returned by this sensor, or, for threshold based 
+	unsigned short reading_mask;	/* 19 & 20 - Reading Mask (for non- threshold
+				   based sensors). Indicates what discrete
+	readings can be returned by this sensor, or, for threshold based
 	sensors, this indicates which thresholds are settable and which are
 	readable. The Reading Mask bytes are a bit mask that specifies support for 15
 	successive states starting with the value from Table 36-1, Event/Reading Type
@@ -4534,7 +4543,7 @@ typedef struct full_sensor_record {
 	[15] - reserved. Write as 0b
 	[14:0] - state bits 0 through 14.
 	1b = discrete state can be returned by this sensor.
-	
+
 	Settable Threshold Mask (for threshold-based sensors)
 	-----------------------------------------------------
 	Indicates which thresholds are settable via the Set Sensor Thresholds.
@@ -4547,7 +4556,7 @@ typedef struct full_sensor_record {
 	[10] - 1b = Lower non-recoverable threshold is settable
 	[9] - 1b = Lower critical threshold is settable
 	[8] - 1b = Lower non-critical threshold is settable
-	
+
 	Readable Threshold Mask (for threshold-based sensors)
 	-----------------------------------------------------
 	Indicates which thresholds are readable via the Get Sensor Thresholds
@@ -4560,11 +4569,11 @@ typedef struct full_sensor_record {
 	[1] - 1b = Lower critical threshold is readable
 	[0] - 1b = Lower non-critical threshold is readable */
 #ifdef BF_MS_FIRST
-	uchar	analog_data_format:2,	/* 21 Sensor Units  
+	uchar	analog_data_format:2,	/* 21 Sensor Units
 					   [7:6] - Analog (numeric) Data Format.
 					   Specifies threshold and analog reading,
 					   if analog reading provided. If neither
-					   thresholds nor analog reading are 
+					   thresholds nor analog reading are
 					   provided, this field should be written
 					   as 00h.
 					   00b = unsigned
@@ -4592,29 +4601,29 @@ typedef struct full_sensor_record {
 		rate_unit:3,
 		analog_data_format:2;
 #endif
-	uchar sensor_units2;	/* 22 Sensor Units 2 - Base Unit  
+	uchar sensor_units2;	/* 22 Sensor Units 2 - Base Unit
 				   [7:0] - Units Type code: See Table 43-15,
 				   Sensor Unit Type Codes. */
 	uchar sensor_units3;	/* 23 Sensor Units 3 - Modifier Unit
 				   [7:0] - Units Type code, 00h if unused. */
-	uchar linearization;	/* 24 Linearization - 
+	uchar linearization;	/* 24 Linearization -
 				   [7] - reserved
-				   [6:0] - enum (linear, ln, log10, log2, e, 
-				   exp10, exp2, 1/x, sqr(x), cube(x), sqrt(x), 
-				   cuberoot(x) ) - 
-				   70h = non-linear. 
+				   [6:0] - enum (linear, ln, log10, log2, e,
+				   exp10, exp2, 1/x, sqr(x), cube(x), sqrt(x),
+				   cuberoot(x) ) -
+				   70h = non-linear.
 				   71h-7Fh = non-linear, OEM defined. */
-	uchar M;		/* 25 M 
-				   [7:0] - M: LS 8 bits [2s complement, 
+	uchar M;		/* 25 M
+				   [7:0] - M: LS 8 bits [2s complement,
 				   signed, 10 bit M value.] */
 	uchar M_tolerance;	/* 26 M, Tolerance -
 				   [7:6] - M: MS 2 bits
-				   [5:0] - Tolerance: 6 bits, unsigned 
+				   [5:0] - Tolerance: 6 bits, unsigned
 				   (Tolerance in +/-  raw counts) */
-	uchar B;		/* 27 B 
-				   [7:0] - B: LS 8 bits [2s complement, 
+	uchar B;		/* 27 B
+				   [7:0] - B: LS 8 bits [2s complement,
 				   signed, 10-bit B value.] */
-	uchar B_accuracy;	/* 28 B, Accuracy 
+	uchar B_accuracy;	/* 28 B, Accuracy
 				   [7:6] - B: MS 2 bits Unsigned, 10-bit
 				   Basic Sensor Accuracy in 1/100 percent
 				   scaled up by unsigned Accuracy exponent:
@@ -4626,33 +4635,33 @@ typedef struct full_sensor_record {
 				   the sensor is monitoring an input or
 				   output relative to the given Entity. E.g. if
 				   the sensor is monitoring a current, this can
-				   be used to specify whether it is an input 
+				   be used to specify whether it is an input
 				   voltage or an output voltage.
 				   00b = unspecified / not applicable
 				   01b = input
 				   10b = output
 				   11b = reserved */
 #ifdef BF_MS_FIRST
-	uchar R_exp:4,		/* 30 R exp, B exp 
-				   [7:4] - R (result) exponent 4 bits, 2s 
+	uchar R_exp:4,		/* 30 R exp, B exp
+				   [7:4] - R (result) exponent 4 bits, 2s
 				   complement, signed */
 	      B_exp:4;		/* [3:0] - B exponent 4 bits, 2s complement, signed */
 #else
 	uchar B_exp:4,
 	      R_exp:4;
 #endif
-	uchar analog_characteristic_flags;	/* 31 Analog characteristic flags 
+	uchar analog_characteristic_flags;	/* 31 Analog characteristic flags
 				   [7:3] - reserved
-				   [2] - normal min specified 1b = yes, 
+				   [2] - normal min specified 1b = yes,
 				         0b = normal min field unspecified
-				   [1] - normal max specified 1b = yes, 
+				   [1] - normal max specified 1b = yes,
 				         0b = normal max field unspecified
-				   [0] - nominal reading specified 1b = yes, 
+				   [0] - nominal reading specified 1b = yes,
 				         0b = nominal reading field unspecified */
-	uchar nominal_reading;	/* 32 Nominal Reading - Given as a raw value. 
+	uchar nominal_reading;	/* 32 Nominal Reading - Given as a raw value.
 				   Must be converted to units-based value using
-				   the y=Mx+B formula. 1s or 2s complement 
-				   signed or unsigned per flag bits in Sensor 
+				   the y=Mx+B formula. 1s or 2s complement
+				   signed or unsigned per flag bits in Sensor
 				   Units 1. */
 	uchar normal_maximum;	/* 33 Normal Maximum - Given as a raw value.
 				   Must be converted to units-based value using
@@ -4665,9 +4674,9 @@ typedef struct full_sensor_record {
 				   signed bit in Sensor Units 1. */
 	uchar sensor_maximum_reading;	/* 35 Sensor Maximum Reading - Given as
 				   a raw value. Must be converted to units-based
-				   value based using the y=Mx+B formula. 
+				   value based using the y=Mx+B formula.
 				   Signed or unsigned per signed bit in sensor
-				   flags. Normally FFh for an 8-bit unsigned 
+				   flags. Normally FFh for an 8-bit unsigned
 				   sensor, but can be a lesser value if the sensor
 				   has a restricted range. If max. reading cannot
 				   be pre-specified this value should be set
@@ -4679,15 +4688,15 @@ typedef struct full_sensor_record {
 				   units-based value using the y=Mx+B formula.
 				   Signed or unsigned per signed bit in sensor
 				   flags. If min. reading cannot be pre-specified
-				   this value should be set to min value, based 
-				   on data format, (e.g. 00h for an unsigned 
+				   this value should be set to min value, based
+				   on data format, (e.g. 00h for an unsigned
 				   sensor, 80h for 2s complement, etc.) */
 	uchar upper_non_recoverable_threshold;
-				/* 37 Upper non-recoverable Threshold - Use of 
-				   this field is based on Settable Threshold 
-				   Mask. If the corresponding bit is set in the 
+				/* 37 Upper non-recoverable Threshold - Use of
+				   this field is based on Settable Threshold
+				   Mask. If the corresponding bit is set in the
 				   mask byte and the Init Sensor Thresholds
-				   bit is also set, then this value will be 
+				   bit is also set, then this value will be
 				   used for initializing the sensor threshold.
 				   Otherwise, this value should be ignored.
 				   The thresholds are given as raw values that
@@ -4695,30 +4704,30 @@ typedef struct full_sensor_record {
 				   the y=Mx+B formula. */
 	uchar upper_critical_threshold;
 				/* 38 Upper critical Threshold - Use of this
-				   field is based on Settable Threshold Mask, 
+				   field is based on Settable Threshold Mask,
 				   above */
 	uchar upper_non_critical_threshold;
-				/* 39 Upper non-critical Threshold - Use of 
+				/* 39 Upper non-critical Threshold - Use of
 				   this field is based on Settable Threshold Mask,
 				   above */
-	uchar lower_non_recoverable_threshold;	
+	uchar lower_non_recoverable_threshold;
 				/* 40 Lower non-recoverable Threshold - Use of
 				   this field is based on Settable Threshold
 				   Mask, above */
 	uchar lower_critical_threshold;
-				/* 41 Lower critical Threshold - Use of this 
+				/* 41 Lower critical Threshold - Use of this
 				   field is based on Settable Threshold Mask,
 				   above */
 	uchar lower_non_critical_threshold;
-				/* 42 Lower non-critical Threshold - Use of 
-				   this field is based on Settable Threshold 
+				/* 42 Lower non-critical Threshold - Use of
+				   this field is based on Settable Threshold
 				   Mask, above */
 	uchar positive_going_threshold_hysteresis_value;
 				/* 43 Positive-going Threshold Hysteresis value
-				   Positive hysteresis is defined as the 
+				   Positive hysteresis is defined as the
 				   unsigned number of counts that are subtracted
-				   from the raw threshold values to create the 
-				   re-arm point for all positive-going 
+				   from the raw threshold values to create the
+				   re-arm point for all positive-going
 				   thresholds on the sensor. 0 indicates that
 				   there is no hysteresis on positive-going
 				   thresholds for this sensor. Hysteresis values
@@ -4727,9 +4736,9 @@ typedef struct full_sensor_record {
 				   be converted using the y=Mx+B formula. */
 	uchar negative_going_threshold_hysteresis_value;
 				/* 44 Negative-going Threshold Hysteresis value
-				   Negative hysteresis is defined as the 
+				   Negative hysteresis is defined as the
 				   unsigned number of counts that are added
-				   to the raw threshold value to create the 
+				   to the raw threshold value to create the
 				   re-arm point for all negative-going
 				   thresholds on the sensor. 0 indicates that
 				   there is no hysteresis on negative-going
@@ -4741,20 +4750,20 @@ typedef struct full_sensor_record {
 	uchar   id_str_typ_len;
 //	uchar	id_string_type:2,
 				/* 48 ID String Type/Length Code - Sensor ID
-				   String Type/Length Code, per Section 43.15, 
+				   String Type/Length Code, per Section 43.15,
 				   Type/Length Byte Format. (copied here)
 				   [7:6] 00 = Unicode
 				         01 = BCD plus (see below)
 				         10 = 6-bit ASCII, packed
-				         11 = 8-bit ASCII + Latin 1. 
-				   At least two bytes of data must be present 
+				         11 = 8-bit ASCII + Latin 1.
+				   At least two bytes of data must be present
 				   when this type is used. Therefore, the
 				   length (number of data bytes) will be >1 if
 				   data is present, 0 if data is not present.
 				   A length of 1 is reserved. */
 //		rsv3:1,		/* [5] reserved. */
 //		id_string_length:5; /* [4:0] length of following data, in characters.
-				   /*00000b indicates none following. 
+				   /*00000b indicates none following.
 				   11111b = reserved. */
 #else
 	uchar   id_str_typ_len;
@@ -4764,10 +4773,10 @@ typedef struct full_sensor_record {
 #endif
 	uchar id_string_bytes[16];
 				/* 49:+N ID String Bytes - Sensor ID String bytes.
-				   Only present if non-zero length in Type/Length 
-				   field. 16 bytes, maximum. Note: the SDR can 
+				   Only present if non-zero length in Type/Length
+				   field. 16 bytes, maximum. Note: the SDR can
 				   be implemented as a fixed length record.
-				   Bytes beyond the ID string bytes are 
+				   Bytes beyond the ID string bytes are
 				   unspecified and should be ignored. */
 } FULL_SENSOR_RECORD;
 
@@ -4775,14 +4784,14 @@ typedef struct full_sensor_record {
 
 typedef struct compact_sensor_record {
 	 // SENSOR RECORD HEADER
- 	uchar	record_id[2];	/* The Record ID is used by the Sensor Data Repository 
-				   device for record organization and access. This may 
-				   not actually be stored, but may be calculated when 
+ 	uchar	record_id[2];	/* The Record ID is used by the Sensor Data Repository
+				   device for record organization and access. This may
+				   not actually be stored, but may be calculated when
 				   records are accessed.  It is not related to the sensor ID. */
 	uchar	sdr_version;	/* SDR Version. Version of the Sensor Model specification
-				   that this record is compatible with. 51h for this 
+				   that this record is compatible with. 51h for this
 				   specification. This is BCD encoded with bits 7:4 holding
-				   the Least Significant digit of the revision and 
+				   the Least Significant digit of the revision and
 				   bits 3:0 holding the Most Significant bits. E.g. 51h
 				   corresponds to 1.5. */
 	uchar	record_type;	/* Record Type Number = 02h, Compact Sensor Record */
@@ -4792,26 +4801,26 @@ typedef struct compact_sensor_record {
 #ifdef BF_MS_FIRST
 	uchar	owner_id:7,	/* 6 Sensor Owner ID - [7:1] - 7-bit I2C Slave
 				   Address, or 7-bit system software ID */
-		id_type:1;	/* [0] - 0b = ID is IPMB Slave Address, 
+		id_type:1;	/* [0] - 0b = ID is IPMB Slave Address,
 				   1b = system software ID */
 #else
 	uchar	id_type:1,
 		owner_id:7;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	channel_num:4,	/* 7 Sensor Owner LUN - 
+	uchar	channel_num:4,	/* 7 Sensor Owner LUN -
 				   [7:4] - Channel Number. The Channel Number
 				   can be, used to specify access to sensors that
-				   are located on management controllers that 
+				   are located on management controllers that
 				   are connected to the BMC via channels other
-				   than the primary IPMB. (Note: In IPMI v1.5 
+				   than the primary IPMB. (Note: In IPMI v1.5
 				   the ordering of bits 7:2 of this byte have
 				   changed to support the 4-bit channel number.) */
 		fru_owner_lun:2,/* [3:2] - FRU Inventory Device Owner LUN. LUN
 				   for Write/Read FRU commands to access FRU
 				   information. 00b otherwise. */
 		sensor_owner_lun:2; /* [1:0] - Sensor Owner LUN. LUN in the Sensor
-				   Owner that is used to send/receive IPMB 
+				   Owner that is used to send/receive IPMB
 				   messages to access the sensor. 00b if system
 				   software is Sensor Owner. */
 #else
@@ -4819,8 +4828,8 @@ typedef struct compact_sensor_record {
 		fru_owner_lun:2,
 		channel_num:4;
 #endif
-	uchar	sensor_number;	/* Sensor Number - Unique number identifying 
-				   the sensor behind the given slave address 
+	uchar	sensor_number;	/* Sensor Number - Unique number identifying
+				   the sensor behind the given slave address
 				   and LUN. Code FFh reserved. */
 	// RECORD BODY BYTES
 	uchar entity_id;	/* 9 Entity ID - Indicates the physical entity
@@ -4828,26 +4837,26 @@ typedef struct compact_sensor_record {
 				   associated with the sensor. See Table 43-13,
 				   Entity ID Codes. */
 #ifdef BF_MS_FIRST
-	uchar	entity_type:1,	/* 10 Entity Instance - 
+	uchar	entity_type:1,	/* 10 Entity Instance -
 				   [7] - 0b = treat entity as a physical entity
 				   per Entity ID table (ENTITY_TYPE_PHYSICAL)
-				   1b = treat entity as a logical container entity. 
-				   For example, if this bit is set, and the Entity 
+				   1b = treat entity as a logical container entity.
+				   For example, if this bit is set, and the Entity
 				   ID is Processor, the container entity would
-				   be considered to represent a logical 
-				   Processor Group rather than a physical 
-				   processor. This bit is typically used in 
+				   be considered to represent a logical
+				   Processor Group rather than a physical
+				   processor. This bit is typically used in
 				   conjunction with an Entity Association record.
 				   (ENTITY_TYPE_LOGICAL) */
-		entity_instance_num:7; /* [6:0] - Instance number for entity. 
+		entity_instance_num:7; /* [6:0] - Instance number for entity.
 				   (See section 39.1, System- and Device-relative
 				   Entity Instance Values for more information)
-				   00h-5Fh system-relative Entity Instance. 
-				   The Entity Instance number must be unique 
-				   for each different entity of the same type 
+				   00h-5Fh system-relative Entity Instance.
+				   The Entity Instance number must be unique
+				   for each different entity of the same type
 				   Entity ID in the system.
 				   60h-7Fh device-relative Entity Instance.
-				   The Entity Instance number must only be 
+				   The Entity Instance number must only be
 				   unique relative to the management controller
 				   providing access to the Entity. */
 #else
@@ -4857,11 +4866,11 @@ typedef struct compact_sensor_record {
 
 #ifdef BF_MS_FIRST
 	uchar	rsv1:1,		/* 11 Sensor Initialization - [7] - reserved. Write as 0b. */
-		init_scanning:1,	/* [6] - Init Scanning 1b = enable scanning 
+		init_scanning:1,	/* [6] - Init Scanning 1b = enable scanning
 				   (this bit=1 implies that the sensor accepts
-				   the enable/disable scanning bit in the 
+				   the enable/disable scanning bit in the
 				   Set Sensor Event Enable command). */
-		init_events:1,	/* [5] - Init Events 1b = enable events (per 
+		init_events:1,	/* [5] - Init Events 1b = enable events (per
 				   Sensor Event Message Control Support bits
 				   in Sensor Capabilities field, and per the
 				   Event Mask fields, below). */
@@ -4869,16 +4878,16 @@ typedef struct compact_sensor_record {
 		init_hysteresis:1, /* [3] - Init Hysteresis 1b = initialize sensor
 				   hysteresis (per Sensor Hysteresis Support
 				   bits in the Sensor Capabilities field, below). */
-		init_sensor_type:1, /* [2] - Init Sensor Type 1b = initialize 
+		init_sensor_type:1, /* [2] - Init Sensor Type 1b = initialize
 				   Sensor Type and Event / Reading Type code. */
 
-		/* Sensor Default (power up) State 
+		/* Sensor Default (power up) State
 		   -------------------------------
 		   Reports how this sensor comes up on device power
 		   up and hardware/cold reset.
 		   The Initialization Agent does not use this
 		   bit. This bit solely reports to software
-		   how the sensor comes prior to being 
+		   how the sensor comes prior to being
 		   initialized by the Initialization Agent. */
 		powerup_evt_generation:1, /* [1] - 0b = event generation disabled,
 					     1b = event generation enabled */
@@ -4895,29 +4904,29 @@ typedef struct compact_sensor_record {
 		rsv1:1;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	ignore_sensor:1,	/* 12 Sensor Capabilities - [7] 
-				   1b = Ignore sensor if Entity is not present 
+	uchar	ignore_sensor:1,	/* 12 Sensor Capabilities - [7]
+				   1b = Ignore sensor if Entity is not present
 				   or disabled.
 				   0b = dont ignore sensor */
 		/* Sensor Auto Re-arm Support
 		   --------------------------
-		   Indicates whether the sensor requires manual rearming, or 
+		   Indicates whether the sensor requires manual rearming, or
 		   automatically rearms itself when the event clears. manual
 		   implies that the get sensor event status and rearm sensor
 		   events commands are supported */
 		sensor_manual_support:1,	/* [6] - 0b = no (manual), 1b = yes (auto) */
-				    
+
 		/* Sensor Hysteresis Support
 		   ------------------------- */
-		sensor_hysteresis_support:2, /* [5:4] 
+		sensor_hysteresis_support:2, /* [5:4]
 					00b = No hysteresis, or hysteresis built-in
 				       	      but not specified.
 					01b = hysteresis is readable.
 					10b = hysteresis is readable and settable.
-					11b = Fixed, unreadable, hysteresis. 
+					11b = Fixed, unreadable, hysteresis.
 					      Hysteresis fields values implemented
 					      in the sensor. */
-					
+
 		/* Sensor Threshold Access Support
 		   ------------------------------- */
 		sensor_threshold_access:2,	/* [3:2]
@@ -4925,7 +4934,7 @@ typedef struct compact_sensor_record {
 					01b = thresholds are readable, per Reading
 				              Mask, below.
 					10b = thresholds are readable and settable
-				              per Reading Mask and Settable Threshold 
+				              per Reading Mask and Settable Threshold
 					      Mask, respectively.
 					11b = Fixed, unreadable, thresholds. Which
 				              thresholds are supported is
@@ -4933,13 +4942,13 @@ typedef struct compact_sensor_record {
 					      threshold value fields report the
 					      values that are hard-coded in the
 					      sensor. */
-				     
+
 		/* Sensor Event Message Control Support
-		   ------------------------------------ 
-		   Indicates whether this sensor generates Event Messages, and 
+		   ------------------------------------
+		   Indicates whether this sensor generates Event Messages, and
 		   if so, what type of Event Message control is offered. */
-		event_msg_control:2;	/* [1:0] - 
-				   00b = per threshold/discrete-state event 
+		event_msg_control:2;	/* [1:0] -
+				   00b = per threshold/discrete-state event
 				   enable/disable control (implies that entire
 				   sensor and global disable are also supported)
 				   01b = entire sensor only (implies that global
@@ -4954,29 +4963,29 @@ typedef struct compact_sensor_record {
 		ignore_sensor:1;
 #endif
 
-	uchar sensor_type;	/* 13 Sensor Type - Code representing the sensor 
+	uchar sensor_type;	/* 13 Sensor Type - Code representing the sensor
 				   type. From Table 42-3, Sensor Type Codes.
 				   E.g. Temperature, Voltage, Processor, etc. */
-	uchar event_type_code;	/* 14 Event / Reading Type Code - Event/Reading 
+	uchar event_type_code;	/* 14 Event / Reading Type Code - Event/Reading
 				   Type Code. From Table 42-1, Event/Reading
 				   Type Code Ranges. */
 	short event_mask;	/* 15 & 16 Assertion Event Mask / Lower
 				   Threshold Reading Mask - This field reports
-				   the assertion event generation or threshold 
+				   the assertion event generation or threshold
 				   event generation capabilities for a discrete
-				   or threshold-based sensor, respectively. 
+				   or threshold-based sensor, respectively.
 				   This field is also used by the init agent to
 				   enable assertion event generation when the Init
-				   Events bit in the Sensor Capabilities field 
+				   Events bit in the Sensor Capabilities field
 				   is set and the Sensor Event Message Control
-				   Support field indicates that the sensor has 
+				   Support field indicates that the sensor has
 				   per threshold/discrete state event enable
 				   control. */
 	/* Assertion Event Mask (for non- threshold-based sensors)
 	   -------------------------------------------------------
 	   The Event Mask bytes are a bit mask that specifies support for 15 successive
 	   events starting with the event specified by Event/Reading Type Code. LS byte
-	   first. 
+	   first.
 	   [15] - reserved. Write as 0.
 	   [14:0] - Event offsets 14 through 0, respectively.
 	   1b = assertion event can be generated by this sensor
@@ -5002,7 +5011,7 @@ typedef struct compact_sensor_record {
 	   [0] - 1b = assertion event for lower non-critical going low supported */
 	/* Deassertion Event Mask / Upper Threshold Reading Mask
 	   ----------------------------------------------------- */
-	short deassertion_event_mask;	/* 17 & 18 - Deassertion Event Mask 
+	short deassertion_event_mask;	/* 17 & 18 - Deassertion Event Mask
 					   (for non- threshold-based sensors)
 	The Event Mask bytes are a bit mask that specifies support for 15 successive
 	events starting with the event specified by Event/Reading Type Code. LS byte
@@ -5032,11 +5041,11 @@ typedef struct compact_sensor_record {
 	[0] - 1b = deassertion event for lower non-critical going low supported
 	*/
 
-	/* Discrete Reading Mask / Settable Threshold Mask, Readable Threshold Mask 
+	/* Discrete Reading Mask / Settable Threshold Mask, Readable Threshold Mask
 	   ------------------------------------------------------------------------ */
-	short reading_mask;	/* 19 & 20 - Reading Mask (for non- threshold 
-				   based sensors). Indicates what discrete 
-	readings can be returned by this sensor, or, for threshold based 
+	short reading_mask;	/* 19 & 20 - Reading Mask (for non- threshold
+				   based sensors). Indicates what discrete
+	readings can be returned by this sensor, or, for threshold based
 	sensors, this indicates which thresholds are settable and which are
 	readable. The Reading Mask bytes are a bit mask that specifies support for 15
 	successive states starting with the value from Table 36-1, Event/Reading Type
@@ -5044,7 +5053,7 @@ typedef struct compact_sensor_record {
 	[15] - reserved. Write as 0b
 	[14:0] - state bits 0 through 14.
 	1b = discrete state can be returned by this sensor.
-	
+
 	Settable Threshold Mask (for threshold-based sensors)
 	-----------------------------------------------------
 	Indicates which thresholds are settable via the Set Sensor Thresholds.
@@ -5057,7 +5066,7 @@ typedef struct compact_sensor_record {
 	[10] - 1b = Lower non-recoverable threshold is settable
 	[9] - 1b = Lower critical threshold is settable
 	[8] - 1b = Lower non-critical threshold is settable
-	
+
 	Readable Threshold Mask (for threshold-based sensors)
 	-----------------------------------------------------
 	Indicates which thresholds are readable via the Get Sensor Thresholds
@@ -5092,7 +5101,7 @@ typedef struct compact_sensor_record {
 		rate_unit:3,
 		rsv3:2;
 #endif
-	uchar	sensor_units2;	/* 22 Sensor Units 2 - Base Unit  
+	uchar	sensor_units2;	/* 22 Sensor Units 2 - Base Unit
 				   [7:0] - Units Type code: See Table 43-15,
 				   Sensor Unit Type Codes. */
 	uchar	sensor_units3;	/* 23 Sensor Units 3 - Modifier Unit
@@ -5111,15 +5120,15 @@ typedef struct compact_sensor_record {
 		id_str_mod_type:2, /* [5:4] - ID String Instance Modifier Type (The
 			instance modifier is a character(s) that software can
 		       	append to the end of the ID String. This field selects
-		       	whether the appended character(s) will be numeric or 
+		       	whether the appended character(s) will be numeric or
 			alpha. The Instance Modified Offset field, below, selects
 		       	the starting value for the character.)
 			  00b = numeric
 			  01b = alpha */
 		share_count:4;	/* [3:0] - Share count (number of sensors sharing
-			this record). Sensor numbers sharing this record are 
+			this record). Sensor numbers sharing this record are
 			sequential starting with the sensor number specified by
-		       	the Sensor Number field for this record. E.g. if the 
+		       	the Sensor Number field for this record. E.g. if the
 			starting sensor number was 10, and the share count was 3,
 		       	then sensors 10, 11, and 12 would share this record. */
 #else
@@ -5132,8 +5141,8 @@ typedef struct compact_sensor_record {
 	uchar	entity_inst_same:1,	/* [7] - 0b = Entity Instance same for all shared records
 					   1b = Entity Instance increments for each shared record */
 		id_str_mod_offset:7;	/* [6:0] - ID String Instance Modifier Offset
-			Multiple Discrete sensors can share the same sensor data 
-			record. The ID String Instance Modifier and Modifier 
+			Multiple Discrete sensors can share the same sensor data
+			record. The ID String Instance Modifier and Modifier
 			Offset are used to modify the Sensor ID String as follows:
 			Suppose sensor ID is Temp  for Temperature Sensor,
 		       	share count = 3, ID string instance modifier = numeric,
@@ -5142,14 +5151,14 @@ typedef struct compact_sensor_record {
 			If the modifier = alpha, offset=0 corresponds to A,
 		       	offset=25 corresponds to Z, and offset = 26 corresponds
 		       	to AA, thus, for offset=26 the sensors could be identified
-			as: Temp AA, Temp AB, Temp AC (alpha characters are 
+			as: Temp AA, Temp AB, Temp AC (alpha characters are
 			considered to be base 26 for ASCII) */
 #else
 	uchar	id_str_mod_offset:7,
 		entity_inst_same:1;
 #endif
 	uchar	positive_hysteresis;	/* 26 Positive-going Threshold Hysteresis value
-			Positive hysteresis is defined as the unsigned number of 
+			Positive hysteresis is defined as the unsigned number of
 			counts that are subtracted from the raw threshold values
 		       	to create the re-arm point for all positive-going thresholds
 		       	on the sensor. 0 indicates that there is no hysteresis on
@@ -5169,37 +5178,37 @@ typedef struct compact_sensor_record {
 	uchar 	rsv5;		/* 29 reserved. Write as 00h. */
 	uchar	rsv6;		/* 30 reserved. Write as 00h. */
 	uchar	oem;	/* 31 Reserved for OEM use. */
-	uchar	id_str_typ_len;	/* 32 Sensor ID String Type/Length Code, per 
+	uchar	id_str_typ_len;	/* 32 Sensor ID String Type/Length Code, per
 				   Section 43.15, Type/Length Byte Format. */
 	uchar	sensor_id_str[16];	/* 33:+N Sensor ID String bytes. Only present
 			if non-zero length in Type/Length field. 16 bytes, maximum. */
 } COMPACT_SENSOR_RECORD;
 
-	
+
 /*
  * SDR Type 12h - Management Controller Device Locator Record
  */
 typedef struct mgmt_ctrl_dev_locator_record {
 	// RECORD HEADER
-	uchar	record_id[2];	/* The Record ID is used by the Sensor Data Repository 
-				   device for record organization and access. This may 
-				   not actually be stored, but may be calculated when 
+	uchar	record_id[2];	/* The Record ID is used by the Sensor Data Repository
+				   device for record organization and access. This may
+				   not actually be stored, but may be calculated when
 				   records are accessed. */
 	uchar	sdr_version;	/* SDR Version. Version of the Sensor Model specification
-				   that this record is compatible with. 51h for this 
+				   that this record is compatible with. 51h for this
 				   specification. This is BCD encoded with bits 7:4 holding
-				   the Least Significant digit of the revision and 
+				   the Least Significant digit of the revision and
 				   bits 3:0 holding the Most Significant bits. E.g. 51h
 				   corresponds to 1.5. */
 	uchar	record_type;	/* Record Type Number = 12h, Management Controller Locator */
 	uchar	record_len;	/* Record Length. Number of remaining record bytes following. */
 	// RECORD KEY BYTES
-	uchar	dev_slave_addr;	/* Device Slave Address. 
+	uchar	dev_slave_addr;	/* Device Slave Address.
 				   [7:1] - 7-bit I2C Slave Address of device on channel.
 				   [0] - reserved. */
 	uchar	ch_num;		/* Channel Number.
 				   [7:4] - reserved
-				   [3:0] - Channel number for the channel that the 
+				   [3:0] - Channel number for the channel that the
 				   management controller is on. Use 0h for the primary BMC.
 				   (New byte for IPMI v1.5. Note this addition causes some
 				   of the following byte offsets to be pushed down when compared
@@ -5211,9 +5220,9 @@ typedef struct mgmt_ctrl_dev_locator_record {
 						   0b = no ACPI System Power State notification required */
 		acpi_dev_pwr_st_notify_req:1,	/* [6] - 1b = ACPI Device Power State notification required (by system s/w)
 						   0b = no ACPI Device Power State notification required */
-		rsv1:1,	/* [5] - For backward compatibility, this bit does not apply to the BMC, 
-			   and should be written as 0b. 
-			   0b = Dynamic controller - controller may or may not 
+		rsv1:1,	/* [5] - For backward compatibility, this bit does not apply to the BMC,
+			   and should be written as 0b.
+			   0b = Dynamic controller - controller may or may not
 			   be present. Software should not generate error status
 			   if this controller is not present.
 			   1b = Static controller - this controller is expected
@@ -5221,20 +5230,20 @@ typedef struct mgmt_ctrl_dev_locator_record {
 			   generate an error status if controller is not detected. */
 		rsv2:1,	/* [4] - reserved */
 	// Global Initialization
-		ctrl_logs_init_errs:1,	/* [3] - 1b = Controller logs Initialization 
+		ctrl_logs_init_errs:1,	/* [3] - 1b = Controller logs Initialization
 					   Agent errors (only applicable to Management
 					   Controller that implements the initialization
 					   agent function. Set to 0b otherwise.) */
-		log_init_agent_errs:1,	/* [2] - 1b = Log Initialization Agent errors 
+		log_init_agent_errs:1,	/* [2] - 1b = Log Initialization Agent errors
 					   accessing this controller (this directs the
 					   initialization agent to log any failures
 					   setting the Event Receiver) */
-		ctrl_init:2;		/* [1:0] 
-			00b = Enable event message generation from controller 
+		ctrl_init:2;		/* [1:0]
+			00b = Enable event message generation from controller
 			(Init agent will set Event Receiver address into controller)
-			01b = Disable event message generation from controller 
+			01b = Disable event message generation from controller
 			(Init agent will set Event Receiver to FFh). This provides
-		       	a temporary fix for a broken controller that floods the 
+		       	a temporary fix for a broken controller that floods the
 			system with events. It can also be used for development
 		       	/ debug purposes.
 			10b = Do not initialize controller. This selection is for
@@ -5251,27 +5260,27 @@ typedef struct mgmt_ctrl_dev_locator_record {
 #endif
 	// Device Capabilities
 #ifdef BF_MS_FIRST
-	uchar	dev_sup_chassis:1, 	/* [7] - 1b = Chassis Device. (device 
-					   functions as chassis device, per ICMB 
+	uchar	dev_sup_chassis:1, 	/* [7] - 1b = Chassis Device. (device
+					   functions as chassis device, per ICMB
 					   spec) */
-		dev_sup_bridge:1, 	/* [6] - 1b = Bridge (Controller responds 
+		dev_sup_bridge:1, 	/* [6] - 1b = Bridge (Controller responds
 					   to Bridge NetFn commands) */
-		dev_sup_ipmb_evt_gen:1, /* [5] - 1b = IPMB Event Generator (device 
+		dev_sup_ipmb_evt_gen:1, /* [5] - 1b = IPMB Event Generator (device
 					   generates event messages on IPMB) */
 		dev_sup_ipmb_evt_rcv:1, /* [4] - 1b = IPMB Event Receiver (device
 					   accepts event messages from IPMB) */
-		dev_sup_fru_inv:1, 	/* [3] - 1b = FRU Inventory Device 
+		dev_sup_fru_inv:1, 	/* [3] - 1b = FRU Inventory Device
 					   (accepts FRU commands to FRU Device #0
 					   at LUN 00b) */
 		dev_sup_sel:1, 		/* [2] - 1b = SEL Device (provides interface
 					   to SEL) */
-		dev_sup_sdr_rep:1,	/* [1] - 1b = SDR Repository Device (For 
+		dev_sup_sdr_rep:1,	/* [1] - 1b = SDR Repository Device (For
 					   BMC, indicates BMC provides interface
-					   to 1b = SDR Repository. For other 
+					   to 1b = SDR Repository. For other
 					   controller, indicates controller accepts
 					   Device SDR commands) */
 		dev_sup_sensor:1; 	/* [0] - 1b = Sensor Device (device accepts
-					   sensor commands) See Table 37-11, 
+					   sensor commands) See Table 37-11,
 					   IPMB/I2C Device Type Codes */
 #else
 	uchar	dev_sup_sensor:1,
@@ -5282,10 +5291,10 @@ typedef struct mgmt_ctrl_dev_locator_record {
 		dev_sup_ipmb_evt_gen:1,
 		dev_sup_bridge:1,
 		dev_sup_chassis:1;
-#endif			       
+#endif
 	uchar	rsv[3];
-	uchar	entity_id;		/* Entity ID for the FRU associated with 
-					   this device. 00h if not specified. If 
+	uchar	entity_id;		/* Entity ID for the FRU associated with
+					   this device. 00h if not specified. If
 					   device supports FRU commands at LUN 00b,
 					   this Entity ID applies to both the IPM
 					   device and the FRU information accessed
@@ -5299,8 +5308,8 @@ typedef struct mgmt_ctrl_dev_locator_record {
 						 10 = 6-bit ASCII, packed
 						 11 = 8-bit ASCII + Latin 1.
 					   [5] reserved.
-					   [4:0] length of following data, in characters. 
-					   0 indicates none following. 11111b = reserved. */				   
+					   [4:0] length of following data, in characters.
+					   0 indicates none following. 11111b = reserved. */
 	uchar	dev_id_str[15];		/* 17:+N Device ID String N Short ID
 					   string for the device. 16 bytes, maximum. */
 } MGMT_CTRL_DEV_LOCATOR_RECORD;
@@ -5310,7 +5319,7 @@ typedef struct mgmt_ctrl_dev_locator_record {
 /*
  * 	Event/Reading Type Code Ranges
  * 	(Table 42-1)
- * 
+ *
  */
 #define EVT_TYPE_CODE_UNSPECIFIED	0x00	/* Event/Reading Type unspecified. */
 #define EVT_TYPE_CODE_THRESHOLD		0x01	/* Threshold-based. Indicates a sensor
@@ -5325,7 +5334,7 @@ typedef struct mgmt_ctrl_dev_locator_record {
 					       	   bit positions / event offsets from one of
 					       	   the sets specified for Discrete or digital
 					       	   Discrete Event/Reading class in Table 42-2,
-					       	   Generic Event/Reading Type Codes */			
+					       	   Generic Event/Reading Type Codes */
 #define EVT_TYPE_CODE_GENERIC_HI	0x0C
 #define EVT_TYPE_CODE_SENSOR_SPECIFIC	0x6F	/* Sensor-specific Discrete. Indicates that
 						   the discrete state information is specific
@@ -5333,18 +5342,18 @@ typedef struct mgmt_ctrl_dev_locator_record {
 						   event offsets for a particular sensor type
 						   are specified in the sensor-specific offset
 						   column in Table 42-3, Sensor Type Codes, below. */
-#define EVT_TYPE_CODE_OEM_LO		0x70	/* OEM Discrete. Indicates that the discrete 
+#define EVT_TYPE_CODE_OEM_LO		0x70	/* OEM Discrete. Indicates that the discrete
 						   state information is specific to the OEM
 						   identified by the Manufacturer ID for the
 						   IPM device that is providing access to the
 						   sensor. */
-#define EVT_TYPE_CODE_OEM_HI		0x7F 
+#define EVT_TYPE_CODE_OEM_HI		0x7F
 
 /*======================================================================*/
 /*
  * 	Entity ID Codes
  * 	(Table 43-13)
- * 
+ *
  */
 
 #define ENTITY_ID_UNSPECIFIED		0x00	/* unspecified */
@@ -5371,7 +5380,7 @@ typedef struct mgmt_ctrl_dev_locator_record {
 #define ENTITY_ID_BACK_PANEL_BOARD	0x0D	/* back panel board */
 #define ENTITY_ID_POWER_SYSTEM_BOARD	0x0E	/* power system board */
 #define ENTITY_ID_DRIVE_BACKPLANE	0x0F	/* drive backplane */
-#define ENTITY_ID_INT_EXPANSION_BOARD	0x10	/* system internal expansion board 
+#define ENTITY_ID_INT_EXPANSION_BOARD	0x10	/* system internal expansion board
 						   (contains expansion slots). */
 #define ENTITY_ID_OTHER_SYS_BOARD	0x11	/* Other system board (part of board set) */
 #define ENTITY_ID_PROCESSOR_BOARD	0x12	/* processor board (holds 1 or more
@@ -5401,9 +5410,9 @@ typedef struct mgmt_ctrl_dev_locator_record {
 						   be used as a pre-defined logical entity
 						   for grouping fans or other cooling devices. */
 #define ENTITY_ID_CABLE_INTERCONNECT	0x1F	/* cable / interconnect */
-#define ENTITY_ID_MEMORY_DEVICE		0x20	/* memory device -This Entity ID 
+#define ENTITY_ID_MEMORY_DEVICE		0x20	/* memory device -This Entity ID
 						   should be used for replaceable
-						   memory devices, e.g. DIMM/SIMM. 
+						   memory devices, e.g. DIMM/SIMM.
 						   It is recommended that Entity IDs
 						   not be used for individual non-replaceable
 						   memory devices. Rather, monitoring and
@@ -5422,7 +5431,7 @@ typedef struct mgmt_ctrl_dev_locator_record {
 						   for the container entity. This Entity should
 						   not be used as a physical entity. */
 #define ENTITY_ID_REMOTE_MGMT_COMM_DEV	0x26	/* Remote (Out of Band) Management Communication Device */
-#define ENTITY_ID_EXT_ENVIRONMENT	0x27	/* External Environment - This Entity 
+#define ENTITY_ID_EXT_ENVIRONMENT	0x27	/* External Environment - This Entity
 						   ID can be used to identify the environment
 						   outside the system chassis. For example, a
 						   system may have a temperature sensor that
@@ -5432,25 +5441,25 @@ typedef struct mgmt_ctrl_dev_locator_record {
 						   This value will typically be used as a single
 						   instance physical entity. However, the Entity
 						   Instance value can be used to denote a difference
-						   in regions of the external environment. For 
-						   example, the region around the front of a 
+						   in regions of the external environment. For
+						   example, the region around the front of a
 						   chassis may be considered to be different from
 						   the region around the back, in which case it would
 						   be reasonable to have two different instances of
 						   the External Environment entity. */
 #define ENTITY_ID_BATTERY		0x28	/* battery */
-#define ENTITY_ID_PROCESSING_BLADE	0x29	/* Processing blade (a blade module that 
+#define ENTITY_ID_PROCESSING_BLADE	0x29	/* Processing blade (a blade module that
 						   contains processor, memory, and I/O
 						   connections that enable it to operate as
 						   a processing entity) */
 #define ENTITY_ID_CONNECTIVITY_SWITCH	0x2A	/* Connectivity switch (a blade module that
 						   provides the fabric or network connection
 						   for one or more processing blades or modules) */
-#define ENTITY_ID_PROCESSOR_MEM_MODULE	0x2B	/* Processor/memory module (processor and 
+#define ENTITY_ID_PROCESSOR_MEM_MODULE	0x2B	/* Processor/memory module (processor and
 						   memory together on a module) */
 #define ENTITY_ID_IO_MODULE		0x2C	/* I/O module (a module that contains the
 						   main elements of an I/O interface) */
-#define ENTITY_ID_PROCESSOR_IO_MODULE	0x2D	/* Processor/ IO module (a module that 
+#define ENTITY_ID_PROCESSOR_IO_MODULE	0x2D	/* Processor/ IO module (a module that
 						   contains the main elements of an I/O interface) */
 #define ENTITY_ID_MGMT_COTROLLER_FW	0x2E	/* Management Controller Firmware (Represents
 						   firmware or software running on a management
@@ -5468,8 +5477,8 @@ typedef struct mgmt_ctrl_dev_locator_record {
 #define ENTITY_ID_SCSI_BUS		0x32	/* SCSI Bus (parallel) */
 #define ENTITY_ID_SATA_SAS_BUS		0x33	/* SATA / SAS bus */
 #define ENTITY_ID_PROCESSOR_FSB		0x34	/* Processor / front-side bus */
-/* - 90h-AFh Chassis-specific Entities. These IDs are system specific and can be 
- *   assigned by the chassis provider. 
+/* - 90h-AFh Chassis-specific Entities. These IDs are system specific and can be
+ *   assigned by the chassis provider.
  * - B0h-CFh Board-set specific Entities. These IDs are system specific and can be
  *   assigned by the Board-set provider.
  * - D0h-FFh OEM System Integrator defined. These IDs are system specific and can be
@@ -5481,7 +5490,7 @@ typedef struct mgmt_ctrl_dev_locator_record {
 /*
  * 	Sensor Unit Type Codes (abridged)
  * 	(Table 43-15)
- * 
+ *
  */
 #define SENSOR_UNIT_UNSPECIFIED		0x0
 #define SENSOR_UNIT_DEGREES_CELSIUS	0x1
@@ -5506,7 +5515,7 @@ typedef struct mgmt_ctrl_dev_locator_record {
  *
  	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
- *    	
+ *
  *    Using NETFN_NVSTORE_REQ/NETFN_NVSTORE_RESP
  */
 /*======================================================================*/
@@ -5530,28 +5539,28 @@ typedef struct mgmt_ctrl_dev_locator_record {
 typedef struct get_sel_info_cmd_resp {
 	uchar completion_code;	/* Completion Code 81h = cannot execute command,
 				   SEL erase in progress */
-	uchar sel_version;	/* SEL Version - version number of the SEL 
+	uchar sel_version;	/* SEL Version - version number of the SEL
 				   command set for this SEL Device.
 				   51h for this specification.
-				   (BCD encoded).BCD encoded with bits 7:4 
-				   holding the Least Significant digit of the 
-				   revision and bits 3:0 holding the Most 
+				   (BCD encoded).BCD encoded with bits 7:4
+				   holding the Least Significant digit of the
+				   revision and bits 3:0 holding the Most
 				   Significant bits. */
 	uchar entries_lsb;	/* Entries LS Byte - number of log entries in SEL, LS Byte */
 	uchar entries_msb;	/* Entries MS Byte - number of log entries in SEL, MS Byte */
-	uchar free_space[2];	/* 5:6 Free Space in bytes, LS Byte first. 
+	uchar free_space[2];	/* 5:6 Free Space in bytes, LS Byte first.
 				   FFFFh indicates 65535 or more bytes of
 				   free space are available. */
-	uchar most_recent_addition[4];	/* 7:10 Most recent addition timestamp. 
+	uchar most_recent_addition[4];	/* 7:10 Most recent addition timestamp.
 				   LS byte first.
-				   Returns FFFF_FFFFh if no SEL entries have 
-				   ever been made or if a component update or 
+				   Returns FFFF_FFFFh if no SEL entries have
+				   ever been made or if a component update or
 				   error caused the retained value to be lost. */
-	uchar most_recent_erase_timestamp[4];	/* 11:14 Most recent erase timestamp. 
+	uchar most_recent_erase_timestamp[4];	/* 11:14 Most recent erase timestamp.
 				   Last time that one or more entries were
 				   deleted from the log. LS byte first. */
 	uchar operation_support;	/* 15 Operation Support
-				   [7] - Overflow Flag. 1 = Events have been 
+				   [7] - Overflow Flag. 1 = Events have been
 				   dropped due to lack of space in the SEL.
 				   [6:4] - reserved. Write as 000
 				   [3] - 1b = Delete SEL command supported
@@ -5566,10 +5575,10 @@ typedef struct get_sel_info_cmd_resp {
 
 typedef struct get_sel_entry_cmd_req {
 	uchar	command;
-	uchar reservation_id[2];	/* 1:2 Reservation ID, LS Byte first. 
-				   Only required for partial Get. Use 0000h 
+	uchar reservation_id[2];	/* 1:2 Reservation ID, LS Byte first.
+				   Only required for partial Get. Use 0000h
 				   otherwise. The reservation ID should be set
-				   to 0000h for implementations that dont 
+				   to 0000h for implementations that dont
 				   implement the Reserve SEL command. */
 	uchar sel_record_id[2];	/* 3:4 SEL Record ID, LS Byte first.
 				   0000h = GET FIRST ENTRY
@@ -5583,11 +5592,11 @@ typedef struct get_sel_entry_cmd_resp {
 				   Return an error completion code if the SEL is empty.
 				   81h = cannot execute command, SEL erase in progress. */
 	uchar next_sel_record_id[2];	/* 2:3 Next SEL Record ID, LS Byte first
-				   (return FFFFh if the record just returned 
+				   (return FFFFh if the record just returned
 				   is the last record.)
 				   Note: FFFFh is not allowed as the record ID
-				   for an actual record. I.e. the Record ID in 
-				   the Record Data for the last record should 
+				   for an actual record. I.e. the Record ID in
+				   the Record Data for the last record should
 				   not be FFFFh. */
 	uchar record_data[20];	/* 4:N Record Data, 16 bytes for entire record */
 } GET_SEL_ENTRY_CMD_RESP;
@@ -5598,12 +5607,12 @@ typedef struct get_sel_entry_cmd_resp {
 
 typedef struct add_sel_entry_cmd_req {
 	uchar	command;
-	uchar record_data[16];	/* 1:16 Record Data, 16 bytes. Refer to 
+	uchar record_data[16];	/* 1:16 Record Data, 16 bytes. Refer to
 				   section 32, SEL Record Formats */
 } ADD_SEL_ENTRY_CMD_REQ;
 
 typedef struct add_sel_entry_cmd_resp {
-       	uchar completion_code;	/* Completion Code. Generic, plus 
+       	uchar completion_code;	/* Completion Code. Generic, plus
 				   following command specific:
 				   80h = operation not supported for this Record Type
 				   81h = cannot execute command, SEL erase in progress */
@@ -5616,22 +5625,22 @@ typedef struct add_sel_entry_cmd_resp {
 
 typedef struct partial_add_sel_entry_cmd_req {
 	uchar	command;
-	uchar reservation_id[2];	/* 1:2 Reservation ID, LS Byte first. 
+	uchar reservation_id[2];	/* 1:2 Reservation ID, LS Byte first.
 					   Only required for partial add. Use
 					   0000h for Reservation ID otherwise.
-					   The reservation ID should be set to 
+					   The reservation ID should be set to
 					   0000h for implementations that dont
 					   implement the Reserve SEL command. */
-	uchar record_id[2];	/* 3:4 Record ID, LS Byte first. Used when 
-				   continuing a partial add (nonzero offset 
-				   into record). Use 0000h for Record ID 
+	uchar record_id[2];	/* 3:4 Record ID, LS Byte first. Used when
+				   continuing a partial add (nonzero offset
+				   into record). Use 0000h for Record ID
 				   otherwise. */
 	uchar offset_into_record;	/* Offset into record. */
 	uchar in_progress;	/* In progress.
 				   [7:4] - reserved
 				   [3:0] - in progress
 				   0h = partial add in progress.
-				   1h = last record data being transferred 
+				   1h = last record data being transferred
 				        with this request */
 	uchar sel_record_data[20];	/* 7:N SEL Record Data */
 } PARTIAL_ADD_SEL_ENTRY_CMD_REQ;
@@ -5639,9 +5648,9 @@ typedef struct partial_add_sel_entry_cmd_req {
 typedef struct partial_add_sel_entry_cmd_resp {
 	uchar completion_code;	/* Completion Code
 				   80h = Record rejected due to mismatch between
-				   record length in header data and number of 
-				   bytes written. (Verifying the length is an 
-				   optional operation for the management 
+				   record length in header data and number of
+				   bytes written. (Verifying the length is an
+				   optional operation for the management
 				   controller)
 				   81h = cannot execute command, SEL erase
 				   in progress. */
@@ -5655,8 +5664,8 @@ typedef struct partial_add_sel_entry_cmd_resp {
 typedef struct clear_sel_cmd_req {
 	uchar	command;
 	uchar reservation_id[2];	/* 1:2 Reservation ID, LS Byte first.
-				   The reservation ID should be set to 0000h 
-				   for implementations that dont implement 
+				   The reservation ID should be set to 0000h
+				   for implementations that dont implement
 				   the Reserve SEL command. */
 	uchar c;		/* 3 C (43h) */
 	uchar l;		/* 4 L (4Ch) */
@@ -5690,7 +5699,7 @@ typedef struct get_sel_time_cmd_resp {
 /*----------------------------------------------------------------------*/
 typedef struct set_sel_time_cmd_req {
 	uchar	command;
-	uchar data[4];	/* 1:4 Time in four-byte format. LS byte first. 
+	uchar data[4];	/* 1:4 Time in four-byte format. LS byte first.
 			   See Section 37, Timestamp Format. */
 } SET_SEL_TIME_CMD_REQ;
 
@@ -5700,7 +5709,7 @@ typedef struct set_sel_time_cmd_resp {
 
 /*======================================================================*/
 /*    LAN Device Commands
- *  	
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Set LAN Configuration Parameters Transport 01h	O/M 	M 	O/M
@@ -5713,7 +5722,7 @@ typedef struct set_sel_time_cmd_resp {
 
 /*======================================================================*/
 /*    Serial/Modem Device Commands
- *    
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Set Serial/Modem Configuration 	Transport 10h 	O/M 	O/M 	O/M
@@ -5735,7 +5744,7 @@ typedef struct set_sel_time_cmd_resp {
 
 /*======================================================================*/
 /*    Bridge management Commands
- *  	
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Get Bridge State 		Bridge 	00h 	O/M 	O/M 	O
@@ -5756,7 +5765,7 @@ typedef struct set_sel_time_cmd_resp {
 
 /*======================================================================*/
 /*    Discovery Commands (ICMB)
- *  	
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Prepare For Discovery 		Bridge 	10h 	O/M 	O/M 	O
@@ -5770,7 +5779,7 @@ typedef struct set_sel_time_cmd_resp {
 
 /*======================================================================*/
 /*    Bridging Commands (ICMB)
- *  	
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Bridge Request 			Bridge 	20h 	O/M 	O/M 	O
@@ -5781,7 +5790,7 @@ typedef struct set_sel_time_cmd_resp {
 
 /*======================================================================*/
 /*    Event Commands(ICMB)
- *  	
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Get Event Count 		Bridge 	30h 	O/M 	O/M 	O
@@ -5796,7 +5805,7 @@ typedef struct set_sel_time_cmd_resp {
 
 /*======================================================================*/
 /*    OEM Commands for Bridge
- *  	
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	OEM Commands 			Bridge C0h-FEh 	O/M 	O/M 	O
@@ -5806,7 +5815,7 @@ typedef struct set_sel_time_cmd_resp {
 
 /*======================================================================*/
 /*    Other Bridge Commands
- *  	
+ *
 	Command				NetFn 	CMD 	BMC 	SHM 	IPMC
 	--------------------------------------------------------------------
 	Error Report 			Bridge 	FFh 	O/M 	O/M 	O
@@ -5912,9 +5921,9 @@ typedef struct fru_fan_info {
 /*----------------------------------------------------------------------*/
 typedef struct picmg_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 } PICMG_CMD_RESP;
 
@@ -5926,7 +5935,7 @@ typedef struct get_picmg_properties_cmd_req {
 	uchar	command;
 	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 } GET_PICMG_PROPERTIES_CMD_REQ;
 
@@ -5935,22 +5944,22 @@ typedef struct get_picmg_properties_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
 	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 #ifdef BF_MS_FIRST
 	uchar	picmg_extension_ver_minor:4,
 		picmg_extension_ver_major:4;
-				  	/* PICMG Extension Version. 
+				  	/* PICMG Extension Version.
 					   Indicates the version of PICMG
-					   extensions implemented by the 
+					   extensions implemented by the
 					   IPM Controller.
 					   [7:4] = BCD encoded minor version
 					   [3:0] = BCD encoded major version
-					   This specification defines version 
+					   This specification defines version
 					   2.1 of the PICMG extensions. IPM
-					   Controllers implementing the extensions 
-					   as defined by this specification shall 
-					   report a value of 12h.The value 00h 
+					   Controllers implementing the extensions
+					   as defined by this specification shall
+					   report a value of 12h.The value 00h
 					   is reserved. */
 #else
 	uchar	picmg_extension_ver_major:4,
@@ -5958,17 +5967,17 @@ typedef struct get_picmg_properties_cmd_resp {
 #endif
 	uchar	max_fru_dev_id;		/* Max FRU Device ID. The numerically
 					   largest FRU Device ID for the
-					   Managed FRUs implemented by this 
+					   Managed FRUs implemented by this
 					   IPM Controller, excluding FRU
-					   Device IDs reserved at the top of 
+					   Device IDs reserved at the top of
 					   the range for special purposes, as
-					   detailed in Table 3-10, 
+					   detailed in Table 3-10,
 					   Reserved FRU Device IDs. */
-	uchar	ipmc_fru_dev_id;	/* FRU Device ID for IPM Controller. 
+	uchar	ipmc_fru_dev_id;	/* FRU Device ID for IPM Controller.
 					   Indicates a FRU Device ID for the
-					   FRU containing the IPM Controller. 
+					   FRU containing the IPM Controller.
 					   IPM Controllers implementing the
-					   extensions defined by this specification 
+					   extensions defined by this specification
 					   shall report 0. */
 } GET_PICMG_PROPERTIES_CMD_RESP;
 
@@ -5979,12 +5988,12 @@ typedef struct get_picmg_properties_cmd_resp {
 /* 			Set FRU Activation command 			*/
 /*----------------------------------------------------------------------*/
 
-/* Request data */ 
+/* Request data */
 typedef struct set_fru_activation_cmd_req {
 	uchar	command;
 	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. */
 	uchar	fru_activation;		/* FRU Activation/Deactivation
@@ -5996,9 +6005,9 @@ typedef struct set_fru_activation_cmd_req {
 /* Response data */
 typedef struct set_fru_activation_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 } SET_FRU_ACTIVATION_CMD_RESP;
 
@@ -6008,25 +6017,25 @@ typedef struct set_fru_activation_cmd_resp {
 
 typedef struct get_address_info_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
-					   this is a PICMG-defined group 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
+					   this is a PICMG-defined group
 					   extension command. A value of 00h
 					   shall be used. */
-	uchar	fru_dev_id;		/* FRU Device ID. Indicates an individual 
-					   FRU. This field is optional. If the 
-					   field is not present, the command 
-					   shall return addressing information 
-					   for the FRU containing the IPM 
-					   Controller that implements the command. 
-					   This is ignored when Address Key Type 
-					   is set to Physical Address. This 
-					   field is required if Address Key Type 
+	uchar	fru_dev_id;		/* FRU Device ID. Indicates an individual
+					   FRU. This field is optional. If the
+					   field is not present, the command
+					   shall return addressing information
+					   for the FRU containing the IPM
+					   Controller that implements the command.
+					   This is ignored when Address Key Type
+					   is set to Physical Address. This
+					   field is required if Address Key Type
 					   is present. */
 	uchar	addr_key_type;		/* Address Key Type. This defines the
-					   type of address that is being provided 
-					   in the Address Key field. This field 
+					   type of address that is being provided
+					   in the Address Key field. This field
 					   is optional. If this field is not present,
-					   the command shall return addressing 
+					   the command shall return addressing
 					   information for the FRU specified by
 					   the FRU Device ID. */
 #define AKT_HW_ADDR	0x00		/* Hardware Address */
@@ -6035,27 +6044,27 @@ typedef struct get_address_info_cmd_req {
 #define AKT_PHYS_ADDR	0x03		/* Physical Address */
 					/* All other values reserved. */
 	uchar	addr_key;		/* Address Key. This is the address to
-					   look-up in the table. This field is 
+					   look-up in the table. This field is
 					   required if Address Key Type is present.
 					   This holds a Hardware Address, IPMB address,
-					   or Site Number depending on what is in 
+					   or Site Number depending on what is in
 					   the Address Key Type. */
-	uchar	site_type;		/* Site Type. This field is required 
-					   if Address Key Type is a Physical 
+	uchar	site_type;		/* Site Type. This field is required
+					   if Address Key Type is a Physical
 					   Address. */
 } GET_ADDRESS_INFO_CMD_REQ;
 
 typedef struct get_address_info_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that this 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that this
 					   is a PICMG-defined group extension
 					   command. A value of 00h shall be used. */
 	uchar	hw_addr;		/* Hardware Address. */
-	uchar	ipmb0_addr;		/* IPMB-0 Address. Indicates the IPMB 
+	uchar	ipmb0_addr;		/* IPMB-0 Address. Indicates the IPMB
 					   address for IPMB-0, if implemented. For
-					   PICMG 2.9. a value of FFh indicates that 
+					   PICMG 2.9. a value of FFh indicates that
 					   IPMB-0 is not implemented. */
-	uchar	reserved;		/* Reserved. Shall have a value of FFh. 
+	uchar	reserved;		/* Reserved. Shall have a value of FFh.
 					   Other values reserved in PICMG 2.9. */
 	uchar	fru_dev_id;		/* FRU device ID. */
 	uchar	site_id;		/* Site ID. */
@@ -6088,38 +6097,38 @@ typedef struct picmg_address_info {
 
 typedef struct set_shelf_address_info_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	uchar	shelf_addr_type;	/* Shelf Address Type/Length Byte. 
-					   Indicates the Type and Length 
+	uchar	shelf_addr_type;	/* Shelf Address Type/Length Byte.
+					   Indicates the Type and Length
 					   (in characters, occupying N bytes,
 					   depending on the packing signaled
 					   by Type) of the following Shelf
 					   address. */
-	uchar	shelf_addr_data[16];	/* 3 + N Shelf Address bytes. 
+	uchar	shelf_addr_data[16];	/* 3 + N Shelf Address bytes.
 					   Lists the Shelf address bytes for
-					   the Shelf that contains the IPM 
+					   the Shelf that contains the IPM
 					   Controller. Note: 16 arbitrarily
 					   selected, review*/
 } SET_SHELF_ADDRESS_INFO_CMD_REQ;
 
 typedef struct get_shelf_address_info_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
 					   extension command. A value of 00h
 					   shall be used. */
-	uchar	shelf_addr_type;	/* Shelf Address Type/Length Byte. 
+	uchar	shelf_addr_type;	/* Shelf Address Type/Length Byte.
 					   Indicates the Type and Length (in
-					   characters, occupying N bytes, 
-					   depending on the packing signaled 
-					   by Type) of the following Shelf 
+					   characters, occupying N bytes,
+					   depending on the packing signaled
+					   by Type) of the following Shelf
 					   address */
-	uchar	shelf_addr_data;	/* 4 + N Shelf Address bytes. 
-					   Lists the Shelf address bytes for 
-					   the Shelf containing the IPM 
+	uchar	shelf_addr_data;	/* 4 + N Shelf Address bytes.
+					   Lists the Shelf address bytes for
+					   the Shelf containing the IPM
 					   Controller. */
 } GET_SHELF_ADDRESS_INFO_CMD_RESP;
 
@@ -6131,31 +6140,31 @@ typedef struct get_shelf_address_info_cmd_resp {
 
 typedef struct set_fru_activation_policy_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. */
 	uchar	act_policy_mask;	/* FRU Activation Policy Mask Bits
 					   [7:2] = Reserved. Write as 0000 00b
-					   [1] = 1  Bit in Byte 4 of command 
+					   [1] = 1  Bit in Byte 4 of command
 					   will affect the Deactivation-Locked
 					   bit
-					   [0] = 1  Bit in Byte 4 of command 
+					   [0] = 1  Bit in Byte 4 of command
 					   will affect the Locked bit */
 	uchar	act_policy_set;		/* FRU Activation Policy Set Bits
 					   [7:2] = Reserved. Write as 0000 00b
 					   [1] = Set/Clear Deactivation-Locked
 					    FRU cannot/can transition from
 					   M4 to M5 (ignored if Bit 1 of Byte 3= 0)
-					   [0] = Set/Clear Locked  FRU 
+					   [0] = Set/Clear Locked  FRU
 					   cannot/can transition from M1 to M2
 					   (ignored if Bit 0 of Byte 3= 0) */
 } SET_FRU_ACTIVATION_POLICY_CMD_REQ;
 
 typedef struct set_fru_activation_policy_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
 					   extension command. A value of 00h
 					   shall be used. */
@@ -6167,28 +6176,28 @@ typedef struct set_fru_activation_policy_cmd_resp {
 
 typedef struct get_fru_activation_policy_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. */
 } GET_FRU_ACTIVATION_POLICY_CMD_REQ;
 
 typedef struct get_fru_activation_policy_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
 					   extension command. A value of 00h
 					   shall be used. */
 #ifdef BF_MS_FIRST
 	uchar	:6,			/* FRU Activation Policy
 					   [7:2] = Reserved. Write as 0000 00b */
-		deactivation_locked:1,	/* [1] = Deactivation-Locked bit. 
+		deactivation_locked:1,	/* [1] = Deactivation-Locked bit.
 					   A 1b indicates the FRU is Deactivation-
-					   Locked. If it is in the M4 state, 
+					   Locked. If it is in the M4 state,
 					   it will not transition to M5 until
 					   this bit is cleared. */
-		locked:1;		/* [0] = Locked bit. A 1b indicates 
+		locked:1;		/* [0] = Locked bit. A 1b indicates
 					   the FRU is locked and if it is in
 					   the M1 state, it will not transition
 					   on to M2 until unlocked. */
@@ -6197,7 +6206,7 @@ typedef struct get_fru_activation_policy_cmd_resp {
 		deactivation_locked:1,
 		:6;
 #endif
-		       
+
 } GET_FRU_ACTIVATION_POLICY_CMD_RESP;
 
 /*----------------------------------------------------------------------*/
@@ -6227,8 +6236,8 @@ typedef struct fru_hot_swap_event_msg_req {
 8-Fh = Reserved
 */
 	uchar	evt_data2;		/* Event Data 2
-					   [7:4] = Cause of state change. 
-					   See Table 3-20, Cause of State Change values, 
+					   [7:4] = Cause of state change.
+					   See Table 3-20, Cause of State Change values,
 					   for values.
 					   [3:0] = Previous State */
 /*
@@ -6275,7 +6284,7 @@ and M5 to M4 transitions.
 */
 
 #define STATE_CH_FRU_ACTION	0x03
-/* 
+/*
 State Change due to FRU programmatic action. The FRU has changed states due to some
 non-operator related internal requirement (such as Locked bit being cleared). Valid for the M1 to
 M2, M3 to M6, M4 to M5, and M5 to M4 transitions.
@@ -6339,15 +6348,15 @@ typedef struct get_sensor_reading_hot_swap_cmd_req {
 
 typedef struct get_sensor_reading_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	sensor_reading;		/* Sensor Reading. 
+	uchar	sensor_reading;		/* Sensor Reading.
 					   [7:0] - Not used. Write as 00h. */
-	uchar	std_ipmi_byte;		/* Standard IPMI byte (See Get 
+	uchar	std_ipmi_byte;		/* Standard IPMI byte (See Get
 					   Sensor Reading in IPMI specification):
 					   [7] - 0b = All Event Messages
 					   disabled from this sensor
 					   [6] - 0b = sensor scanning disabled
-					   [5] - 1b = initial update in progress. 
-	This bit is set to indicate that a Re-arm Sensor Events or Set 
+					   [5] - 1b = initial update in progress.
+	This bit is set to indicate that a Re-arm Sensor Events or Set
 	Event Receiver command has been used to request an update of the
 	sensor status, and that update has not occurred yet. Software
 	should use this bit to avoid getting an incorrect status while the first sensor
@@ -6368,7 +6377,7 @@ typedef struct get_sensor_reading_cmd_resp {
 [1]  1b = FRU Operational State M1 - FRU Inactive
 [0]  1b = FRU Operational State M0 - FRU Not Installed
 */
-	uchar 	reserved2;		   /*(5) [7:0]  Optional/Reserved. If provided, write as 80h (IPMI restriction). 
+	uchar 	reserved2;		   /*(5) [7:0]  Optional/Reserved. If provided, write as 80h (IPMI restriction).
 					   Ignore on read.*/
 } GET_SENSOR_READING_CMD_RESP;
 
@@ -6378,9 +6387,9 @@ typedef struct get_sensor_reading_cmd_resp {
 
 typedef struct fru_control_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. */
 	uchar	fru_control_options;	/* FRU Control Options are: */
@@ -6394,7 +6403,7 @@ typedef struct fru_control_cmd_req {
 
 typedef struct fru_control_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
 					   extension command. A value of 00h
 					   shall be used. */
@@ -6405,17 +6414,17 @@ typedef struct fru_control_cmd_resp {
 /*----------------------------------------------------------------------*/
 
 /* LED ID assignments (as defined in Section 2.2.8, LEDs */
-#define FRU_LED_BLUE		0x00	/* This serves as an indication of 
-					   whether or not the Front Board 
+#define FRU_LED_BLUE		0x00	/* This serves as an indication of
+					   whether or not the Front Board
 					   can be safely extracted. */
 
-#define FRU_LED1		0x01	/* It is common practice in many 
-					   telco and data center equipment 
+#define FRU_LED1		0x01	/* It is common practice in many
+					   telco and data center equipment
 					   designs to provide at least one
-					   status LED used to indicate 
-					   operational failure of Payload 
+					   status LED used to indicate
+					   operational failure of Payload
 					   resources. LED 1 is intended to
-					   serve this function. The color 
+					   serve this function. The color
 					   and details of meaning of this
 					   LED vary from industry to industry.
 					   In North American telco applications,
@@ -6425,7 +6434,7 @@ typedef struct fru_control_cmd_resp {
 					   from the Shelf. In European telco
 					   applications, this LED is typically
 					   AMBER and illuminated when the Front
-					   Board is in a failed state. */			   
+					   Board is in a failed state. */
 #define FRU_LED2		0x02	/* defined by the system implementer. */
 #define FRU_LED3		0x03	/* defined by the system implementer. */
 					/* 04h-FEh Application specific LEDs */
@@ -6434,26 +6443,26 @@ typedef struct fru_control_cmd_resp {
 
 typedef struct get_led_properties_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. */
 } GET_LED_PROPERTIES_CMD_REQ;
 
 typedef struct get_led_properties_cmd_resp {
 	uchar	completion_code;	/* Completion Code. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
 					   extension command. A value of 00h
 					   shall be used. */
 
 	uchar	gen_status_led_prop;	/* General Status LED Properties
-					   A bit field indicating the FRUs 
+					   A bit field indicating the FRUs
 					   ability to control the four
 					   LEDs defined in Section 2.2.8.1,
 					   General status LEDs.
-					   When a bit is set, the FRU can 
+					   When a bit is set, the FRU can
 					   control the associated LED.
 					   [7:4] Reserved, shall be set to 0. */
 #define GS_LED3			0x8	/* [3] LED3 */
@@ -6462,11 +6471,11 @@ typedef struct get_led_properties_cmd_resp {
 #define GS_LED_BLUE		0x1	/* [0] BLUE LED */
 
 	uchar	app_spec_led_count;	/* Application Specific LED Count
-					   The number of application specific 
+					   The number of application specific
 					   LEDs under control of the IPM Controller.
 					   00h-FB Number of application specific
-					   LEDs under control by IPM Controller. 
-					   If no application specific LEDs are 
+					   LEDs under control by IPM Controller.
+					   If no application specific LEDs are
 					   present this field is 00h.
 					   FCh-FFh Reserved */
 } GET_LED_PROPERTIES_CMD_RESP;
@@ -6477,9 +6486,9 @@ typedef struct get_led_properties_cmd_resp {
 
 typedef struct get_led_color_capabilities_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. */
 	uchar	led_id;			/* LED ID - FFh Reserved */
@@ -6490,12 +6499,12 @@ typedef struct	get_led_color_capabilities_cmd_resp {
 					   CCHIf the LED ID contained in
 					   the Request data is not present
 					   on the FRU. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	led_color_capabilities;	/* LED Color Capabilities
-					   A bit field. When the bit set, 
+					   A bit field. When the bit set,
 					   the LED supports the color. */
 					/* [7] Reserved, shall be set to 0. */
 #define LED_SUPPORT_WHITE	0x40	/* [6] LED supports WHITE */
@@ -6535,46 +6544,46 @@ typedef struct	get_led_color_capabilities_cmd_resp {
 
 typedef struct set_fru_led_state_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. */
 	uchar	led_id;			/* LED ID - FFh Reserved */
 
 	/* LED ID assignments (as defined in Section 2.2.8, LEDs */
-	/* 
+	/*
 	 * LED_BLUE		0x00
 	 * LED1			0x01
 	 * LED2			0x02
 	 * LED3			0x03
 	 */
 
-#define LED_TEST_ALL		0xff	/* Lamp Test (All LEDs under 
+#define LED_TEST_ALL		0xff	/* Lamp Test (All LEDs under
 					   management control are addressed) */
 	uchar	led_function;		/* LED Function
 					   00h = LED off override
-					   01h - FAh = LED BLINKING override. 
-					   The off duration is specified by 
-					   the value of this byte and the on 
+					   01h - FAh = LED BLINKING override.
+					   The off duration is specified by
+					   the value of this byte and the on
 					   duration is specified by the value
 					   of byte 5. Both values specify the
-					   time in tens of milliseconds 
+					   time in tens of milliseconds
 					   (10 ms 2.5 s)
-					   FBh = LAMP TEST state. 
-					   Turn on LED(s) specified in byte 
-					   3 for duration specified in byte 
-					   5 (in hundreds of milliseconds) 
+					   FBh = LAMP TEST state.
+					   Turn on LED(s) specified in byte
+					   3 for duration specified in byte
+					   5 (in hundreds of milliseconds)
 					   then return to the highest priority
 					   state.
-					   FCh = LED state restored to Local 
+					   FCh = LED state restored to Local
 					   Control state
 					   FDh-FEh Reserved
 					   FFh = LED on override */
-	uchar	on_duration;		/* On-duration: LED on-time in tens 
+	uchar	on_duration;		/* On-duration: LED on-time in tens
 					   of milliseconds if (1 = Byte 4 = FAh)
-					   Lamp Test time in hundreds of 
-					   milliseconds if (Byte 4 = FBh. 
+					   Lamp Test time in hundreds of
+					   milliseconds if (Byte 4 = FBh.
 					   Lamp Test time value must be less
 					   than 128. Other values when Byte 4
 					   = FBh are reserved.
@@ -6583,13 +6592,13 @@ typedef struct set_fru_led_state_cmd_req {
 
 	uchar	color;			/* Color when illuminated. This byte
 					   sets the override color when
-					   LED Function is 01hFAh and FFh. 
+					   LED Function is 01hFAh and FFh.
 					   This byte sets the Local Control
-					   color when LED Function is FCh. 
-					   This byte may be ignored during 
+					   color when LED Function is FCh.
+					   This byte may be ignored during
 					   Lamp Test or may be used to control
 					   the color during the lamp test when
-					   LED Function is FBh. 
+					   LED Function is FBh.
 					   [7:4] Reserved, shall be set to 0.
 					   [3:0] Hex Value Function
 					   0h Reserved
@@ -6606,9 +6615,9 @@ typedef struct set_fru_led_state_cmd_req {
 
 typedef struct set_fru_led_state_cmd_resp {
 		uchar	completion_code;	/* Completion Code */
-		uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+		uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 } SET_FRU_LED_STATE_CMD_RESP;
 
@@ -6618,15 +6627,15 @@ typedef struct set_fru_led_state_cmd_resp {
 
 typedef struct get_fru_led_state_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. */
 	uchar	led_id;			/* LED ID - FFh Reserved */
 
 	/* LED ID assignments (as defined in Section 2.2.8, LEDs */
-	/* 
+	/*
 	 * LED_BLUE		0x00
 	 * LED1			0x01
 	 * LED2			0x02
@@ -6639,31 +6648,31 @@ typedef struct get_fru_led_state_cmd_resp {
 					   CCHIf the LED ID contained in
 					   the Request data is not present
 					   on the FRU. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	led_states;		/* LED States:
 					   [7:3] - Reserved
 					   [2] - 1b if Lamp Test has been enabled.
-					   [1] - 1b if override state has been 
+					   [1] - 1b if override state has been
 					         enabled.
-					   [0] - 1b if IPM Controller has a 
+					   [0] - 1b if IPM Controller has a
 					         Local Control state. */
 	uchar local_control_led_func;	/* Local Control LED Function
 					   00h = LED is off. This is a default
 					   value if the IPM Controller does not
 					   support Local Control.
-					   01h - FAh = LED is BLINKING. 
+					   01h - FAh = LED is BLINKING.
 					   The off duration is specified by the
 					   value of this byte, and the on duration
-					   is specified by the value of byte 5. 
+					   is specified by the value of byte 5.
 					   Both values specify the time in tens
 					   of milliseconds (10 ms2.5 s).
 					   FB - FEh = Reserved
 					   FFh = LED is on */
 	uchar	local_control_on_duration;	/* Local Control On-duration
-					   The LED on-time in tens of milliseconds 
+					   The LED on-time in tens of milliseconds
 					   if (01h = Byte 4 = FAh) and ignored otherwise.
 					   Otherwise, this field is ignored and
 					   shall be set to 0h. */
@@ -6679,25 +6688,25 @@ typedef struct get_fru_led_state_cmd_resp {
 					 * LED_COLOR_WHITE
 					 * 7h-Fh Reserved */
 
-	uchar	override_led_state_func;/* Override state LED Function. This 
+	uchar	override_led_state_func;/* Override state LED Function. This
 					   byte is required if either override
 					   state or Lamp Test is in effect.
 					   00h = LED override state is off.
-					   01h - FAh = LED override state is BLINKING. 
-					   The off duration is specified by 
-					   the value of this byte and the on 
-					   duration is specified by the value 
+					   01h - FAh = LED override state is BLINKING.
+					   The off duration is specified by
+					   the value of this byte and the on
+					   duration is specified by the value
 					   of byte 8. Both values specify the
 					   time in tens of milliseconds (10 ms2.5 s).
 					   FBh - FEh = Reserved
 					   FFh = LED override state is on */
-	uchar	override_state_on_duration;	/* Override State On-duration. 
+	uchar	override_state_on_duration;	/* Override State On-duration.
 					   This byte is required if either override
 					   state or Lamp Test is in effect.
 					   The LED on-time in tens of milliseconds
-					   if (01h = Byte 7 = FAh) and ignored 
+					   if (01h = Byte 7 = FAh) and ignored
 					   otherwise. */
-	uchar	override_state_color;	/* Override State Color. This byte is 
+	uchar	override_state_color;	/* Override State Color. This byte is
 					   required if either override state or
 					   Lamp Test is in effect. */
 					/* [7:4] Reserved, shall be set to 0.
@@ -6710,11 +6719,11 @@ typedef struct get_fru_led_state_cmd_resp {
 					 * LED_COLOR_ORANGE
 					 * LED_COLOR_WHITE
 					 * 7h-Fh Reserved */
-	uchar led_test_duration;	/* Lamp Test Duration. This byte 
-					   is optional if Lamp Test is not 
+	uchar led_test_duration;	/* Lamp Test Duration. This byte
+					   is optional if Lamp Test is not
 					   in effect. This byte contains the
-					   Lamp Test time in hundreds of 
-					   milliseconds and the value must 
+					   Lamp Test time in hundreds of
+					   milliseconds and the value must
 					   be < 128. Other values reserved. */
 } GET_FRU_LED_STATE_CMD_RESP;
 
@@ -6722,24 +6731,24 @@ typedef struct fru_led_state {
 	uchar	led_states;		/* LED States:
 					   [7:3] - Reserved
 					   [2] - 1b if Lamp Test has been enabled.
-					   [1] - 1b if override state has been 
+					   [1] - 1b if override state has been
 					         enabled.
-					   [0] - 1b if IPM Controller has a 
+					   [0] - 1b if IPM Controller has a
 					         Local Control state. */
 	uchar local_control_led_func;	/* Local Control LED Function
 					   00h = LED is off. This is a default
 					   value if the IPM Controller does not
 					   support Local Control.
-					   01h - FAh = LED is BLINKING. 
+					   01h - FAh = LED is BLINKING.
 					   The off duration is specified by the
 					   value of this byte, and the on duration
-					   is specified by the value of byte 5. 
+					   is specified by the value of byte 5.
 					   Both values specify the time in tens
 					   of milliseconds (10 ms2.5 s).
 					   FB - FEh = Reserved
 					   FFh = LED is on */
 	uchar	local_control_on_duration;	/* Local Control On-duration
-					   The LED on-time in tens of milliseconds 
+					   The LED on-time in tens of milliseconds
 					   if (01h = Byte 4 = FAh) and ignored otherwise.
 					   Otherwise, this field is ignored and
 					   shall be set to 0h. */
@@ -6755,25 +6764,25 @@ typedef struct fru_led_state {
 					 * LED_COLOR_WHITE
 					 * 7h-Fh Reserved */
 
-	uchar	override_led_state_func;/* Override state LED Function. This 
+	uchar	override_led_state_func;/* Override state LED Function. This
 					   byte is required if either override
 					   state or Lamp Test is in effect.
 					   00h = LED override state is off.
-					   01h - FAh = LED override state is BLINKING. 
-					   The off duration is specified by 
-					   the value of this byte and the on 
-					   duration is specified by the value 
+					   01h - FAh = LED override state is BLINKING.
+					   The off duration is specified by
+					   the value of this byte and the on
+					   duration is specified by the value
 					   of byte 8. Both values specify the
 					   time in tens of milliseconds (10 ms2.5 s).
 					   FBh - FEh = Reserved
 					   FFh = LED override state is on */
-	uchar	override_state_on_duration;	/* Override State On-duration. 
+	uchar	override_state_on_duration;	/* Override State On-duration.
 					   This byte is required if either override
 					   state or Lamp Test is in effect.
 					   The LED on-time in tens of milliseconds
-					   if (01h = Byte 7 = FAh) and ignored 
+					   if (01h = Byte 7 = FAh) and ignored
 					   otherwise. */
-	uchar	override_state_color;	/* Override State Color. This byte is 
+	uchar	override_state_color;	/* Override State Color. This byte is
 					   required if either override state or
 					   Lamp Test is in effect. */
 					/* [7:4] Reserved, shall be set to 0.
@@ -6786,11 +6795,11 @@ typedef struct fru_led_state {
 					 * LED_COLOR_ORANGE
 					 * LED_COLOR_WHITE
 					 * 7h-Fh Reserved */
-	uchar led_test_duration;	/* Lamp Test Duration. This byte 
-					   is optional if Lamp Test is not 
+	uchar led_test_duration;	/* Lamp Test Duration. This byte
+					   is optional if Lamp Test is not
 					   in effect. This byte contains the
-					   Lamp Test time in hundreds of 
-					   milliseconds and the value must 
+					   Lamp Test time in hundreds of
+					   milliseconds and the value must
 					   be < 128. Other values reserved. */
 } FRU_LED_STATE;
 
@@ -6800,7 +6809,7 @@ typedef struct fru_led_capabilities {
 	uchar default_led_color_override;
 } FRU_LED_CAPABILITIES;
 
-/* Per FRU data structure 
+/* Per FRU data structure
  * Include data for:
  * 	FRU Control
  * 	FRU LED Properties
@@ -6829,16 +6838,16 @@ typedef struct fru_info {
 	FRU_LED_CAPABILITIES	led_capabilities[4];	/* LED Color Capabilities. */
 	uchar	default_led_color;	/* Default LED Color in Local Control State */
 	FRU_LED_STATE	led_state[4];
-	uchar	record_id_LSB;		/* Record ID LS. Contains the least 
+	uchar	record_id_LSB;		/* Record ID LS. Contains the least
 					   significant byte of the Record ID
 					   for the appropriate Device Locator
 					   SDR. */
-	uchar	record_id_MSB;		/* Record ID MS. Contains the most 
+	uchar	record_id_MSB;		/* Record ID MS. Contains the most
 					   significant byte of the Record ID
 					   for the appropriate Device Locator
 					   SDR. */
-	uchar	dyn_power_config;	/* Dynamic Power Configuration. Set 
-					   to 1b if the FRU supports dynamic 
+	uchar	dyn_power_config;	/* Dynamic Power Configuration. Set
+					   to 1b if the FRU supports dynamic
 					   reconfiguration of power */
 	uchar	power_level_steady_state; /* Power Level.*/
 	uchar	power_level_desired_steady_state;
@@ -6855,38 +6864,38 @@ typedef struct fru_info {
 
 typedef struct get_device_locator_record_id_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. This contains
-					   the FRU Device ID to use when 
-					   returning the Record ID. A value 
-					   of zero returns the Management 
-					   Controller Device Locator Record 
-					   ID. A value between 1 and Max FRU 
-					   Device ID (see Table 3-9, Get 
+					   the FRU Device ID to use when
+					   returning the Record ID. A value
+					   of zero returns the Management
+					   Controller Device Locator Record
+					   ID. A value between 1 and Max FRU
+					   Device ID (see Table 3-9, Get
 					   PICMG Properties command) returns
-					   the FRU Device Locator Record ID. 
-					   As per the IPMI specification, a 
-					   value of FFh is reserved Response 
+					   the FRU Device Locator Record ID.
+					   As per the IPMI specification, a
+					   value of FFh is reserved Response
 					   data. */
-} GET_DEVICE_LOCATOR_RECORD_ID_CMD_REQ; 
+} GET_DEVICE_LOCATOR_RECORD_ID_CMD_REQ;
 
 typedef struct get_device_locator_record_id_cmd_resp {
 	uchar	completion_code;	/* Completion Code
 					   CCHIf the LED ID contained in
 					   the Request data is not present
 					   on the FRU. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	uchar	record_id_LSB;		/* Record ID LS. Contains the least 
+	uchar	record_id_LSB;		/* Record ID LS. Contains the least
 					   significant byte of the Record ID
 					   for the appropriate Device Locator
 					   SDR. */
-	uchar	record_id_MSB;		/* Record ID MS. Contains the most 
+	uchar	record_id_MSB;		/* Record ID MS. Contains the most
 					   significant byte of the Record ID
 					   for the appropriate Device Locator
 					   SDR. */
@@ -6933,17 +6942,17 @@ typedef struct link_info {
 		link_type:8,
 		link_type_extension:4,
 		link_grouping_id:8;
-#endif			    
+#endif
 } LINK_INFO;
 
 typedef struct set_port_state_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 
-	/* Link Info. LS Byte first. Describes the Link that should 
+	/* Link Info. LS Byte first. Describes the Link that should
 	   be enabled or disabled.
 		[31:24]  Link Grouping ID
 		[23:20]  Link Type Extension
@@ -6955,11 +6964,11 @@ typedef struct set_port_state_cmd_req {
 		[07:06]  Interface
 		[05:00]  Channel Number */
 	LINK_INFO	link_info;
-	uchar	state;			/* State. Indicates the desired 
-					   state of the Link as described 
+	uchar	state;			/* State. Indicates the desired
+					   state of the Link as described
 					   by Link Info. */
 #define PORT_STATE_ENABLE	0x1	/* Enable */
-#define PORT_STATE_DISABLE	0x0	/* Disable */	
+#define PORT_STATE_DISABLE	0x0	/* Disable */
 					/* All other values reserved. */
 } SET_PORT_STATE_CMD_REQ;
 
@@ -6994,14 +7003,14 @@ typedef struct get_port_state_cmd_resp {
 					   CCHIf the LED ID contained in
 					   the Request data is not present
 					   on the FRU. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	LINK_INFO link_info1;		/* Link Info 1. LS Byte first. Optional. 
+	LINK_INFO link_info1;		/* Link Info 1. LS Byte first. Optional.
 					   Describes information about Link one
 					   on the specified Channel. If this set of
-					   bytes is not provided, the Channel 
+					   bytes is not provided, the Channel
 					   does not have any Links on the Channel.
 						[31:24]  Link Grouping ID
 						[23:20]  Link Type Extension
@@ -7012,21 +7021,21 @@ typedef struct get_port_state_cmd_resp {
 						[08] - Port 0 Bit Flag
 						[07:06] - Interface. See interface types below.
 						[05:00] - Channel Number */
-	uchar	state1;			/* State 1. Must be present if Link 
+	uchar	state1;			/* State 1. Must be present if Link
 					   Info 1 is present. Indicates
 					   the current state of the Port(s)
 					   on the Channel.
    					     PORT_STATE_ENABLE = 1
-					     PORT_STATE_DISABLE = 0 */	
-	LINK_INFO link_info2;		/* Link Info 2. LS Byte first. Optional. 
-					   Similar to Link Info 1. Used for cases 
+					     PORT_STATE_DISABLE = 0 */
+	LINK_INFO link_info2;		/* Link Info 2. LS Byte first. Optional.
+					   Similar to Link Info 1. Used for cases
 					   where a second Link has been established. */
 	uchar	state2;			/* State 2. Similar to State 1. */
-	LINK_INFO link_info3;		/* Link Info 3. LS Byte first. Optional. 
+	LINK_INFO link_info3;		/* Link Info 3. LS Byte first. Optional.
 					   Similar to Link Info 1. Used for cases
 					   where a third Link has been established. */
 	uchar	state3;			/* State 3. Similar to State 1. */
-	LINK_INFO link_info4;		/* Link Info 4. LS Byte first. Optional. 
+	LINK_INFO link_info4;		/* Link Info 4. LS Byte first. Optional.
 					   Similar to Link Info 1.
 					   Used for cases where a fourth Link
 					   has been established. */
@@ -7046,40 +7055,40 @@ typedef struct get_port_state_cmd_resp {
 
 typedef struct bused_resource_control_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 
 	uchar	command_types;			/* Command Types for Shelf Manager to Board
-					   0 = Query, ask a Board if it has control 
+					   0 = Query, ask a Board if it has control
 					   of the bus
-					   1 = Release, request a Board to release 
+					   1 = Release, request a Board to release
 					   control of the bus when no longer in-use
 					   2 = Force, command a Board to release
 					   control of bus immediately. For
-					   the Metallic Test Bus, the Board must 
+					   the Metallic Test Bus, the Board must
 					   cease any and all use of the bus
 					   (i.e., disconnect from the bus). For
 					   the Synchronization Clock group, the
-					   Board must stop driving the bus 
+					   Board must stop driving the bus
 					   (receiving is not governed by EKeying).
-					   3=Bus Free, inform a Board that 
+					   3=Bus Free, inform a Board that
 					   Requested the bus previously (and
-					   was given a Defer) that the bus is 
+					   was given a Defer) that the bus is
 					   now available.
 					   Command Types for Board to Shelf Manager
-					   0 = Request, request to seize control 
+					   0 = Request, request to seize control
 					   of the bus
 					   1 = Relinquish, indicate to the Shelf
-					   Manager that the Board has relinquished 
-					   control of the bus and that use of 
+					   Manager that the Board has relinquished
+					   control of the bus and that use of
 					   the bus by all Boards in its application
-					   has ceased. Indicates that the Shelf 
+					   has ceased. Indicates that the Shelf
 					   Manager can reassign control of the bus.
 					   2 = Notify, notify the Shelf Manager
 					   that control of the bused resource
-					   has been transferred to this Board 
+					   has been transferred to this Board
 					   from another authorized Board
 					   All other values reserved */
 	uchar	bused_resource_id;	/* Bused Resource ID
@@ -7096,17 +7105,17 @@ typedef struct bused_resource_control_cmd_resp {
 					   CCHIf the LED ID contained in
 					   the Request data is not present
 					   on the FRU. */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	uchar	status;			/* Status. See Table 3-45, 
+	uchar	status;			/* Status. See Table 3-45,
 					   Bused Resource Control command status, for
-					   values. Any values not specified in the table 
+					   values. Any values not specified in the table
 					   are reserved. */
 } BUSED_RESOURCE_CONTROL_CMD_RESP;
 
-/* Table 3-45 Bused Resource Control command status 
+/* Table 3-45 Bused Resource Control command status
 Command
 direction
 Command
@@ -7198,7 +7207,7 @@ typedef struct get_sensor_reading_ipmb_cmd_resp {
 #ifdef BF_MS_FIRST
 	uchar	ipmb_b_override_state:1,	/* [7]  IPMB B Override State
 						   0b = Override state, bus isolated
-						   1b = Local Control state - IPM 
+						   1b = Local Control state - IPM
 						   Controller determines state of bus. */
 		ipmb_b_local_status:3,		/* [6:4] = IPMB B Local Status */
 #define IPMB_STATUS_NO_FAILURE		0x0	/* 0h = No Failure. Bus enabled if no override in effect. */
@@ -7207,14 +7216,14 @@ typedef struct get_sensor_reading_ipmb_cmd_resp {
 #define IPMB_STATUS_UNABLE_CLOCK_LO	0x3	/* 3h = Unable to drive clock LO */
 #define IPMB_STATUS_UNABLE_DATA_LO	0x4	/* 4h = Unable to drive data LO */
 #define IPMB_STATUS_CLOCK_LO_TIMEOUT	0x5	/* 5h = Clock low timeout */
-#define IPMB_STATUS_UNDER_TEST		0x6	/* 6h = Under test (the IPM 
-						        Controller is attempting to 
+#define IPMB_STATUS_UNDER_TEST		0x6	/* 6h = Under test (the IPM
+						        Controller is attempting to
 						        determine if it is causing a
 						        bus hang). */
 #define IPMB_STATUS_UNDIAG_COM_FAILURE	0x7	/* 7h = Undiagnosed Communications Failure */
 		ipmb_a_override_state:1,	/* [3]  IPMB A Override State
 						   0b = Override state, bus isolated
-						   1b = Local Control state - IPM 
+						   1b = Local Control state - IPM
 						   Controller determines state of bus. */
 		ipmb_a_local_status:3;		/* [2:0] = IPMB A Local Status (see IPMB_STATUS above) */
 #else
@@ -7223,11 +7232,11 @@ typedef struct get_sensor_reading_ipmb_cmd_resp {
 		ipmb_b_local_status:3,
 		ipmb_b_override_state:1;
 #endif
-	uchar	std_ipmi_byte;			/* Standard IPMI byte (see Get Sensor Reading 
+	uchar	std_ipmi_byte;			/* Standard IPMI byte (see Get Sensor Reading
 						   in IPMI specification)
 				[7]  0b = All Event Messages disabled from this sensor
 				[6]  0b = Sensor scanning disabled
-				[5]  1b = Initial update in progress. 
+				[5]  1b = Initial update in progress.
 				This bit is set to indicate that a
 				Re-arm Sensor Events or Set Event Receiver command has
 				been used to request an update of the sensor status, and that
@@ -7251,7 +7260,7 @@ typedef struct get_sensor_reading_ipmb_cmd_resp {
 		ipmb_a_enabled_ipmb_b_disabled:1,	/* [1] 1b = IPMB-A enabled, IPMB-B disabled */
 		ipmb_a_disabled_ipmb_b_enabled:1,	/* [2] 1b = IPMB A disabled, IPMB-B enabled */
 		ipmb_a_enabled_ipmb_b_enabled:1,	/* [3] 1b = IPMB A enabled, IPMB-B enabled */
-		:4;					      
+		:4;
 #endif
 	uchar 	reserved2;			/* [7:0]  Optional/Reserved. If provided,
 						   write as 80h (IPMI restriction). Ignore on read. */
@@ -7273,7 +7282,7 @@ typedef struct ipmb_status_change_event_msg {
 		event_direction:1;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	event_data1:4,		/* Event Data 1 [7:4] = Ah (OEM code 
+	uchar	event_data1:4,		/* Event Data 1 [7:4] = Ah (OEM code
 					   in Event Data 2, OEM code in Event Data 3) */
 		offset:4;		/* [3:0] = Offset
 					   00h  IPMB-A disabled, IPMB-B disabled
@@ -7285,7 +7294,7 @@ typedef struct ipmb_status_change_event_msg {
 		event_data1:4;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	event_data2:4,		/* Event Data 2 [7:4] = Channel Number. For 
+	uchar	event_data2:4,		/* Event Data 2 [7:4] = Channel Number. For
 					   AdvancedTCA, this will typically
 					   be 0h to indicate IPMB-0 */
 		:4;			/* [3:0] = Reserved */
@@ -7296,12 +7305,12 @@ typedef struct ipmb_status_change_event_msg {
 #ifdef BF_MS_FIRST
 	uchar 	ipmb_b_override_state:1,/* Event Data 3 [7]  IPMB B Override State
 					   0b = Override state, bus isolated
-					   1b = Local Control state IPM 
+					   1b = Local Control state IPM
 					   Controller determines state of bus. */
 		ipmb_b_local_status:3,	/* [6:4] = IPMB B Local Status (see IPMB_STATUS above) */
 		ipmb_a_override_state:1,/* [3]  IPMB A Override Status
 					   0b = Override status, bus isolated
-					   1b = Local Control state  IPM 
+					   1b = Local Control state  IPM
 					   Controller determines state of bus. */
 		ipmb_a_local_status:3;	/* [2:0] = IPMB A Local Status (see IPMB_STATUS above) */
 #else
@@ -7311,7 +7320,7 @@ typedef struct ipmb_status_change_event_msg {
 		ipmb_b_override_state:1;
 #endif
 } IPMB_STATUS_CHANGE_EVENT_MSG;
-/*		
+/*
 		Response data 1 Completion Code.
 */
 
@@ -7321,41 +7330,41 @@ typedef struct ipmb_status_change_event_msg {
 
 typedef struct set_ipmb_state_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 #ifdef BF_MS_FIRST
-	uchar	ipmb_a_state:1,		/* IPMB-A State. Indicates the state of 
+	uchar	ipmb_a_state:1,		/* IPMB-A State. Indicates the state of
 					   IPMB-A. Options are:
 					   [0] - IPMB-A State
 					   0h = Override state - Isolate (disable)
-					   1h = Local Control state - IPM 
+					   1h = Local Control state - IPM
 					   Controller determines state of IPMB-A */
 		ipmb_a_link_id:7;	/* [1:7] - IPMB-0 Link Identification
-					   00h = Select All IPMB-0 Links (also 
+					   00h = Select All IPMB-0 Links (also
 					   the value for bused IPMB-0)
 					   01h - 5Fh = IPMB-0 Link Number 1 to 95
 					   60h - 7Eh = reserved
-					   If Byte 2 = FFh, command does not change 
+					   If Byte 2 = FFh, command does not change
 					   current state of IPMB-A */
 #else
 	uchar	ipmb_a_link_id:7,
 		ipmb_a_state:1;
 #endif
 #ifdef BF_MS_FIRST
-	uchar	ipmb_b_state:1,		/* IPMB-B State. Indicates the state of 
+	uchar	ipmb_b_state:1,		/* IPMB-B State. Indicates the state of
 					   IPMB-B. Options are:
 					   [0] - IPMB-B State
 					   0h = Override state - Isolate (disable)
-					   1h = Local Control state - IPM 
+					   1h = Local Control state - IPM
 					   Controller determines state of IPMB-B */
 		ipmb_b_link_id:7;	/* [1:7] - IPMB-0 Link Identification
-					   00h = Select All IPMB-0 Links (also 
+					   00h = Select All IPMB-0 Links (also
 					   the value for bused IPMB-0)
 					   01h - 5Fh = IPMB-0 Link Number 1 to 95
 					   60h - 7Eh = reserved
-					   If Byte 2 = FFh, command does not change 
+					   If Byte 2 = FFh, command does not change
 					   current state of IPMB-B */
 #else
 	uchar	ipmb_b_link_id:7,
@@ -7365,9 +7374,9 @@ typedef struct set_ipmb_state_cmd_req {
 
 typedef struct set_ipmb_state_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 } SET_IPMB_STATE_CMD_RESP;
 
@@ -7377,39 +7386,39 @@ typedef struct set_ipmb_state_cmd_resp {
 
 typedef struct compute_power_properties_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	uchar	fru_dev_id;		/* FRU Device ID. Indicates an 
-					   individual FRU device to lock 
+	uchar	fru_dev_id;		/* FRU Device ID. Indicates an
+					   individual FRU device to lock
 					   in the power properties. */
 } COMPUTE_POWER_PROPERTIES_CMD_REQ;
 
 typedef struct compute_power_properties_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	uchar	num_slots;		/* Number of Spanned Slots. Indicates 
-					   the total number of Slots spanned 
-					   by the Board. This shall be 1 for 
+	uchar	num_slots;		/* Number of Spanned Slots. Indicates
+					   the total number of Slots spanned
+					   by the Board. This shall be 1 for
 					   a Board that inserts into a single
 					   Slot and any non-Board FRU. */
-	uchar	ipm_location;		/* IPM Controller Location. 
-					   When a Board spans more than one 
-					   Slot (a multi-Slot Board), the Shelf 
+	uchar	ipm_location;		/* IPM Controller Location.
+					   When a Board spans more than one
+					   Slot (a multi-Slot Board), the Shelf
 					   Manager needs to know which Slot
-					   contains the IPM Controller. This 
+					   contains the IPM Controller. This
 					   number shall treat the left most Slot
-					   location of the multi-Slot Board 
+					   location of the multi-Slot Board
 					   as 0 and increment by single units
 					   moving to the right. This value shall
 					   be 0 for a Board that inserts into
-					   a single Slot and any non-Board FRU. 
+					   a single Slot and any non-Board FRU.
 					   This value shall represent the
-					   location of the Zone 1 connection 
+					   location of the Zone 1 connection
 					   for the Board. */
 } COMPUTE_POWER_PROPERTIES_CMD_RESP;
 
@@ -7420,9 +7429,9 @@ typedef struct compute_power_properties_cmd_resp {
 
 typedef struct get_power_level_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. Indicates an
 					   individual FRU device to query. */
@@ -7438,57 +7447,57 @@ All other values reserved.
 
 typedef struct get_power_level_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 #ifdef BF_MS_FIRST
 	uchar	dyn_power_config:1,	/* Properties. This holds properties about the FRU.
-					   [7] Dynamic Power Configuration. Set 
-					   to 1b if the FRU supports dynamic 
-					   reconfiguration of power (i.e., 
-					   the Payload service is uninterrupted 
+					   [7] Dynamic Power Configuration. Set
+					   to 1b if the FRU supports dynamic
+					   reconfiguration of power (i.e.,
+					   the Payload service is uninterrupted
 					   when power levels are altered). */
 		:2,			/* [6:5] Reserved. */
-		power_level:5;		/* [4:0] Power Level. When requesting 
-					   Steady state power draw levels, 
-					   this represents the power level of 
-					   the FRU. When requesting desired power 
-					   levels, this represents the power 
+		power_level:5;		/* [4:0] Power Level. When requesting
+					   Steady state power draw levels,
+					   this represents the power level of
+					   the FRU. When requesting desired power
+					   levels, this represents the power
 					   level the FRU would like to have. */
 #else
 	uchar	power_level:5,
 		:2,
 		dyn_power_config:1;
 #endif
-	uchar	delay_to_stable_power;	/* Delay to Stable Power. This byte 
+	uchar	delay_to_stable_power;	/* Delay to Stable Power. This byte
 					   shall be written as 00h when Power
 					   Type is Steady state power draw levels
-					   or Desired steady state draw levels. 
+					   or Desired steady state draw levels.
 					   Otherwise, this byte shall contain the
 					   amount of time before power transitions
 					   from the early power levels to the normal
 					   levels. This value is returned in tenths
 					   of a second. */
-	uchar	power_multiplier;	/* Power Multiplier. This defines the 
+	uchar	power_multiplier;	/* Power Multiplier. This defines the
 					   number of tenths of a Watt by
-					   which to multiply all values held 
+					   which to multiply all values held
 					   in bytes 6 and beyond. This is
 					   included to allow a FRU that spans
 					   multiple locations to specify
-					   higher power draws. For instance, 
+					   higher power draws. For instance,
 					   if this byte holds a 50, then bytes 6
 					   and beyond specify 5 W increments. */
-	uchar	power_draw[20];		/* Power Draw[1..N]. The first entry 
+	uchar	power_draw[20];		/* Power Draw[1..N]. The first entry
 					   reflects the lowest level of power
 					   (minimum power level) used by the FRUs Payload.
-					   Power Draw[Max]. The last entry 
+					   Power Draw[Max]. The last entry
 					   reflects the highest level of power
 					   used by the FRUs Payload. Everything
 					   is powered full capacity. Any bytes
-					   past the 6th byte are optional. The 
-					   maximum value of N is 25 (which 
-					   corresponds to a Max value of 20) 
+					   past the 6th byte are optional. The
+					   maximum value of N is 25 (which
+					   corresponds to a Max value of 20)
 					   due to IPMI message size restrictions. */
 
 } GET_POWER_LEVEL_CMD_RESP;
@@ -7499,9 +7508,9 @@ typedef struct get_power_level_cmd_resp {
 
 typedef struct set_power_level_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. Indicates an
 					   individual FRU device to query. */
@@ -7510,7 +7519,7 @@ typedef struct set_power_level_cmd_req {
 					   support circuitry is running (e.g.,
 					   IPM Controller, fans running to cool
 					   management circuitry, PEMs, FRU devices).
-					   01h - 14h = Select the power level, 
+					   01h - 14h = Select the power level,
 					   if available.
 					   FFh = Do not change current power level.
 					   All other values reserved. */
@@ -7522,9 +7531,9 @@ typedef struct set_power_level_cmd_req {
 
 typedef struct set_power_level_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 } SET_POWER_LEVEL_CMD_RESP;
 
@@ -7533,9 +7542,9 @@ typedef struct set_power_level_cmd_resp {
 /*----------------------------------------------------------------------*/
 typedef struct get_fan_speed_properties_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. Indicates an
 					   individual FRU device to query. */
@@ -7543,28 +7552,28 @@ typedef struct get_fan_speed_properties_cmd_req {
 
 typedef struct get_fan_speed_properties_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 
-	uchar	min_speed_level;	/* Minimum Speed Level. This field 
+	uchar	min_speed_level;	/* Minimum Speed Level. This field
 					   describes the minimum setting that
-					   is accepted by the Set Fan Level 
+					   is accepted by the Set Fan Level
 					   command. */
-	uchar	max_speed_level;	/* Maximum Speed Level. This field 
+	uchar	max_speed_level;	/* Maximum Speed Level. This field
 					   describes the maximum setting that
-					   is accepted by the Set Fan Level 
+					   is accepted by the Set Fan Level
 					   command. */
-	uchar	norm_operating_level;	/* Normal Operating Level. This 
-					   field represents the default 
-					   normal fan speed recommended by 
+	uchar	norm_operating_level;	/* Normal Operating Level. This
+					   field represents the default
+					   normal fan speed recommended by
 					   the fan manufacturer. */
-	uchar	fan_tray_prop;		/* Fan Tray Properties. This field 
+	uchar	fan_tray_prop;		/* Fan Tray Properties. This field
 					   holds properties of the Fan Tray.
-					   [7]  Local Control Mode Supported. 
+					   [7]  Local Control Mode Supported.
 					   This bit is set to 1b if the Fan
-					   Tray supports automatic adjustment 
+					   Tray supports automatic adjustment
 					   of the fan speed.
 					   [6:0]  Reserved. */
 #define	FAN_TRAY_LOCAL_CONTROL_MODE_SUPPORTED	0x80
@@ -7578,9 +7587,9 @@ typedef struct get_fan_speed_properties_cmd_resp {
 
 typedef struct get_fan_level_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	fru_dev_id;		/* FRU Device ID. Indicates an
 					   individual FRU device to query. */
@@ -7588,35 +7597,35 @@ typedef struct get_fan_level_cmd_req {
 
 typedef struct get_fan_level_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	uchar	override_fan_level;	/* Override Fan Level. Indicates the 
+	uchar	override_fan_level;	/* Override Fan Level. Indicates the
 					   fan level that the Shelf Manager
 					   has selected, which must be in the
 					   range Minimum Speed Level to
-					   Maximum Speed Level, or equal 
+					   Maximum Speed Level, or equal
 					   to FEh or FFh.
-					   FEh = Fan has been placed in 
-					   Emergency Shut Down by the 
+					   FEh = Fan has been placed in
+					   Emergency Shut Down by the
 					   Shelf Manager
-					   FFh = Fan operating in Local 
+					   FFh = Fan operating in Local
 					   Control mode */
-	uchar	local_control_fan_level;/* Local Control Fan Level - This 
+	uchar	local_control_fan_level;/* Local Control Fan Level - This
 					   byte is optional if the Fan Tray does
-					   not support Local Control. When 
+					   not support Local Control. When
 					   present, this byte always indicates
-					   the Local Control fan level as 
+					   the Local Control fan level as
 					   determined by the Fan Tray controller.
-					   When Local Control is supported, 
-					   the actual fan level is: 
-					   1) the value of this byte if 
+					   When Local Control is supported,
+					   the actual fan level is:
+					   1) the value of this byte if
 					   Override Fan Level is FFh, or
 					   2) the larger of this byte and
-					   Override Fan Level, or 
+					   Override Fan Level, or
 					   3) Emergency Shut Down if either
-					   Override Fan Level or this byte 
+					   Override Fan Level or this byte
 					   has a value FEh. */
 } GET_FAN_LEVEL_CMD_RESP;
 
@@ -7627,26 +7636,26 @@ typedef struct get_fan_level_cmd_resp {
 
 typedef struct set_fan_level_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	uchar	fru_dev_id;		/* FRU Device ID. Indicates the FRU 
+	uchar	fru_dev_id;		/* FRU Device ID. Indicates the FRU
 					   device for which the command is
 					   intended. */
-	uchar	fan_level;		/* Fan Level. To be accepted, this 
+	uchar	fan_level;		/* Fan Level. To be accepted, this
 					   value shall be: 1) greater than or
 					   equal to Minimum Speed Level and
 					   less than or equal to Maximum
-					   Speed Level, or 2) FEh (Emergency 
+					   Speed Level, or 2) FEh (Emergency
 					   Shut Down) or 3) FFh (Local Control). */
 } SET_FAN_LEVEL_CMD_REQ;
 
 typedef struct set_fan_level_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 } SET_FAN_LEVEL_CMD_RESP;
 
@@ -7656,13 +7665,13 @@ typedef struct set_fan_level_cmd_resp {
 
 typedef struct renegotiate_power_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
-	uchar	fru_dev_id;		/* Requesting FRU Device ID. This 
+	uchar	fru_dev_id;		/* Requesting FRU Device ID. This
 					   byte is optional. If this is present,
-					   designates which FRU Device ID 
+					   designates which FRU Device ID
 					   wishes to have power levels
 					   renegotiated. If this byte is not
 					   present, the Shelf Manager
@@ -7672,9 +7681,9 @@ typedef struct renegotiate_power_cmd_req {
 
 typedef struct renegotiate_power_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 } RENEGOTIATE_POWER_CMD_RESP;
 
@@ -7685,9 +7694,9 @@ typedef struct renegotiate_power_cmd_resp {
 
 typedef struct get_ipmb_link_info_cmd_req {
 	uchar	command;
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 
 	uchar	qualifier;	/* 00 = Byte 3 of the request contains an IPMB-0 Link Number (1-95).
@@ -7698,9 +7707,9 @@ typedef struct get_ipmb_link_info_cmd_req {
 
 typedef struct get_ipmb_link_info_cmd_resp {
 	uchar	completion_code;	/* Completion Code */
-	uchar	picmg_id;		/* PICMG Identifier. Indicates that 
+	uchar	picmg_id;		/* PICMG Identifier. Indicates that
 					   this is a PICMG-defined group
-					   extension command. A value of 
+					   extension command. A value of
 					   00h shall be used. */
 	uchar	link_number;		/* IPMB-0 Link Number */
 	uchar	sensor_number;		/* IPMB-0 Sensor Number */
@@ -7739,25 +7748,25 @@ typedef struct fru_temperature_event_msg_req {
 					   00b = Unspecified Event Data 2
 					   01b = Trigger reading in Event Data 2
 					   10b = OEM code in Event Data 2
-					   11b = Sensor-specific event extension 
+					   11b = Sensor-specific event extension
 						 code in Event Data 2 */
-		evt_data3_qual:2,	/* [5:4] - Event data 3 qualifier 
+		evt_data3_qual:2,	/* [5:4] - Event data 3 qualifier
 					   00b = Unspecified Event Data 3
 					   01b = Trigger threshold value in Event Data 3
 					   10b = OEM code in Event Data 3
 					   11b = Sensor-specific event extension code in Event Data 3 */
-		
+
 		evt_data2_qual:2;		/* [3:0] - reason for the event
 					   00h - 05h = IPMI Lower Thresholds
 					   07h = Upper Non-critical (minor) - going high
 					   09h = Upper Critical (major) - going high
 					   0Bh = Upper Non-recoverable (critical) - going high */
 	/* Event Data 2 */
-	uchar	temp_reading;		/* Event Data 2 - reading that triggered event, 
+	uchar	temp_reading;		/* Event Data 2 - reading that triggered event,
 					   FFh or not present if unspecified. */
 	/* Event Data 3 */
-	uchar	threshold;		/* Event Data 3 - threshold value that triggered 
-					   event, FFh or not present if unspecified. 
+	uchar	threshold;		/* Event Data 3 - threshold value that triggered
+					   event, FFh or not present if unspecified.
 					   If present, byte 2 must be present. */
 } FRU_TEMPERATURE_EVENT_MSG_REQ;
 
@@ -7780,8 +7789,8 @@ typedef struct fru_ipmb_0_event_msg_req {
 						/*  	 01h = IPMB-A enabled, IPMB-B disabled */
 						/*  	 00h = IPMB A disabled, IPMB-B disabled */
 #else
-	uchar	offset:4,								
-		oem:4;					      
+	uchar	offset:4,
+		oem:4;
 #endif
 	/* Event Data 2 */
 #ifdef BF_MS_FIRST
@@ -7795,12 +7804,12 @@ typedef struct fru_ipmb_0_event_msg_req {
 #ifdef BF_MS_FIRST
 	uchar	ipmb_b_override_state:1,	/* [7]  IPMB B Override State
 						   0b = Override state, bus isolated
-						   1b = Local Control state - IPM 
+						   1b = Local Control state - IPM
 						   Controller determines state of bus. */
 		ipmb_b_local_status:3,		/* [6:4] = IPMB B Local Status */
 		ipmb_a_override_state:1,	/* [3]  IPMB A Override State
 						   0b = Override state, bus isolated
-						   1b = Local Control state - IPM 
+						   1b = Local Control state - IPM
 						   Controller determines state of bus. */
 		ipmb_a_local_status:3;		/* [2:0] = IPMB A Local Status (see IPMB_STATUS above) */
 #else
@@ -7883,11 +7892,11 @@ typedef struct fru_ipmb_0_event_msg_req {
 typedef struct str_lst{
 	int id;
 	char *str;
-} STR_LST;	
+} STR_LST;
 
 
 
-void ipmi_process_pkt( IPMI_WS *ws ); 
+void ipmi_process_pkt( IPMI_WS *ws );
 void ipmi_initialize( void );
 unsigned char ipmi_get_next_seq( unsigned char *seq );
 unsigned char ipmi_calculate_checksum( unsigned char *ptr, int numchar );

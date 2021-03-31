@@ -21,3 +21,5 @@ typedef unsigned char u8;
 
 int i2c_write(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 data); 
 int i2c_read(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 *result);
+void i2c_sensor_initialize(void);
+void i2c_sensor_deinitialize(void);

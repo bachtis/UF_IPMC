@@ -1,5 +1,5 @@
 /*
-    UF_IPMC/logger.c
+    UF_IPMC/semaphore.h
 
     Copyright (C) 2020 Aleksei Greshilov
     aleksei.greshilov@cern.ch
@@ -17,27 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with UF_IPMC.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include "logger.h"
-
-void logger(const char* tag, const char* fmt, ...) {
-	time_t now;
-	time(&now);
-	FILE* fp;
-
-	fp = fopen("/tmp/uf_ipmc.log", "a+");
-	if (fp != NULL) {
-		va_list argp;
-		
-		va_start(argp, fmt);
-		fprintf(fp, "\n\n%s [%s]:\n ", ctime(&now), tag);
-		fprintf(fp, fmt, argp);
-		va_end(argp);
-		fflush(fp);
-		fclose(fp);
-	}
-}
+void lock (int i2c_bus);
+void unlock (int i2c_bus);
+int create_semaphore (int dev_ind);

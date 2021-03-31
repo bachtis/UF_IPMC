@@ -30,6 +30,7 @@
 #include "sensor.h"
 #include "logger.h"
 #include "user-sensor.h"
+#include "semaphore.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -43,16 +44,32 @@ extern FRU_CACHE fru_inventory_cache[];
 extern unsigned char current_sensor_count;
 extern SDR_ENTRY sdr_entry_table[];
 extern int i2c_fd_snsr[];
+extern pthread_mutex_t* mutex[];
 extern FULL_SENSOR_RECORD sdr[];
 extern SENSOR_DATA sd[];
 
 /*==============================================================*/
-/* User Local Function Prototypes				*/
+/* Local Function Prototypes					*/
 /*==============================================================*/
 int user_module_payload_status( void );
 void pok_state_poll( unsigned char *arg );
 
+/*==============================================================*/
+/* USER SEMAPHORE INITIALIZATION				*/
+/*==============================================================*/
+void
+semaphore_initialize( void )
+{
+	if (create_semaphore(1) < 0) 
+	{
+		logger("ERROR", "Semaphore initialization failed for sensor bus 1");
+	}
 
+	if (create_semaphore(2) < 0) 
+	{
+		logger("ERROR", "Semaphore initialization failed for sensor bus 2");
+	}
+}
 
 /*==============================================================
  * USER SENSOR STATE POLL INITIALIZATION
@@ -271,27 +288,40 @@ read_sensor_pok(int first_time, int i2c_bus, int sensor_number, int topbot)
 void 
 read_sensor_top_pok( void )
 {
+	lock(1);
+
 	static int skip_sensor = 0;
-	if (skip_sensor == 1) return;
-	static int first_time = 1;
 
-	// params: first_time, i2c_bus, sensor_number, top/bottom (1/2)
-	skip_sensor = read_sensor_pok (first_time, 1, 6, 1);
+	if (skip_sensor != 1)
+	{
+		static int first_time = 1;
 
-	first_time = 0;
+		// params: first_time, i2c_bus, sensor_number, top/bottom (1/2)
+		skip_sensor = read_sensor_pok (first_time, 1, 6, 1);
+
+		first_time = 0;
+	}
+
+	unlock(1);
 }
 
 void 
 read_sensor_bottom_pok( void )
 {
+	lock(2);
+
 	static int skip_sensor = 0;
-	if (skip_sensor == 1) return;
-	static int first_time = 1;
+	if (skip_sensor != 1)
+	{
+		static int first_time = 1;
 
-	// params: first_time, i2c_bus, sensor_number, top/bottom (1/2)
-	skip_sensor = read_sensor_pok (first_time, 2, 7, 2); 
+		// params: first_time, i2c_bus, sensor_number, top/bottom (1/2)
+		skip_sensor = read_sensor_pok (first_time, 2, 7, 2); 
 
-	first_time = 0;
+		first_time = 0;
+	}
+
+	unlock(2);
 }
 
 void

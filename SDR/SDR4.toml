@@ -35,7 +35,7 @@ powerup_sensor_scanning = 1			#[0] powerup_sensor_scanning
 #BYTE 12 - Sensor capabilities
 ignore_sensor = 1				#[7] ignore_sensor
 sensor_manual_support = 1			#[6] sensor_manual_support
-sensor_hysteresis_support = 3			#[5:4] sensor_hysteresis_support 
+sensor_hysteresis_support = 3			#[5:4] sensor_hysteresis_support
 sensor_threshold_access = 2			#[3:2] sensor_threshold_access
 event_msg_control = 0				#[1:0] event_msg_control
 
@@ -47,34 +47,34 @@ deassertion_event_mask = 0x2200			#17,18 deassertion event mask
 reading_mask = 0x1010				#19,20 reading_mask
 
 #BYTE 21
-analog_data_format = 0				#[7:6] Analog (numeric) Data Format - 2s complement (signed)
+analog_data_format = 2				#[7:6] Analog (numeric) Data Format - 2s complement (signed)
 rate_unit = 0					#[5:3] rate_unit - 000b = none
-modifier_unit = 2				#[2:1] modifier_unit - 00b = none
-percentage = 2					#[0] percentage - 0b
+modifier_unit = 0				#[2:1] modifier_unit - 00b = none
+percentage = 0					#[0] percentage - 0b
 
 sensor_units2 = 1				#22 sensor_units2
 sensor_units3 = 0				#23 sensor_units3
 
 linearization = 0				#24 linearization
-M = 1						#25 M 
+M = 1						#25 M
 M_tolerance = 0					#26 M Tolerance
 B = 0						#27 B
-B_accuracy = 0					#28 B Accuracy 
+B_accuracy = 0					#28 B Accuracy
 accuracy = 0					#29 Accuracy, Accuracy exp, Sensor Direction
-K1 = 0                                          #30 R exp 
-K2 = 0                                          #30 B exp 
-analog_characteristic_flags = 0			#31 Analog characteristic flags 
+K1 = 0                                          #30 R exp
+K2 = 0                                          #30 B exp
+analog_characteristic_flags = 0			#31 Analog characteristic flags
 nominal_reading = 0				#32 Nominal Reading
 normal_maximum = 0				#33 Normal Maximum - Given as a raw value.
 normal_minimum = 0				#34 Normal Minimum - Given as a raw value.
-sensor_maximum_reading = 0x7F			#35 Sensor Maximum Reading 
+sensor_maximum_reading = 0x7F			#35 Sensor Maximum Reading
 sensor_minimum_reading = 0xC9			#36 Sensor Minimum Reading
 upper_non_recoverable_threshold = 0x7F		#37 Upper non-recoverable Threshold
-upper_critical_threshold = 0x4B			#38 Upper critical Threshold 
-upper_non_critical_threshold = 0x3C		#39 Upper non-critical Threshold 
+upper_critical_threshold = 0x4B			#38 Upper critical Threshold
+upper_non_critical_threshold = 0x3C		#39 Upper non-critical Threshold
 lower_non_recoverable_threshold = 0xFB		#40 Lower non-recoverable Threshold
-lower_critical_threshold = 5			#41 Lower critical Threshold 
-lower_non_critical_threshold = 0xA		#42 Lower non-critical Threshold 
+lower_critical_threshold = 5			#41 Lower critical Threshold
+lower_non_critical_threshold = 0xA		#42 Lower non-critical Threshold
 positive_going_threshold_hysteresis_value = 0	#43 Positive-going Threshold Hysteresis value
 negative_going_threshold_hysteresis_value = 0	#44 Negative-going Threshold Hysteresis value
 reserved2 = 0					#45 reserved. Write as 00h.
@@ -82,5 +82,3 @@ reserved3 = 0					#46 reserved. Write as 00h.
 oem = 0						#47 OEM - Reserved for OEM use.
 id_str_typ_len = 0xCA				#48 id_str_typ_len Sensor ID String Type/Length Code, 5 chars in str
 id_string_bytes = ["T", "E", "M", "P", " ", "D", "U", "M", "M", "Y"]	#ID String Bytes
-
-
