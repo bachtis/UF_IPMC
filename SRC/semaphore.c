@@ -28,6 +28,7 @@
 #include <sys/sem.h>
 #include <errno.h>
 #include "semaphore.h"
+#include "logger.h"
 
 #define MAX_DEVICES 20
 

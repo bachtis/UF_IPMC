@@ -467,7 +467,7 @@ clear_sdr_repository( IPMI_PKT *pkt )
   resp->erasure_progress = 1;
 
   resp->completion_code = CC_NORMAL;
-  pkt->hdr.resp_data_len = sizeof( RESERVE_SDR_REPOSITORY_CMD_RESP ) - 1;
+  pkt->hdr.resp_data_len = sizeof( CLEAR_SDR_REPOSITORY_CMD_RESP );
 }
 
 /*

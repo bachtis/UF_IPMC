@@ -25,14 +25,15 @@
 #include "i2c.h"
 #include "timer.h"
 #include "debug.h"
-#include <stdio.h>
-#include <stdarg.h>
 #include "debug.h"
 #include "picmg.h"
 #include "fan.h"
 #include "ipmc.h"
 #include "event.h"
 #include "toml.h"
+#include "logger.h"
+#include <stdio.h>
+#include <stdarg.h>
 
 #define	FRU_DEV_ID	1
 #define SITE_ID		1
@@ -57,14 +58,6 @@ struct {
 
 #define NUM_LINK_INFO_ENTRIES	8
 LINK_INFO_ENTRY link_info_table[NUM_LINK_INFO_ENTRIES];
-
-void picmg_m0_state( unsigned fru_id );
-void picmg_m1_state( unsigned fru_id );
-void picmg_m2_state( unsigned fru_id );
-void picmg_m3_state( unsigned fru_id );
-void picmg_m4_state( unsigned fru_id );
-void picmg_m5_state( unsigned fru_id );
-void picmg_m6_state( unsigned fru_id );
 
 void picmg_get_picmg_properties( IPMI_PKT * );
 void picmg_get_address_info( IPMI_PKT * );
@@ -790,6 +783,8 @@ picmg_m4_state( unsigned fru_id )
 
 	fru[fru_id].state = FRU_STATE_M4_ACTIVE;
 
+	module_payload_on();
+
 	/* dispatch message */
 	ipmi_send_event_req( ( unsigned char * )&msg, sizeof( FRU_HOT_SWAP_EVENT_MSG_REQ ), 0 );
 }
@@ -925,7 +920,7 @@ picmg_set_power_level( IPMI_PKT *pkt )
 				//if( fru[req->fru_dev_id].state == FRU_STATE_M4_ACTIVE ) {
 				if( fru[req->fru_dev_id].state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS ) {
 					picmg_m4_state( req->fru_dev_id );
-					module_payload_on();
+					//module_payload_on();
 				} else {
 					/* architecture dependent - adjust power level */
 					// SET_POWER(fru[req->fru_dev_id].power_level_steady_state)

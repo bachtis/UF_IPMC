@@ -21,6 +21,7 @@
     along with UF_IPMC.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "toml.h"
+#include "logger.h"
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
@@ -33,6 +34,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <sys/ioctl.h>
 
 #define MAX_SENSOR_COUNT	20
 

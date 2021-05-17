@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with UF_IPMC.  If not, see <https://www.gnu.org/licenses/>.
 */
-extern FRU_INFO fru[MAX_FRU_DEV_ID + 1];
+extern FRU_INFO fru[];
 
 void picmg_process_command( IPMI_PKT *pkt );
 void picmg_get_address_info( IPMI_PKT *pkt );
@@ -50,7 +50,12 @@ void picmg_set_fru_activation_policy( IPMI_PKT *pkt );
 void picmg_get_fru_activation_policy( IPMI_PKT *pkt );
 unsigned char picmg_get_hw_address( void );
 unsigned char picmg_get_ipmb0_address( void );
-void picmg_m2_state( unsigned fru );
-void picmg_m2_to_m3_state( unsigned fru );
+void picmg_m0_state( unsigned fru_id );
+void picmg_m1_state( unsigned fru_id );
+void picmg_m2_state( unsigned fru_id );
+void picmg_m3_state( unsigned fru_id );
+void picmg_m4_state( unsigned fru_id );
+void picmg_m5_state( unsigned fru_id );
+void picmg_m6_state( unsigned fru_id );
 void picmg_handle_switch_check( void );
 

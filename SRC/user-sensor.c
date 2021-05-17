@@ -276,7 +276,7 @@ read_sensor_pok(int first_time, int i2c_bus, int sensor_number, int topbot)
 	sd[sensor_number].unavailable = 0;
 
 	// shut down payload if any of the POK bits is down and the power is on
-	if (pok != 0x3f && user_module_payload_status() == 1) 
+	if (pok != 0x3f && user_module_payload_status() == 1 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M4_ACTIVE) 
 	{
 		sprintf (line, "Abnormal %s Module Power OK bits: %x Shutting down payload power\n", topbot == 1 ? "Top" : "Bottom", pok);
 		logger ("POWER FAILURE", line);
