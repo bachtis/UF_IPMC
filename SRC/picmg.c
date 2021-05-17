@@ -1231,8 +1231,8 @@ picmg_get_power_level( IPMI_PKT *pkt )
 			//resp->dyn_power_config = fru[req->fru_dev_id].dyn_power_config;
 			resp->dyn_power_config = 1;
 			resp->delay_to_stable_power = fru[req->fru_dev_id].delay_to_stable_power;
-			resp->power_multiplier = fru[req->fru_dev_id].power_multiplier;
-			//resp->power_draw[0] = 0;
+			//resp->power_multiplier = fru[req->fru_dev_id].power_multiplier;
+			resp->power_multiplier = 10;
 			resp->power_draw[1] = (unsigned char) dsrd_std_state;
 			break;
 		case 0x02:

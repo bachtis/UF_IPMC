@@ -16,7 +16,7 @@ man_handle_status = 0			#enable/disable MANUAL management: 1 = ON, 0 = OFF.
 man_handle_switch = 1			#handle switch: 0 = CLOSED, 1 = OPENED.
 
 [POWER_DRAW]
-desired_steady_state = 0xbe		#desired power draw  = 200 Watts (190 W + 10 W already allocated by the Shelf Manager)
+desired_steady_state = 0xC8		#desired power draw  = 200 Watts 
 
 
 
