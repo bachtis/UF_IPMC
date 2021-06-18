@@ -30,6 +30,7 @@
 #include "sensor.h"
 #include "logger.h"
 #include "user-sensor.h"
+#include "user-payload.h"
 #include "semaphore.h"
 #include <stdio.h>
 #include <stdint.h>
@@ -44,7 +45,6 @@ extern FRU_CACHE fru_inventory_cache[];
 extern unsigned char current_sensor_count;
 extern SDR_ENTRY sdr_entry_table[];
 extern int i2c_fd_snsr[];
-extern pthread_mutex_t* mutex[];
 extern FULL_SENSOR_RECORD sdr[];
 extern SENSOR_DATA sd[];
 
@@ -60,12 +60,12 @@ void pok_state_poll( unsigned char *arg );
 void
 semaphore_initialize( void )
 {
-	if (create_semaphore(1) < 0) 
+	if (create_semaphore(1) < 0)
 	{
 		logger("ERROR", "Semaphore initialization failed for sensor bus 1");
 	}
 
-	if (create_semaphore(2) < 0) 
+	if (create_semaphore(2) < 0)
 	{
 		logger("ERROR", "Semaphore initialization failed for sensor bus 2");
 	}
@@ -121,7 +121,7 @@ user_module_sensor_init( void )
 // this function reads payload power status
 // returns 1 if power is on and POK flags should be stable
 // returns 2 if power was just turned on and POK flags may be unstable
-int 
+int
 user_module_payload_status( void )
 {
 	unsigned int payload_read;
@@ -131,8 +131,8 @@ user_module_payload_status( void )
 	payload_read &= 0x20;
 	if (payload_read != 0)
 	{
-//		if (ramp_up_cnt < 100) 
-		if (lbolt - payload_timeout_init < 1000)	// lbolt - payload_timeout_init < 0.1 sec		
+//		if (ramp_up_cnt < 100)
+		if (lbolt - payload_timeout_init < 1000)	// lbolt - payload_timeout_init < 0.1 sec
 		{
 //			ramp_up_cnt++;
 			return 2; // ramping up, POK flags are not stable yet
@@ -153,7 +153,7 @@ user_module_payload_status( void )
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +	Dummy Temperature Sensor				      +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-void 
+void
 read_sensor_temp_dummy( void )
 {
 	sd[4].last_sensor_reading = 0x19; //25 degrees C
@@ -165,7 +165,7 @@ read_sensor_temp_dummy( void )
 	|| sd[4].last_sensor_reading > sdr[4].upper_critical_threshold)
 	{
 		FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-	
+
 		msg.command = 0x02;
 		msg.evt_msg_rev = 0x04;
 		msg.sensor_type = 0x01;
@@ -185,13 +185,13 @@ read_sensor_temp_dummy( void )
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +	Temperature Sensor (Temp 1)				      +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-void 
+void
 read_sensor_temp_1( void )
 {
 	unsigned char result;
-	
+
 	i2c_read(i2c_fd_snsr[0], 0x48, 0x00, &result);
-	sd[5].last_sensor_reading = result; 
+	sd[5].last_sensor_reading = result;
 	sd[5].sensor_scanning_enabled = 1;
 	sd[5].event_messages_enabled = 1;
 	sd[5].unavailable = 0;
@@ -200,7 +200,7 @@ read_sensor_temp_1( void )
 	|| sd[5].last_sensor_reading > sdr[5].upper_critical_threshold)
 	{
 		FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-	
+
 		msg.command = 0x02;
 		msg.evt_msg_rev = 0x04;
 		msg.sensor_type = 0x01;
@@ -220,7 +220,7 @@ read_sensor_temp_1( void )
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +	FPGA top POK Sensors					      +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-int 
+int
 read_sensor_pok(int first_time, int i2c_bus, int sensor_number, int topbot)
 {
 	char line[1000];
@@ -258,7 +258,7 @@ read_sensor_pok(int first_time, int i2c_bus, int sensor_number, int topbot)
 		// log a message and stop polling
 		sprintf (line, "%s Module POK I2C failure: %d. Marking this sensor as invalid\n", topbot == 1 ? "Top" : "Bottom", res);
 		logger ("WARNING", line);
-		skip_sensor = 1; 
+		skip_sensor = 1;
 		sd[sensor_number].last_sensor_reading = 0;
 		sd[sensor_number].sensor_scanning_enabled = 0;
 		sd[sensor_number].event_messages_enabled = 0;
@@ -276,16 +276,16 @@ read_sensor_pok(int first_time, int i2c_bus, int sensor_number, int topbot)
 	sd[sensor_number].unavailable = 0;
 
 	// shut down payload if any of the POK bits is down and the power is on
-	if (pok != 0x3f && user_module_payload_status() == 1 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M4_ACTIVE) 
+	if (pok != 0x3f && user_module_payload_status() == 1 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M4_ACTIVE)
 	{
 		sprintf (line, "Abnormal %s Module Power OK bits: %x Shutting down payload power\n", topbot == 1 ? "Top" : "Bottom", pok);
 		logger ("POWER FAILURE", line);
-		module_payload_off();
+		user_module_payload_off();
 	}
 	return skip_sensor;
 }
 
-void 
+void
 read_sensor_top_pok( void )
 {
 	lock(1);
@@ -305,7 +305,7 @@ read_sensor_top_pok( void )
 	unlock(1);
 }
 
-void 
+void
 read_sensor_bottom_pok( void )
 {
 	lock(2);
@@ -316,7 +316,7 @@ read_sensor_bottom_pok( void )
 		static int first_time = 1;
 
 		// params: first_time, i2c_bus, sensor_number, top/bottom (1/2)
-		skip_sensor = read_sensor_pok (first_time, 2, 7, 2); 
+		skip_sensor = read_sensor_pok (first_time, 2, 7, 2);
 
 		first_time = 0;
 	}
@@ -329,11 +329,10 @@ pok_state_poll( unsigned char *arg )
 {
 	unsigned char top_pok_timer_handle;
 
-	read_sensor_top_pok();	
-	read_sensor_bottom_pok();	
-	
+	read_sensor_top_pok();
+	read_sensor_bottom_pok();
+
 	// Re-start the timer
 	timer_add_callout_queue( (void *)&top_pok_timer_handle,
 			0.001*SEC, pok_state_poll, 0 ); /* 0 sec timeout */
 }
-

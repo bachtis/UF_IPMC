@@ -31,8 +31,6 @@ unsigned char module_get_i2c_address( int address_type );
 void module_term_process( unsigned char * );
 void module_led_on( unsigned led_state );
 void module_led_off( unsigned led_state );
-void module_payload_on( void );
-void module_payload_off( void );
 void module_process_response( IPMI_WS *req_ws, unsigned char seq, unsigned char completion_code );
 void module_sensor_init( void );
 void module_rearm_events( void );
@@ -40,6 +38,3 @@ void fru_data_init( void );
 void read_fru_hot_swap( void );
 void read_ipmb_0_status( void );
 void read_hot_swap_handle( void );
-void module_payload_on( void );
-void module_payload_off( void );
-

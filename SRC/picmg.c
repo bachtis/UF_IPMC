@@ -32,6 +32,7 @@
 #include "event.h"
 #include "toml.h"
 #include "logger.h"
+#include "user-payload.h"
 #include <stdio.h>
 #include <stdarg.h>
 
@@ -472,7 +473,7 @@ picmg_m1_state( unsigned fru_id )
 	/* dispatch message */
 	ipmi_send_event_req( ( unsigned char * )&msg, sizeof( FRU_HOT_SWAP_EVENT_MSG_REQ ), 0 );
 
-	module_payload_off();
+	user_module_payload_off();
 
 	//usleep(3000000);
 	//picmg_m2_state( 0 );
@@ -783,7 +784,7 @@ picmg_m4_state( unsigned fru_id )
 
 	fru[fru_id].state = FRU_STATE_M4_ACTIVE;
 
-	module_payload_on();
+	user_module_payload_on();
 
 	/* dispatch message */
 	ipmi_send_event_req( ( unsigned char * )&msg, sizeof( FRU_HOT_SWAP_EVENT_MSG_REQ ), 0 );
@@ -884,7 +885,7 @@ picmg_m6_state( unsigned fru_id )
 	ipmi_send_event_req( ( unsigned  char * )&msg, sizeof( FRU_HOT_SWAP_EVENT_MSG_REQ ), 0 );
 
 	//usleep(2000000);
-	module_payload_off();
+	user_module_payload_off();
 	fru[fru_id].power_level_steady_state = 0;
 	picmg_m1_state( fru_id );
 }
@@ -907,7 +908,7 @@ picmg_set_power_level( IPMI_PKT *pkt )
 		switch( req->power_level ) {
 			case 0:
 				/* arch dependent - power off */
-				module_payload_off();
+				user_module_payload_off();
 				break;
 			case 0xff:
 				/* do not change power level */
@@ -920,7 +921,7 @@ picmg_set_power_level( IPMI_PKT *pkt )
 				//if( fru[req->fru_dev_id].state == FRU_STATE_M4_ACTIVE ) {
 				if( fru[req->fru_dev_id].state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS ) {
 					picmg_m4_state( req->fru_dev_id );
-					//module_payload_on();
+					//user_module_payload_on();
 				} else {
 					/* architecture dependent - adjust power level */
 					// SET_POWER(fru[req->fru_dev_id].power_level_steady_state)
