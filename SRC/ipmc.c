@@ -982,7 +982,7 @@ module_sensor_init( void )
 			sdr0.dev_id_typ_len = (unsigned char) dev_id_typ_len;					//ASCII | 7 bytes
 
 			sdr_entry_table[0].record_ptr = (unsigned char *)&sdr0;
-			sdr_entry_table[0].rec_len = 25;
+			sdr_entry_table[0].rec_len = 23;
 			sdr_entry_table[0].record_id = current_sensor_count;
 
 			mgmt_add(&sdr0);
