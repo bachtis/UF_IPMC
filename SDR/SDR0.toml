@@ -4,7 +4,7 @@
 record_id = [0,0]					#record_id[0-1] of this record
 sdr_version = 0x51					#SDR version
 record_type = 0x12					#Management Controller Locator
-record_len = 0x14					#Number of remaining record bytes following
+record_len = 0x12					#Number of remaining record bytes following
 dev_slave_addr = 0					#[7:1] - 7-bit I2C Slave Address of device on channel. Fill during init.
 ch_num = 0						#[3:0] - Channel number for the channel that the management controller is on.
 
