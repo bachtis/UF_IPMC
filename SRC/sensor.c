@@ -181,7 +181,7 @@ ipmi_get_device_sdr( IPMI_PKT *pkt )
 
 		/* fill in the Record ID for next record */
 		if( i + 1 < current_sensor_count ) {
-			resp->rec_id_next_lsb = sdr_entry_table[i+1].record_id & 0xf;
+			resp->rec_id_next_lsb = sdr_entry_table[i+1].record_id & 0xff;
 			resp->rec_id_next_msb = sdr_entry_table[i+1].record_id >> 8;
 		} else {
 			resp->rec_id_next_lsb = 0xff;
