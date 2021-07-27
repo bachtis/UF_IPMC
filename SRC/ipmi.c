@@ -635,8 +635,8 @@ ipmi_process_app_req( IPMI_PKT *pkt )
       gdi_resp->manuf_id[0] = 0x00;
       gdi_resp->manuf_id[1] = 0x00;
 			gdi_resp->manuf_id[2] = 0x0;
-			gdi_resp->product_id[0] = 0x58;
-      gdi_resp->product_id[1] = 0x1B;
+			gdi_resp->product_id[0] = 0x00;
+      gdi_resp->product_id[1] = 0x70;
 			gdi_resp->aux_fw_rev[0] = 0x0;
 			gdi_resp->aux_fw_rev[1] = 0x0;
 			gdi_resp->aux_fw_rev[2] = 0x0;
