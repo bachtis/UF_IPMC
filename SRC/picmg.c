@@ -40,6 +40,7 @@
 #define SITE_ID		1
 #define PICMG_ID	0
 #define NUM_PICMG_ADDRESS_INFO_TABLE_ENTRIES	16
+#define NUM_ATCA_SLOTS	14
 
 #define LONG_BLINK_ON	9 /* in 100 ms */
 #define LONG_BLINK_OFF	1 /* in 100 ms */
@@ -51,11 +52,22 @@ FRU_FAN_INFO fru_fan[MAX_FRU_DEV_ID + 1];
 PICMG_ADDRESS_INFO picmg_address_info_table[NUM_PICMG_ADDRESS_INFO_TABLE_ENTRIES] = { { 0, 0, 0, 0, 0 } };
 uchar controller_fru_dev_id = 0; // fru dev id for the BMC
 
-#define NUM_IPMB_SENSORS			2
+#define NUM_IPMB_SENSORS			1
 struct {
 	uchar	link_number;
 	uchar	sensor_number;
-} ipmb_sensor[NUM_IPMB_SENSORS] = { { 0, 0 }, { 1, 1 } };
+} ipmb_sensor[NUM_IPMB_SENSORS] = { { 0, 2 } };
+
+struct {
+	uchar	ipmb_addr;
+	uchar	slot_number;
+} ipmb_slot_pairs[NUM_ATCA_SLOTS] = { { 0x9A, 1 }, { 0x96, 2 },
+																			{ 0x92, 3 }, { 0x8E, 4 },
+																			{ 0x8A, 5 }, { 0x86, 6 },
+																			{ 0x82, 7 }, { 0x84, 8 },
+																			{ 0x88, 9 }, { 0x8C, 10 },
+																			{ 0x90, 11 }, { 0x94, 12 },
+																			{ 0x98, 13 }, { 0x9C, 14 }, };
 
 #define NUM_LINK_INFO_ENTRIES	8
 LINK_INFO_ENTRY link_info_table[NUM_LINK_INFO_ENTRIES];
@@ -148,7 +160,7 @@ picmg_process_command( IPMI_PKT *pkt )
 			picmg_get_fru_led_state( pkt );
 			break;
 		case ATCA_CMD_SET_IPMB_STATE:		/* Set IPMB State */
-            //picmg_set_ipmb_state( pkt );
+            picmg_set_ipmb_state( pkt );
 			break;
 		case ATCA_CMD_SET_FRU_ACTIVATION_POLICY:	/* Set FRU Activation Policy */
 			picmg_set_fru_activation_policy( pkt );
@@ -279,6 +291,10 @@ picmg_get_address_info( IPMI_PKT *pkt )
 
     dbprintf( DBG_IPMI | DBG_INOUT, "picmg_get_address_info: ingress\n" );
 
+	picmg_address_info_table[0].hw_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL )/2;
+	picmg_address_info_table[0].ipmb0_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
+	picmg_address_info_table[0].fru_dev_id = controller_fru_dev_id;
+
 	if( cmd_len < 3 ) {
 		/* variation 1: the command shall return addressing information
 		 * for the FRU containing the IPM Controller that implements
@@ -359,14 +375,20 @@ picmg_get_address_info( IPMI_PKT *pkt )
 		resp->picmg_id = PICMG_ID;	/* PICMG Identifier. Indicates that this
 					   is a PICMG-defined group extension
 					   command. A value of 00h shall be used. */
-		resp->hw_addr = picmg_address_info_table[i].hw_addr;		/* Hardware Address. */
-		resp->ipmb0_addr = picmg_address_info_table[i].ipmb0_addr;
+		resp->hw_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL )/2;		/* Hardware Address. */
+		resp->ipmb0_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 		/* IPMB-0 Address. Indicates the IPMB address for IPMB-0, if implemented. For
 		   PICMG 2.9. a value of FFh indicates that IPMB-0 is not implemented. */
 		resp->reserved = 0xFF;		/* Reserved. Shall have a value of FFh.
 					   Other values reserved in PICMG 2.9. */
 		resp->fru_dev_id =  picmg_address_info_table[i].fru_dev_id;
-		resp->site_id = picmg_address_info_table[i].site_id;
+		for( i = 0; i < NUM_ATCA_SLOTS; i++ ) {
+			if( ipmb_slot_pairs[i].ipmb_addr == module_get_i2c_address( I2C_ADDRESS_LOCAL ) ) {
+				picmg_address_info_table[0].site_id = ipmb_slot_pairs[i].slot_number;
+				break;
+			}
+		}
+		resp->site_id = picmg_address_info_table[0].site_id;
 		resp->site_type = SITE_TYPE_ATCA;			/* Site Type. */
 		pkt->hdr.resp_data_len = sizeof( GET_ADDRESS_INFO_CMD_RESP ) - 1;
 	} else {
@@ -804,6 +826,8 @@ picmg_m5_state( unsigned fru_id )
 	/* blink blue LED at short blink rate */
 //	gpio_led_blink( GPIO_FRU_LED_BLUE, SHORT_BLINK_ON, SHORT_BLINK_OFF, 0 );
 
+	fru[fru_id].locked = 1;
+
 	/* send transition msg to shelf controler */
 	msg.command = IPMI_SE_PLATFORM_EVENT;
 	msg.evt_msg_rev = IPMI_EVENT_MESSAGE_REVISION;
@@ -908,6 +932,10 @@ picmg_set_power_level( IPMI_PKT *pkt )
 		switch( req->power_level ) {
 			case 0:
 				/* arch dependent - power off */
+				if( fru[req->fru_dev_id].state == FRU_STATE_M4_ACTIVE ) {
+					picmg_m5_state( req->fru_dev_id );
+					//user_module_payload_off();
+				}
 				user_module_payload_off();
 				break;
 			case 0xff:
@@ -959,9 +987,27 @@ picmg_set_fru_activation_policy( IPMI_PKT *pkt )
 
 	if ( req->fru_dev_id < MAX_FRU_DEV_ID + 1 ) {
 		if( req->act_policy_mask & FRU_ACTIVATION_POLICY_LOCK )
-			fru[req->fru_dev_id].locked |= req->act_policy_set & FRU_ACTIVATION_POLICY_LOCK;
+		{
+			if ( req->act_policy_set & FRU_ACTIVATION_POLICY_LOCK )
+			{
+				fru[req->fru_dev_id].locked |= (req->act_policy_set & FRU_ACTIVATION_POLICY_LOCK);
+			}
+			else
+			{
+				fru[req->fru_dev_id].locked &= (req->act_policy_set & FRU_ACTIVATION_POLICY_LOCK);
+			}
+		}
 		else if( req->act_policy_mask & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK )
-			fru[req->fru_dev_id].deactivation_locked |= req->act_policy_set & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK;
+		{
+			if ( req->act_policy_set & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK )
+			{
+				fru[req->fru_dev_id].deactivation_locked |= (req->act_policy_set & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK);
+			}
+			else
+			{
+				fru[req->fru_dev_id].deactivation_locked &= (req->act_policy_set & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK);
+			}
+		}
 		resp->completion_code = CC_NORMAL;
 	} else {
 		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
@@ -1066,9 +1112,11 @@ picmg_get_led_color_capabilities( IPMI_PKT *pkt )
 	pkt->hdr.resp_data_len = sizeof( GET_COLOR_CAPABILITIES_CMD_RESP ) - 1;
 
 	if ( req->fru_dev_id < MAX_FRU_DEV_ID + 1 ) {
-		resp->led_color_capabilities = fru[req->fru_dev_id].led_capabilities[req->led_id].led_color_capabilities;
-		resp->default_led_color	= fru[req->fru_dev_id].led_capabilities[req->led_id].default_led_color;
-		resp->default_led_color_override = fru[req->fru_dev_id].led_capabilities[req->led_id].default_led_color_override;
+		//resp->led_color_capabilities = fru[req->fru_dev_id].led_capabilities[req->led_id].led_color_capabilities;
+		//resp->default_led_color	= fru[req->fru_dev_id].led_capabilities[req->led_id].default_led_color;
+		//resp->default_led_color_override = fru[req->fru_dev_id].led_capabilities[req->led_id].default_led_color_override;
+		resp->completion_code = CC_INVALID_DATA_IN_REQ;  // Should be fixed
+		pkt->hdr.resp_data_len = 0;
 	} else {
 		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
@@ -1209,10 +1257,10 @@ picmg_get_power_level( IPMI_PKT *pkt )
 
 	if (fru[req->fru_dev_id].power_level_steady_state == 0)
 	{
-		fru[req->fru_dev_id].power_level_steady_state = 1;
+		//fru[req->fru_dev_id].power_level_steady_state = 1;
 		fru[req->fru_dev_id].power_level_desired_steady_state = 2;
-		fru[req->fru_dev_id].power_level_early_draw = 1;
-		fru[req->fru_dev_id].power_level_early_draw_desired = 1;
+		//fru[req->fru_dev_id].power_level_early_draw = 1;
+		//fru[req->fru_dev_id].power_level_early_draw_desired = 1;
 	}
 
 	switch (req->power_type) {
@@ -1437,7 +1485,7 @@ picmg_get_fru_led_state( IPMI_PKT *pkt )
 	pkt->hdr.resp_data_len = sizeof( GET_FRU_LED_STATE_CMD_RESP ) - 1;
 }
 
-/*void
+void
 picmg_set_ipmb_state( IPMI_PKT *pkt )
 {
 	SET_IPMB_STATE_CMD_REQ	*req = ( SET_IPMB_STATE_CMD_REQ * )pkt->req;
@@ -1445,7 +1493,7 @@ picmg_set_ipmb_state( IPMI_PKT *pkt )
 
     dbprintf( DBG_IPMI | DBG_INOUT, "picmg_set_ipmb_state: ingress\n" );
 
-	if( req->ipmb_a_state )
+	/*if( req->ipmb_a_state )
 		i2c_interface_enable_local_control( 0, req->ipmb_a_link_id );
 	else
 		i2c_interface_disable( 0, req->ipmb_a_link_id );
@@ -1453,12 +1501,12 @@ picmg_set_ipmb_state( IPMI_PKT *pkt )
 	if( req->ipmb_b_state )
 		i2c_interface_enable_local_control( 1, req->ipmb_b_link_id );
 	else
-		i2c_interface_disable( 1, req->ipmb_b_link_id );
+		i2c_interface_disable( 1, req->ipmb_b_link_id );*/
 
 	resp->picmg_id = PICMG_ID;
 	resp->completion_code = CC_NORMAL;
 	pkt->hdr.resp_data_len = sizeof( SET_IPMB_STATE_CMD_RESP ) - 1;
-}*/
+}
 
 void
 picmg_get_device_locator_rec_id( IPMI_PKT *pkt )

@@ -103,7 +103,7 @@ ipmi_get_device_sdr_info( IPMI_PKT *pkt )
 		resp->num = current_sensor_count;
 	} else {
 		if( lun == 0 )
-			resp->num = current_sensor_count;
+			resp->num = current_sensor_count - 1;
 		else
 			resp->num = 0;
 	}
@@ -271,7 +271,7 @@ ipmi_get_sensor_reading( IPMI_PKT *pkt )
 			resp->current_state_mask = sensor[i]->current_state_mask;
 			resp->reserved2 = sensor[i]->reserved2;
 
-			pkt->hdr.resp_data_len = 2;
+			pkt->hdr.resp_data_len = sizeof( GET_SENSOR_READING_CMD_RESP ) - 1;
 		} else {
 			resp->completion_code = CC_REQ_DATA_NOT_AVAIL;
        			pkt->hdr.resp_data_len = 0;
@@ -295,7 +295,7 @@ ipmi_get_sensor_reading( IPMI_PKT *pkt )
 
 			resp->reserved2 = sensor[i]->reserved2;
 
-			pkt->hdr.resp_data_len = 2;
+			pkt->hdr.resp_data_len = sizeof( GET_SENSOR_READING_IPMB_CMD_RESP ) - 1;
 		} else {
 			resp->completion_code = CC_REQ_DATA_NOT_AVAIL;
        			pkt->hdr.resp_data_len = 0;
@@ -593,4 +593,83 @@ get_sdr( IPMI_PKT *pkt )
 //	resp->record_id_next_msb;	/* Record ID for next record, MS Byte */
 //	resp->record_data[20];	/* 4:3+N Record Data */
 
+}
+
+void
+set_sensor_threshold ( IPMI_PKT *pkt )
+{
+	SET_SENSOR_THRESHOLD_CMD_RESP *resp = ( SET_SENSOR_THRESHOLD_CMD_RESP * )(pkt->resp);
+
+	resp->completion_code = CC_NORMAL;
+	pkt->hdr.resp_data_len = 0;
+}
+
+void
+get_sensor_threshold ( IPMI_PKT *pkt )
+{
+	GET_SENSOR_THRESHOLD_CMD_REQ *req = ( GET_SENSOR_THRESHOLD_CMD_REQ * )(pkt->req);
+	GET_SENSOR_THRESHOLD_CMD_RESP *resp = ( GET_SENSOR_THRESHOLD_CMD_RESP * )(pkt->resp);
+
+	int i, found = 0;
+
+	/* Given the req->sensor_number return the reading */
+	for( i = 1; i < current_sensor_count; i++ ) {
+		if( sensor[i]->sensor_id == req->sensor_number ) {
+			found++;
+			break;
+		}
+	}
+
+	if( found ) {
+		resp->completion_code = CC_NORMAL;
+		resp->read_thresholds_mask = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->reading_mask;
+		resp->low_non_critical_threshold = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->lower_non_critical_threshold;
+		resp->low_critical_threshold = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->lower_critical_threshold;
+		resp->low_non_recoverable_threshold = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->lower_non_recoverable_threshold;
+		resp->up_non_critical_threshold = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->upper_non_critical_threshold;
+		resp->up_critical_threshold = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->upper_critical_threshold;
+		resp->up_non_recoverable_threshold = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->upper_non_recoverable_threshold;
+
+		pkt->hdr.resp_data_len = sizeof( GET_SENSOR_THRESHOLD_CMD_RESP ) - 1;
+	} else {
+		resp->completion_code = CC_REQ_DATA_NOT_AVAIL;
+		pkt->hdr.resp_data_len = 0;
+	}
+}
+
+void
+set_sensor_hysteresis ( IPMI_PKT *pkt )
+{
+	SET_SENSOR_HYSTERESIS_CMD_RESP *resp = ( SET_SENSOR_HYSTERESIS_CMD_RESP * )(pkt->resp);
+
+	resp->completion_code = CC_NORMAL;
+	pkt->hdr.resp_data_len = 0;
+}
+
+void
+get_sensor_hysteresis ( IPMI_PKT *pkt )
+{
+	GET_SENSOR_HYSTERESIS_CMD_REQ *req = ( GET_SENSOR_HYSTERESIS_CMD_REQ * )(pkt->req);
+	GET_SENSOR_HYSTERESIS_CMD_RESP *resp = ( GET_SENSOR_HYSTERESIS_CMD_RESP * )(pkt->resp);
+
+	int i, found = 0;
+
+	/* Given the req->sensor_number return the reading */
+	for( i = 1; i < current_sensor_count; i++ ) {
+		if( sensor[i]->sensor_id == req->sensor_number ) {
+			found++;
+			break;
+		}
+	}
+
+	if( found ) {
+		resp->completion_code = CC_NORMAL;
+		resp->pos_going_threshold_hysteresis_value = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->positive_going_threshold_hysteresis_value;
+		resp->neg_going_threshold_hysteresis_value = ((FULL_SENSOR_RECORD *)(sdr_entry_table[i].record_ptr))->negative_going_threshold_hysteresis_value;
+
+		pkt->hdr.resp_data_len = sizeof( GET_SENSOR_HYSTERESIS_CMD_RESP ) - 1;
+	} else {
+		resp->completion_code = CC_REQ_DATA_NOT_AVAIL;
+		pkt->hdr.resp_data_len = 0;
+	}
 }

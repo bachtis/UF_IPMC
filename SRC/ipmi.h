@@ -7820,6 +7820,58 @@ typedef struct fru_ipmb_0_event_msg_req {
 #endif
 } FRU_IPMB_0_EVENT_MSG_REQ;
 
+/*----------------------------------------------------------------------*/
+/*			Set Sensor Threshold command			*/
+/*----------------------------------------------------------------------*/
+
+typedef struct set_sensor_threshold_cmd_resp {
+	uchar	completion_code;
+} SET_SENSOR_THRESHOLD_CMD_RESP;
+
+/*----------------------------------------------------------------------*/
+/*			Get Sensor Threshold command			*/
+/*----------------------------------------------------------------------*/
+
+typedef struct get_sensor_threshold_cmd_req {
+	uchar	command;
+	uchar	sensor_number;
+} GET_SENSOR_THRESHOLD_CMD_REQ;
+
+typedef struct get_sensor_threshold_cmd_resp {
+	uchar	completion_code;
+	uchar	read_thresholds_mask;
+	uchar	low_non_critical_threshold;
+	uchar	low_critical_threshold;
+	uchar	low_non_recoverable_threshold;
+	uchar	up_non_critical_threshold;
+	uchar	up_critical_threshold;
+	uchar	up_non_recoverable_threshold;
+} GET_SENSOR_THRESHOLD_CMD_RESP;
+
+/*----------------------------------------------------------------------*/
+/*			Set Sensor Hysteresis command			*/
+/*----------------------------------------------------------------------*/
+
+typedef struct set_sensor_hysteresis_cmd_resp {
+	uchar	completion_code;
+} SET_SENSOR_HYSTERESIS_CMD_RESP;
+
+/*----------------------------------------------------------------------*/
+/*			Get Sensor Hysteresis command			*/
+/*----------------------------------------------------------------------*/
+
+typedef struct get_sensor_hysteresis_cmd_req {
+	uchar	command;
+	uchar	sensor_number;
+	uchar	reserved;
+} GET_SENSOR_HYSTERESIS_CMD_REQ;
+
+typedef struct get_sensor_hysteresis_cmd_resp {
+	uchar	completion_code;
+	uchar	pos_going_threshold_hysteresis_value;
+	uchar	neg_going_threshold_hysteresis_value;
+} GET_SENSOR_HYSTERESIS_CMD_RESP;
+
 
 #define ATCA_CMD_GET_PICMG_PROPERTIES_STR		"Get PICMG Properties"
 #define ATCA_CMD_GET_ADDRESS_INFO_STR			"Get Address Info"

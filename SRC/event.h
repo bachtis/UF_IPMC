@@ -23,7 +23,7 @@ void ipmi_arm_pef_postpone_timer( IPMI_PKT *pkt );
 void ipmi_set_pef_config_params( IPMI_PKT *pkt );
 void ipmi_get_pef_config_params( IPMI_PKT *pkt );
 void ipmi_set_last_processed_event( IPMI_PKT *pkt );
-void ipmi_get_last_processed_event( IPMI_PKT *pkt );   
+void ipmi_get_last_processed_event( IPMI_PKT *pkt );
 void ipmi_platform_event( IPMI_PKT *pkt );
 void ipmi_set_event_receiver( IPMI_PKT *pkt );
 void ipmi_get_event_receiver( IPMI_PKT *pkt );

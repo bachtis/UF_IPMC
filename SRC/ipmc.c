@@ -460,6 +460,16 @@ switch_state_poll( unsigned char *arg )
 		}
 	}
 
+	if ( fru[fru_inventory_cache[0].fru_dev_id].locked = 0 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M1_INACTIVE )
+	{
+		picmg_m2_state( fru_inventory_cache[0].fru_dev_id );
+	}
+
+	if ( fru[fru_inventory_cache[0].fru_dev_id].deactivation_locked = 0 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M4_ACTIVE )
+	{
+		picmg_m5_state( fru_inventory_cache[0].fru_dev_id );
+	}
+
 	hot_swap_handle_last_state = handle_state;
 
 	toml_free(config);

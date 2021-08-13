@@ -190,7 +190,7 @@ int i2c_write(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 data) {
 
     if (ioctl(i2c_fd_snsr, I2C_FUNCS, &funcs) < 0) {
 				//perror("ioctl(I2C_FUNCS) in i2c_write");
-				logger("ioctl(I2C_FUNCS) in i2c_write", strerror(errno));
+				logger("ioctl(I2C_FUNCS) in i2c_write()", strerror(errno));
 				return (-1);
     }
 
@@ -209,7 +209,7 @@ int i2c_write(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 data) {
 
     if (ioctl(i2c_fd_snsr, I2C_RDWR, &msgset) < 0) {
         //perror("ioctl(I2C_RDWR) in i2c_write");
-				logger("ioctl(I2C_RDWR) in i2c_write", strerror(errno));
+				logger("ioctl(I2C_RDWR) in i2c_write()", strerror(errno));
         return (-1);
     }
 
@@ -226,7 +226,7 @@ int i2c_read(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 *result) {
 
     if (ioctl(i2c_fd_snsr, I2C_FUNCS, &funcs) < 0) {
 				//perror("ioctl(I2C_FUNCS) in i2c_read");
-				logger("ioctl(I2C_FUNCS) in i2c_read", strerror(errno));
+				logger("ioctl(I2C_FUNCS) in i2c_read()", strerror(errno));
 				return (-1);
     }
 
@@ -254,7 +254,7 @@ int i2c_read(int i2c_fd_snsr, u8 slave_addr, u8 reg, u8 *result) {
     *result = 0;
     if (ioctl(i2c_fd_snsr, I2C_RDWR, &msgset) < 0) {
         //perror("ioctl(I2C_RDWR) in i2c_read");
-				logger("ioctl(I2C_RDWR) in i2c_read", strerror(errno));
+				logger("ioctl(I2C_RDWR) in i2c_read()", strerror(errno));
         return (-1);
     }
 
