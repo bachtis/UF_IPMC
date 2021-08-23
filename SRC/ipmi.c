@@ -811,6 +811,8 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 
 			dputstr( DBG_IPMI | DBG_LVL1, "ipmi_process_app_req: IPMI_CMD_GET_WATCHDOG_TIMER\n" );
 
+			wd_timer.timer_use_exp_fl = 0x20;
+
 			gwd_resp->completion_code = CC_NORMAL;
 			gwd_resp->dont_log = wd_timer.dont_log;
 			gwd_resp->dont_stop_timer = wd_timer.timer_running;
@@ -1030,7 +1032,8 @@ ipmi_get_fru_inventory_area_info( IPMI_PKT *pkt )
 		resp->completion_code = CC_NORMAL;
 		pkt->hdr.resp_data_len = 3;
 	} else {
-		resp->completion_code = CC_REQ_DATA_NOT_AVAIL;
+		//resp->completion_code = CC_REQ_DATA_NOT_AVAIL;
+		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
 	}
 
@@ -1129,7 +1132,8 @@ ipmi_read_fru_data( IPMI_PKT *pkt )
 	}
 
 	if( !found ) {
-		resp->completion_code = CC_INVALID_DATA_IN_REQ;
+		//resp->completion_code = CC_INVALID_DATA_IN_REQ;
+		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
 		return;
 	}
@@ -1224,7 +1228,26 @@ ipmi_write_fru_data( IPMI_PKT *pkt )
 {
 	WRITE_FRU_DATA_CMD_REQ *req = ( WRITE_FRU_DATA_CMD_REQ * )(pkt->req);
 	WRITE_FRU_DATA_CMD_RESP *resp = ( WRITE_FRU_DATA_CMD_RESP * )(pkt->resp);
-	/* TODO */
+
+	int	i, found = 0;
+
+	/* if the fru information is cached we already have this info */
+	for( i = 0; i < FRU_INVENTORY_CACHE_ARRAY_SIZE; i++ ) {
+		if( fru_inventory_cache[i].fru_dev_id == req->fru_dev_id ) {
+			found = 1;
+			break;
+		}
+	}
+
+	if( !found ) {
+		//resp->completion_code = CC_INVALID_DATA_IN_REQ;
+		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
+		//pkt->hdr.resp_data_len = 0;
+		pkt->hdr.resp_data_len = sizeof( WRITE_FRU_DATA_CMD_RESP ) - 1;
+		return;
+	}
+
+	/* TODO for found = 1*/
 }
 
 void

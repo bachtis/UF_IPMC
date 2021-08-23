@@ -16,7 +16,7 @@ rsv1 = 0					#[3:2] reserved
 sensor_owner_lun = 0				#[1:0] sensor_owner_lun
 
 sensor_number = 0x7				#8 sensor number
-entity_id = 0x0b				#9 entity_id (add-in card)
+entity_id = 0x0E				#9 entity_id (add-in card)
 
 #BYTE 10
 entity_type = 0					#0b = treat entity as a physical entity
@@ -35,7 +35,7 @@ powerup_sensor_scanning = 1			#[0] powerup_sensor_scanning
 #BYTE 12 - Sensor capabilities
 ignore_sensor = 1				#[7] ignore_sensor
 sensor_manual_support = 1			#[6] sensor_manual_support
-sensor_hysteresis_support = 0			#[5:4] sensor_hysteresis_support 
+sensor_hysteresis_support = 0			#[5:4] sensor_hysteresis_support
 sensor_threshold_access = 0			#[3:2] sensor_threshold_access
 event_msg_control = 3				#[1:0] event_msg_control
 
@@ -56,24 +56,24 @@ sensor_units2 = 0				#22 sensor_units2 0 = unspecified
 sensor_units3 = 0				#23 sensor_units3
 
 linearization = 0				#24 linearization
-M = 1						#25 M 
+M = 1						#25 M
 M_tolerance = 0					#26 M Tolerance
 B = 0						#27 B
-B_accuracy = 0					#28 B Accuracy 
+B_accuracy = 0					#28 B Accuracy
 accuracy = 0					#29 Accuracy, Accuracy exp, Sensor Direction
-K1 = 0                                          #30 R exp 
-K2 = 0                                          #30 B exp 
-analog_characteristic_flags = 0			#31 Analog characteristic flags 
+K1 = 0                                          #30 R exp
+K2 = 0                                          #30 B exp
+analog_characteristic_flags = 0			#31 Analog characteristic flags
 
-sensor_maximum_reading          = 0x40	#35 Sensor Maximum Reading 
+sensor_maximum_reading          = 0x40	#35 Sensor Maximum Reading
 upper_non_recoverable_threshold = 0x40	#37 Upper non-recoverable Threshold
-upper_critical_threshold        = 0x40	#38 Upper critical Threshold 
-upper_non_critical_threshold    = 0x40	#39 Upper non-critical Threshold 
+upper_critical_threshold        = 0x40	#38 Upper critical Threshold
+upper_non_critical_threshold    = 0x40	#39 Upper non-critical Threshold
 normal_maximum                  = 0x3f	#33 Normal Maximum - Given as a raw value.
 nominal_reading                 = 0x3f	#32 Nominal Reading
 normal_minimum                  = 0x3f	#34 Normal Minimum - Given as a raw value.
-lower_non_critical_threshold    = 0x3e	#42 Lower non-critical Threshold 
-lower_critical_threshold        = 0x3e	#41 Lower critical Threshold 
+lower_non_critical_threshold    = 0x3e	#42 Lower non-critical Threshold
+lower_critical_threshold        = 0x3e	#41 Lower critical Threshold
 lower_non_recoverable_threshold = 0x3e	#40 Lower non-recoverable Threshold
 sensor_minimum_reading          = 0x00	#36 Sensor Minimum Reading
 
@@ -84,5 +84,3 @@ reserved3 = 0					#46 reserved. Write as 00h.
 oem = 0						#47 OEM - Reserved for OEM use.
 id_str_typ_len = 0xC8				#48 id_str_typ_len Sensor ID String Type/Length Code, 8 chars in str
 id_string_bytes = ["B", "O", "T", " ", "P", "O", "K", " "]	#ID String Bytes
-
-

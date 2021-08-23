@@ -6822,6 +6822,7 @@ typedef struct fru_led_capabilities {
  */
 typedef struct fru_info {
 	uchar	state;
+	uchar old_state;
 	uchar	fru_activation;		/* FRU Activation/Deactivation
 					   00h = FRU Deactivated
 					   01h = FRU Activated

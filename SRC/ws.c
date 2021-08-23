@@ -24,6 +24,7 @@
 #include "i2c.h"
 #include "debug.h"
 #include "ws.h"
+#include "timer.h"
 
 extern unsigned long long int lbolt;
 
@@ -34,11 +35,11 @@ IPMI_WS	ws_array[WS_ARRAY_SIZE];
 
 
 /* initialize ws structures */
-void 
+void
 ws_init( void )
 {
 	unsigned i;
-	
+
 	for ( i = 0; i < WS_ARRAY_SIZE; i++ )
 	{
 		ws_array[i].ws_state = WS_FREE;
@@ -53,7 +54,7 @@ ws_alloc( void )
 	IPMI_WS *ws = 0;
 	IPMI_WS *ptr = ws_array;
 	unsigned i;
-	//unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	//unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 	//DISABLE_INTERRUPTS;
 	for ( i = 0; i < WS_ARRAY_SIZE; i++ )
@@ -70,7 +71,7 @@ ws_alloc( void )
 }
 
 /* set ws state to free */
-void 
+void
 ws_free( IPMI_WS *ws )
 {
 	int len, i;
@@ -79,7 +80,7 @@ ws_free( IPMI_WS *ws )
 	len = sizeof( IPMI_WS );
 	for( i = 0 ; i < len ; i++ ) {
 		*ptr++ = 0;
-	}	
+	}
 	ws->incoming_protocol = IPMI_CH_PROTOCOL_NONE;
 	ws->ws_state = WS_FREE;
 }
@@ -90,9 +91,9 @@ ws_get_elem( unsigned state )
 	IPMI_WS *ws = 0;
 	IPMI_WS *ptr = ws_array;
 	unsigned i;
-	//unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	//unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-	//DISABLE_INTERRUPTS;	
+	//DISABLE_INTERRUPTS;
 	for ( i = 0; i < WS_ARRAY_SIZE; i++ )
 	{
 		ptr = &ws_array[i];
@@ -106,7 +107,7 @@ ws_get_elem( unsigned state )
 			}
 		}
 	}
-	
+
 	if( ws )
 		ws->timestamp = lbolt;
 
@@ -122,7 +123,7 @@ ws_get_elem_seq( uchar seq, IPMI_WS *ws_ignore )
 	unsigned i;
     //unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-	//DISABLE_INTERRUPTS;		
+	//DISABLE_INTERRUPTS;
 	for ( i = 0; i < WS_ARRAY_SIZE; i++ )
 	{
 		ptr = &ws_array[i];
@@ -145,15 +146,16 @@ ws_set_state( IPMI_WS * ws, unsigned state )
 
 /*==============================================================
  * ws_process_work_list()
- * 	Go through the active list, calling the ipmi handler for 
+ * 	Go through the active list, calling the ipmi handler for
  * 	incoming entries and transport handler for outgoing entries.
  *==============================================================*/
-void ws_process_work_list_0( void ) 
+void ws_process_work_list_0( unsigned char *arg ) 
 {
     IPMI_WS *ws;
+		unsigned char ws_process_0_timer_handle;
 
     //repeat = 0;
-    
+
     i2c_slave_read_0();
 	ws = ws_get_elem( WS_ACTIVE_IN );
     if( ws ) {
@@ -171,11 +173,11 @@ void ws_process_work_list_0( void )
 			case IPMI_CH_MEDIUM_IPMB:
                 		i2c_master_write_0( ws );
 				break;
-				
+
 			case IPMI_CH_MEDIUM_SERIAL:	/* Asynch. Serial/Modem (RS-232) 	*/
                 //serial_tm_send( ( unsigned char * )ws );
 				break;
-				
+
 			case IPMI_CH_MEDIUM_ICMB10:	/* ICMB v1.0 				*/
 			case IPMI_CH_MEDIUM_ICMB09:	/* ICMB v0.9 				*/
 			case IPMI_CH_MEDIUM_LAN:	/* 802.3 LAN 				*/
@@ -191,11 +193,16 @@ void ws_process_work_list_0( void )
 				break;
 		}
 	}
+
+	// Re-start the timer
+	timer_add_callout_queue( (void *)&ws_process_0_timer_handle,
+		       	0.1*SEC, ws_process_work_list_0, 0 ); /* 0.1 sec timeout */
 }
 
-void ws_process_work_list_1( void ) 
+void ws_process_work_list_1( unsigned char *arg )
 {
     IPMI_WS *ws;
+		unsigned char ws_process_1_timer_handle;
 
     //repeat = 0;
 
@@ -216,11 +223,11 @@ void ws_process_work_list_1( void )
 			case IPMI_CH_MEDIUM_IPMB:
                 		i2c_master_write_1( ws );
 				break;
-				
+
 			case IPMI_CH_MEDIUM_SERIAL:	/* Asynch. Serial/Modem (RS-232) 	*/
                 //serial_tm_send( ( unsigned char * )ws );
 				break;
-				
+
 			case IPMI_CH_MEDIUM_ICMB10:	/* ICMB v1.0 				*/
 			case IPMI_CH_MEDIUM_ICMB09:	/* ICMB v0.9 				*/
 			case IPMI_CH_MEDIUM_LAN:	/* 802.3 LAN 				*/
@@ -236,6 +243,10 @@ void ws_process_work_list_1( void )
 				break;
 		}
 	}
+
+	// Re-start the timer
+	timer_add_callout_queue( (void *)&ws_process_1_timer_handle,
+		       	0.1*SEC, ws_process_work_list_1, 0 ); /* 0.1 sec timeout */
 }
 
 /* Default handler for incoming packets */
@@ -245,5 +256,3 @@ ws_process_incoming( IPMI_WS *ws )
 	ipmi_process_pkt( ws );
 	return;
 }
-
-

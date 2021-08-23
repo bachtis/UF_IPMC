@@ -49,11 +49,11 @@ int main()
 	module_init();
 
         dbprintf( DBG_I2C | DBG_LVL1, "Hello World\n");
-	
+
 //      time = lbolt;
 
 //	picmg_m1_state( 0 );
-	
+
 	/* Do forever */
 	while( 1 )
 	{
@@ -62,9 +62,9 @@ int main()
 			time = lbolt;
 			gpio_toggle_activity_led();
         	}*/
-		ws_process_work_list_0();
+		//ws_process_work_list_0();
 		//usleep(500000);
-		ws_process_work_list_1();
+		//ws_process_work_list_1();
 		//usleep(500000);
 		timer_process_callout_queue();
 	}
@@ -72,4 +72,3 @@ int main()
 	i2c_deinitialize();
 	i2c_sensor_deinitialize();
 }
-

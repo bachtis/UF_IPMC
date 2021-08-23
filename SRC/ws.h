@@ -39,7 +39,7 @@
 #define WS_FL_REPEATED_START	2
 
 /* transport layer completion codes */
-#define XPORT_REQ_NOERR 	0 
+#define XPORT_REQ_NOERR 	0
 #define XPORT_REQ_ERR		1
 #define XPORT_RESP_NOERR	2
 #define XPORT_RESP_ERR		3
@@ -50,9 +50,7 @@ IPMI_WS *ws_alloc( void );
 void ws_free( IPMI_WS *ws );
 IPMI_WS *ws_get_elem( unsigned state );
 void ws_set_state( IPMI_WS * ws, unsigned state );
-void ws_process_work_list_0( void );
-void ws_process_work_list_1( void );
+void ws_process_work_list_0( unsigned char *arg );
+void ws_process_work_list_1( unsigned char *arg );
 IPMI_WS *ws_get_elem_seq( uchar seq, IPMI_WS* ws_ignore );
 void ws_process_incoming( IPMI_WS *ws );
-
-

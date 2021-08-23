@@ -42,7 +42,7 @@ unsigned long long int lbolt;
 
 typedef struct cqe_struct {
 	unsigned state;
-	unsigned long tick;
+	unsigned long long int tick;
 	void *handle;
 	void ( *func )( unsigned char * );
 	unsigned char *arg;
@@ -58,7 +58,7 @@ void timer_process_callout_queue( void );
 void cq_init( void );
 CQE *cq_alloc( void );
 void cq_free( CQE *cqe );
-CQE *cq_get_expired_elem( unsigned long current_tick );
+CQE *cq_get_expired_elem( unsigned long long int current_tick );
 void cq_set_cqe_state( CQE *cqe, unsigned state );
 
 
@@ -73,7 +73,7 @@ void timer_expired(int sig)
  *==============================================================*/
 /* Setup the Timer Counter 0 Interrupt */
 void
-timer_initialize( void ) 
+timer_initialize( void )
 {
     struct sigaction act;
     clockid_t clock_id;
@@ -123,10 +123,10 @@ timer_initialize( void )
  * timer_add_callout_queue()
  *==============================================================*/
 int
-timer_add_callout_queue( 
+timer_add_callout_queue(
 	void *handle,
-	unsigned long ticks, 
-	void(*func)(unsigned char *), 
+	unsigned long long int ticks,
+	void(*func)(unsigned char *),
 	unsigned char *arg )
 {
 	CQE *cqe;
@@ -144,7 +144,7 @@ timer_add_callout_queue(
 
 /*==============================================================
  * timer_remove_callout_queue()
- * 	Search the callout queue using the handle and remove the 
+ * 	Search the callout queue using the handle and remove the
  * 	entry if found.
  *==============================================================*/
 void
@@ -153,7 +153,7 @@ timer_remove_callout_queue(
 {
 	CQE *ptr;
 	unsigned i;
-//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 //	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
@@ -168,20 +168,20 @@ timer_remove_callout_queue(
 }
 
 /*==============================================================
- * timer_reset_callout_queue() 
+ * timer_reset_callout_queue()
  * 	Search the callout queue using the handle and reset the
  * 	timeout value with the new value passed in ticks.
  *==============================================================*/
 void
 timer_reset_callout_queue(
 	void *handle,
-	unsigned long ticks )
+	unsigned long long int ticks )
 {
 	CQE *cqe;
 	unsigned i;
-//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-//	DISABLE_INTERRUPTS;	
+//	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		cqe = &cq_array[i];
@@ -195,18 +195,18 @@ timer_reset_callout_queue(
 
 
 /*==============================================================
- * timer_get_expiration_time() 
+ * timer_get_expiration_time()
  * 	Get ticks to expiration.
- * 
+ *
  *==============================================================*/
-unsigned long
+unsigned long long int
 timer_get_expiration_time(
-	void *handle ) 
+	void *handle )
 {
 	CQE *cqe;
 	unsigned i;
-	unsigned long ticks = 0;
-	
+	unsigned long long int ticks = 0;
+
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		cqe = &cq_array[i];
@@ -218,7 +218,7 @@ timer_get_expiration_time(
 	}
 	return( 0 );
 }
-		
+
 
 /*==============================================================
  * timer_process_callout_queue()
@@ -229,11 +229,19 @@ void
 timer_process_callout_queue( void )
 {
 	CQE *cqe;
-	
-	if( ( cqe = cq_get_expired_elem( lbolt ) ) ) {
-		cq_set_cqe_state( cqe, CQE_PENDING );
-		(*cqe->func)( cqe->arg );
-		cq_free( cqe );
+	unsigned i;
+
+	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
+	{
+		//if( ( cqe = cq_get_expired_elem( lbolt ) ) ) {
+			cqe = &cq_array[i];
+			if( ( cqe->state == CQE_ACTIVE ) && ( cqe->tick )
+					&& ( lbolt >= cqe->tick ) ) {
+				cq_set_cqe_state( cqe, CQE_PENDING );
+				(*cqe->func)( cqe->arg );
+				cq_free( cqe );
+			}
+		//}
 	}
 }
 
@@ -245,11 +253,11 @@ timer_process_callout_queue( void )
  * cq_init()
  *==============================================================*/
 /* initialize cq structures */
-void 
+void
 cq_init( void )
 {
 	unsigned i;
-	
+
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		cq_array[i].state = CQE_FREE;
@@ -267,7 +275,7 @@ cq_alloc( void )
 	CQE *cqe = 0;
 	CQE *ptr = cq_array;
 	unsigned i;
-//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 //	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
@@ -288,7 +296,7 @@ cq_alloc( void )
  * cq_free()
  *==============================================================*/
 /* set cqe state to free */
-void 
+void
 cq_free( CQE *cqe )
 {
 	cqe->state = CQE_FREE;
@@ -298,12 +306,12 @@ cq_free( CQE *cqe )
  * cq_get_expired_elem()
  *==============================================================*/
 CQE *
-cq_get_expired_elem( unsigned long current_tick )
+cq_get_expired_elem( unsigned long long int current_tick )
 {
 	CQE *cqe = 0;
 	CQE *ptr = cq_array;
 	unsigned i;
-//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 //	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
@@ -327,4 +335,3 @@ cq_set_cqe_state( CQE *cqe, unsigned state )
 {
 	cqe->state = state;
 }
-

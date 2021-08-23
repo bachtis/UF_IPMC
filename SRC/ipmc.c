@@ -22,6 +22,7 @@
 */
 #include "string.h"
 #include "ipmi.h"
+#include "ws.h"
 #include "picmg.h"
 #include "event.h"
 #include "ipmc.h"
@@ -91,6 +92,7 @@ void switch_state_poll( unsigned char *arg );
 void fru_data_init( void );
 void module_sensor_init( void );
 void payload_state_poll( unsigned char *arg );
+void fru_hot_swap_state_poll( unsigned char *arg );
 void ipmb_0_state_poll( unsigned char *arg);
 void pok_state_poll( unsigned char *arg );
 
@@ -335,14 +337,23 @@ module_init( void )
 	user_module_sensor_init();
 
 	/*==============================================================*/
-	/* State Poll Functions call					*/
+	/* State Poll Functions call																		*/
 	/*==============================================================*/
 
 	payload_state_poll( 0 );
 
+	fru_hot_swap_state_poll( 0 );
+
 	ipmb_0_state_poll( 0 );
 
 	user_sensor_state_poll();
+
+	/*==============================================================*/
+	/* I2C message handlers																					*/
+	/*==============================================================*/
+
+	ws_process_work_list_0( 0 );
+	ws_process_work_list_1( 0 );
 
 	// ====================================================================
 	// Handle current state of Hot Swap Handle
@@ -460,14 +471,22 @@ switch_state_poll( unsigned char *arg )
 		}
 	}
 
-	if ( fru[fru_inventory_cache[0].fru_dev_id].locked = 0 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M1_INACTIVE )
+	if ( fru[fru_inventory_cache[0].fru_dev_id].locked == 0 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M1_INACTIVE )
 	{
+		picmg_m1_state( fru_inventory_cache[0].fru_dev_id );
 		picmg_m2_state( fru_inventory_cache[0].fru_dev_id );
+		logger("DEBUG", "M1 -> M2 (locked bit cleared)");
 	}
 
-	if ( fru[fru_inventory_cache[0].fru_dev_id].deactivation_locked = 0 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M4_ACTIVE )
+	if ( fru[fru_inventory_cache[0].fru_dev_id].deactivation_locked == 0 && fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M4_ACTIVE )
 	{
 		picmg_m5_state( fru_inventory_cache[0].fru_dev_id );
+		logger("DEBUG", "M4 -> M5 (deactivation_locked bit cleared)");
+	}
+
+	if ( fru[fru_inventory_cache[0].fru_dev_id].state == FRU_STATE_M6_DEACTIVATION_IN_PROGRESS )
+	{
+		picmg_m1_state( fru_inventory_cache[0].fru_dev_id );
 	}
 
 	hot_swap_handle_last_state = handle_state;
@@ -1836,6 +1855,21 @@ read_fru_hot_swap( void )
 	}
 }
 
+void
+fru_hot_swap_state_poll( unsigned char *arg )
+{
+	unsigned char fru_hot_swap_timer_handle;
+
+	if ( fru[fru_inventory_cache[0].fru_dev_id].state != FRU_STATE_M4_ACTIVE )
+	{
+		module_rearm_events();
+	}
+
+	// Re-start the timer
+	timer_add_callout_queue( (void *)&fru_hot_swap_timer_handle,
+		       	5*SEC, fru_hot_swap_state_poll, 0 ); /* 5 sec timeout */
+}
+
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +		IPMB-0 Status Sensor			     	      +
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -1932,6 +1966,7 @@ read_ipmb_0_status( void )
 	if (sd[2].ipmb_a_enabled_ipmb_b_enabled && fru_ipmb_a_b_last_state)
 	{
 		ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_IPMB_0_EVENT_MSG_REQ), 0);
+		fru_ipmb_a_b_last_state = 0;
 	}
 
 	if (sd[2].ipmb_a_enabled_ipmb_b_disabled
@@ -1939,7 +1974,12 @@ read_ipmb_0_status( void )
 	    || sd[2].ipmb_a_disabled_ipmb_b_disabled)
 	{
 		ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_IPMB_0_EVENT_MSG_REQ), 0);
+		fru_ipmb_a_b_last_state = 1;
 	}
+
+	sd[2].ipmb_a_enabled_ipmb_b_disabled = 0;
+	sd[2].ipmb_a_disabled_ipmb_b_enabled = 0;
+	sd[2].ipmb_a_disabled_ipmb_b_disabled = 0;
 }
 
 void

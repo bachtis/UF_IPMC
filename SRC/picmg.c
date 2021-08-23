@@ -27,6 +27,7 @@
 #include "debug.h"
 #include "debug.h"
 #include "picmg.h"
+#include "sensor.h"
 #include "fan.h"
 #include "ipmc.h"
 #include "event.h"
@@ -51,6 +52,7 @@ FRU_INFO fru[MAX_FRU_DEV_ID + 1];
 FRU_FAN_INFO fru_fan[MAX_FRU_DEV_ID + 1];
 PICMG_ADDRESS_INFO picmg_address_info_table[NUM_PICMG_ADDRESS_INFO_TABLE_ENTRIES] = { { 0, 0, 0, 0, 0 } };
 uchar controller_fru_dev_id = 0; // fru dev id for the BMC
+extern SENSOR_DATA sd[];
 
 #define NUM_IPMB_SENSORS			1
 struct {
@@ -294,6 +296,13 @@ picmg_get_address_info( IPMI_PKT *pkt )
 	picmg_address_info_table[0].hw_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL )/2;
 	picmg_address_info_table[0].ipmb0_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	picmg_address_info_table[0].fru_dev_id = controller_fru_dev_id;
+	for( i = 0; i < NUM_ATCA_SLOTS; i++ ) {
+		if( ipmb_slot_pairs[i].ipmb_addr == module_get_i2c_address( I2C_ADDRESS_LOCAL ) ) {
+			picmg_address_info_table[0].site_id = ipmb_slot_pairs[i].slot_number;
+			picmg_address_info_table[0].phys_addr = ipmb_slot_pairs[i].slot_number;
+			break;
+		}
+	}
 
 	if( cmd_len < 3 ) {
 		/* variation 1: the command shall return addressing information
@@ -375,19 +384,13 @@ picmg_get_address_info( IPMI_PKT *pkt )
 		resp->picmg_id = PICMG_ID;	/* PICMG Identifier. Indicates that this
 					   is a PICMG-defined group extension
 					   command. A value of 00h shall be used. */
-		resp->hw_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL )/2;		/* Hardware Address. */
-		resp->ipmb0_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
+		resp->hw_addr = picmg_address_info_table[0].hw_addr;		/* Hardware Address. */
+		resp->ipmb0_addr = picmg_address_info_table[0].ipmb0_addr;
 		/* IPMB-0 Address. Indicates the IPMB address for IPMB-0, if implemented. For
 		   PICMG 2.9. a value of FFh indicates that IPMB-0 is not implemented. */
 		resp->reserved = 0xFF;		/* Reserved. Shall have a value of FFh.
 					   Other values reserved in PICMG 2.9. */
-		resp->fru_dev_id =  picmg_address_info_table[i].fru_dev_id;
-		for( i = 0; i < NUM_ATCA_SLOTS; i++ ) {
-			if( ipmb_slot_pairs[i].ipmb_addr == module_get_i2c_address( I2C_ADDRESS_LOCAL ) ) {
-				picmg_address_info_table[0].site_id = ipmb_slot_pairs[i].slot_number;
-				break;
-			}
-		}
+		resp->fru_dev_id =  picmg_address_info_table[0].fru_dev_id;
 		resp->site_id = picmg_address_info_table[0].site_id;
 		resp->site_type = SITE_TYPE_ATCA;			/* Site Type. */
 		pkt->hdr.resp_data_len = sizeof( GET_ADDRESS_INFO_CMD_RESP ) - 1;
@@ -465,6 +468,10 @@ picmg_m1_state( unsigned fru_id )
 		logger("Hot Swap Event Message", "M0 -> M1");
 	}
 
+	if( fru[fru_id].state == FRU_STATE_M2_ACTIVATION_REQUEST ) {
+		logger("Hot Swap Event Message", "M2 -> M1");
+	}
+
 	if( fru[fru_id].state == FRU_STATE_M6_DEACTIVATION_IN_PROGRESS ) {
 		logger("Hot Swap Event Message", "M6 -> M1");
 	}
@@ -475,6 +482,8 @@ picmg_m1_state( unsigned fru_id )
 	/* turn on the BLUE LED */
 //	gpio_led_on( GPIO_FRU_LED_BLUE );
 
+	fru[fru_id].locked = 1;
+
 	/* announce presence in the shelf by sending a hot swap event msg to shelf controler */
 	msg.command = IPMI_SE_PLATFORM_EVENT;
 	msg.evt_msg_rev = IPMI_EVENT_MESSAGE_REVISION;
@@ -484,7 +493,28 @@ picmg_m1_state( unsigned fru_id )
 	msg.evt_data1 = 0xa << 4 | FRU_STATE_M1_INACTIVE;
 	msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M0_NOT_INSTALLED;
 
+	if( fru[fru_id].state == FRU_STATE_M0_NOT_INSTALLED ) {
+		fru[fru_id].old_state = FRU_STATE_M0_NOT_INSTALLED;
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M0_NOT_INSTALLED;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M2_ACTIVATION_REQUEST ) {
+		fru[fru_id].old_state = FRU_STATE_M2_ACTIVATION_REQUEST;
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M2_ACTIVATION_REQUEST;
+	}
+
 	if( fru[fru_id].state == FRU_STATE_M6_DEACTIVATION_IN_PROGRESS ) {
+		fru[fru_id].old_state = FRU_STATE_M6_DEACTIVATION_IN_PROGRESS;
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M6_DEACTIVATION_IN_PROGRESS;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M1_INACTIVE &&
+			fru[fru_id].old_state == FRU_STATE_M0_NOT_INSTALLED ) {
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M0_NOT_INSTALLED;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M1_INACTIVE &&
+			fru[fru_id].old_state == FRU_STATE_M6_DEACTIVATION_IN_PROGRESS ) {
 		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M6_DEACTIVATION_IN_PROGRESS;
 	}
 
@@ -738,7 +768,13 @@ picmg_m3_state( unsigned fru_id )
 
     	dbprintf( DBG_IPMI | DBG_INOUT, "picmg_m3_state: ingress\n" );
 
-	logger("Hot Swap Event Message", "M2 -> M3");
+	if( fru[fru_id].state == FRU_STATE_M2_ACTIVATION_REQUEST ) {
+		logger("Hot Swap Event Message", "M2 -> M3");
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M4_ACTIVE ) {
+		logger("Hot Swap Event Message", "M4 -> M3");
+	}
 
 	fru[fru_id].state = FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
 
@@ -755,6 +791,27 @@ picmg_m3_state( unsigned fru_id )
 	msg.evt_direction = IPMI_EVENT_TYPE_GENERIC_AVAILABILITY;
 	msg.evt_data1 = 0xa << 4 | FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
 	msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M2_ACTIVATION_REQUEST;
+
+	if( fru[fru_id].state == FRU_STATE_M2_ACTIVATION_REQUEST ) {
+		fru[fru_id].old_state = FRU_STATE_M2_ACTIVATION_REQUEST;
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M2_ACTIVATION_REQUEST;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M4_ACTIVE ) {
+		fru[fru_id].old_state = FRU_STATE_M4_ACTIVE;
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M4_ACTIVE;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS &&
+			fru[fru_id].old_state == FRU_STATE_M2_ACTIVATION_REQUEST ) {
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M2_ACTIVATION_REQUEST;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS &&
+			fru[fru_id].old_state == FRU_STATE_M4_ACTIVE ) {
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M4_ACTIVE;
+	}
+
 	msg.evt_data3 = controller_fru_dev_id;
 
 	/* dispatch message */
@@ -769,7 +826,13 @@ picmg_m4_state( unsigned fru_id )
 
     	dbprintf( DBG_IPMI | DBG_INOUT, "picmg_m4_state: ingress\n" );
 
-	logger("Hot Swap Event Message", "M3 -> M4");
+	if( fru[fru_id].state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS ) {
+		logger("Hot Swap Event Message", "M3 -> M4");
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M5_DEACTIVATION_REQUEST ) {
+		logger("Hot Swap Event Message", "M5 -> M4");
+	}
 
 //	fru[fru_id].state = FRU_STATE_M4_ACTIVE;
 
@@ -794,12 +857,25 @@ picmg_m4_state( unsigned fru_id )
 	msg.evt_data3 = 0;		/* Event Data 3
 					   [7:0] = FRU Device ID */
 	msg.evt_data1 = 0xa << 4 | FRU_STATE_M4_ACTIVE;
+	msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
 
 	if( fru[fru_id].state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS ) {
+		fru[fru_id].old_state = FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
 		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
 	}
 	if( fru[fru_id].state == FRU_STATE_M5_DEACTIVATION_REQUEST ) {
+		fru[fru_id].old_state = FRU_STATE_M5_DEACTIVATION_REQUEST;
 		msg.evt_data2 = STATE_CH_SH_MGR << 4 | FRU_STATE_M5_DEACTIVATION_REQUEST;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M4_ACTIVE &&
+			fru[fru_id].old_state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS ) {
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M4_ACTIVE &&
+			fru[fru_id].old_state == FRU_STATE_M5_DEACTIVATION_REQUEST ) {
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M5_DEACTIVATION_REQUEST;
 	}
 
 	msg.evt_data3 = controller_fru_dev_id;
@@ -861,7 +937,17 @@ picmg_m6_state( unsigned fru_id )
 
     	dbprintf( DBG_IPMI | DBG_INOUT, "picmg_m5_state: ingress\n" );
 
-	logger("Hot Swap Event Message", "M5 -> M6");
+	if( fru[fru_id].state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS ) {
+		logger("Hot Swap Event Message", "M3 -> M6 (State Change due to FRU programmatic action)");
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M4_ACTIVE ) {
+		logger("Hot Swap Event Message", "M4 -> M6 (Unexpected Deactivation)");
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M5_DEACTIVATION_REQUEST ) {
+		logger("Hot Swap Event Message", "M5 -> M6");
+	}
 
 	/* set state */
 //	fru[fru_id].state = FRU_STATE_M6_DEACTIVATION_IN_PROGRESS;
@@ -889,15 +975,34 @@ picmg_m6_state( unsigned fru_id )
 	msg.evt_data3 = 0;		/* Event Data 3
 					   [7:0] = FRU Device ID */
 	msg.evt_data1 = 0xa << 4 | FRU_STATE_M6_DEACTIVATION_IN_PROGRESS;
+	msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M5_DEACTIVATION_REQUEST;
 
 	if( fru[fru_id].state == FRU_STATE_M5_DEACTIVATION_REQUEST ) {
+		fru[fru_id].old_state = FRU_STATE_M5_DEACTIVATION_REQUEST;
 		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M5_DEACTIVATION_REQUEST;
 	}
 	if( fru[fru_id].state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS ) {
 //		msg.evt_data2 = STATE_CH_OPERATOR << 4 | FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
+		fru[fru_id].old_state = FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
 		msg.evt_data2 = STATE_CH_FRU_ACTION << 4 | FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
 	}
 	if( fru[fru_id].state == FRU_STATE_M4_ACTIVE ) {
+		fru[fru_id].state = FRU_STATE_M4_ACTIVE;
+		msg.evt_data2 = 0x09 << 4 | FRU_STATE_M4_ACTIVE;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M6_DEACTIVATION_IN_PROGRESS &&
+			fru[fru_id].old_state == FRU_STATE_M5_DEACTIVATION_REQUEST ) {
+		msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M5_DEACTIVATION_REQUEST;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M6_DEACTIVATION_IN_PROGRESS &&
+			fru[fru_id].old_state == FRU_STATE_M3_ACTIVATION_IN_PROGRESS ) {
+		msg.evt_data2 = STATE_CH_FRU_ACTION << 4 | FRU_STATE_M3_ACTIVATION_IN_PROGRESS;
+	}
+
+	if( fru[fru_id].state == FRU_STATE_M6_DEACTIVATION_IN_PROGRESS &&
+			fru[fru_id].old_state == FRU_STATE_M4_ACTIVE ) {
 		msg.evt_data2 = 0x09 << 4 | FRU_STATE_M4_ACTIVE;
 	}
 
@@ -932,11 +1037,10 @@ picmg_set_power_level( IPMI_PKT *pkt )
 		switch( req->power_level ) {
 			case 0:
 				/* arch dependent - power off */
-				if( fru[req->fru_dev_id].state == FRU_STATE_M4_ACTIVE ) {
-					picmg_m5_state( req->fru_dev_id );
+				if( fru[req->fru_dev_id].state == FRU_STATE_M4_ACTIVE || fru[req->fru_dev_id].state == FRU_STATE_M5_DEACTIVATION_REQUEST ) {
+					picmg_m6_state( req->fru_dev_id );
 					//user_module_payload_off();
 				}
-				user_module_payload_off();
 				break;
 			case 0xff:
 				/* do not change power level */
@@ -986,26 +1090,27 @@ picmg_set_fru_activation_policy( IPMI_PKT *pkt )
 	pkt->hdr.resp_data_len = sizeof( SET_FRU_ACTIVATION_POLICY_CMD_RESP ) - 1;
 
 	if ( req->fru_dev_id < MAX_FRU_DEV_ID + 1 ) {
-		if( req->act_policy_mask & FRU_ACTIVATION_POLICY_LOCK )
+		if( (req->act_policy_mask & FRU_ACTIVATION_POLICY_LOCK) == 0x1 )
 		{
-			if ( req->act_policy_set & FRU_ACTIVATION_POLICY_LOCK )
+			if ( (req->act_policy_set & FRU_ACTIVATION_POLICY_LOCK) == 0x1 )
 			{
-				fru[req->fru_dev_id].locked |= (req->act_policy_set & FRU_ACTIVATION_POLICY_LOCK);
+				fru[req->fru_dev_id].locked = 1;
 			}
 			else
 			{
-				fru[req->fru_dev_id].locked &= (req->act_policy_set & FRU_ACTIVATION_POLICY_LOCK);
+				fru[req->fru_dev_id].locked = 0;
 			}
 		}
-		else if( req->act_policy_mask & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK )
+
+		if( (req->act_policy_mask & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK) == 0x2 )
 		{
-			if ( req->act_policy_set & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK )
+			if ( (req->act_policy_set & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK) == 0x2 )
 			{
-				fru[req->fru_dev_id].deactivation_locked |= (req->act_policy_set & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK);
+				fru[req->fru_dev_id].deactivation_locked = 1;
 			}
 			else
 			{
-				fru[req->fru_dev_id].deactivation_locked &= (req->act_policy_set & FRU_ACTIVATION_POLICY_DEACTIVATION_LOCK);
+				fru[req->fru_dev_id].deactivation_locked = 0;
 			}
 		}
 		resp->completion_code = CC_NORMAL;
@@ -1505,6 +1610,29 @@ picmg_set_ipmb_state( IPMI_PKT *pkt )
 
 	resp->picmg_id = PICMG_ID;
 	resp->completion_code = CC_NORMAL;
+
+	if ( req->ipmb_a_state == 0 )
+	{
+		sd[2].ipmb_a_disabled_ipmb_b_enabled = 1;
+	}
+
+	if ( req->ipmb_b_state == 0 )
+	{
+		sd[2].ipmb_a_enabled_ipmb_b_disabled = 1;
+	}
+
+	if ( req->ipmb_a_link_id != 0 && req->ipmb_b_link_id != 0 )
+	{
+		resp->completion_code = CC_INVALID_CMD;
+		sd[2].ipmb_a_disabled_ipmb_b_enabled = 0;
+		sd[2].ipmb_a_enabled_ipmb_b_disabled = 0;
+	}
+	if ( req->ipmb_a_state == 0 && req->ipmb_b_state == 0 )
+	{
+		resp->completion_code = CC_NOT_SUPPORTED;
+		sd[2].ipmb_a_disabled_ipmb_b_enabled = 0;
+		sd[2].ipmb_a_enabled_ipmb_b_disabled = 0;
+	}
 	pkt->hdr.resp_data_len = sizeof( SET_IPMB_STATE_CMD_RESP ) - 1;
 }
 

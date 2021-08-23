@@ -279,7 +279,7 @@ i2c_slave_read_0( void )
     if( ws->interface == 1 )
         channel = i2c_last_channel_used = ws->interface;
 
-    usleep(150000);
+    //usleep(150000);
 }
 
 void
@@ -331,7 +331,7 @@ i2c_slave_read_1( void )
     if( ws->interface == 1 )
         channel = i2c_last_channel_used = ws->interface;
 
-    usleep(150000);
+    //usleep(150000);
 }
 
 /*
