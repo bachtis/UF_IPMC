@@ -36,7 +36,7 @@
 #define TIMER_FREQUENCY 100000
 //#define TIMER_FREQUENCY 1
 
-#define CQ_ARRAY_SIZE 32
+#define CQ_ARRAY_SIZE 64
 
 unsigned long long int lbolt;
 
@@ -274,7 +274,7 @@ cq_alloc( void )
 {
 	CQE *cqe = 0;
 	CQE *ptr = cq_array;
-	unsigned i;
+	unsigned i, found = 0;
 //	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 //	DISABLE_INTERRUPTS;
@@ -285,8 +285,14 @@ cq_alloc( void )
 			ptr->tick = 0;
 			ptr->state = CQE_ACTIVE;
 			cqe = ptr;
+			found = 1;
 			break;
 		}
+	}
+	
+	if ( !found )
+	{
+		cq_alloc();	
 	}
 //	ENABLE_INTERRUPTS( interrupt_mask );
 	return cqe;
