@@ -30,6 +30,7 @@
 #include "user-sensor.h"
 #include "picmg.h"
 #include "toml.h"
+#include <unistd.h>
 
 extern unsigned long long int lbolt;
 
@@ -65,7 +66,7 @@ int main()
 		//ws_process_work_list_0();
 		//usleep(500000);
 		//ws_process_work_list_1();
-		//usleep(500000);
+		usleep(50000);
 		timer_process_callout_queue();
 	}
 
