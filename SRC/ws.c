@@ -246,7 +246,7 @@ void ws_process_work_list( unsigned char *arg )
 
 	// Re-start the timer
 	timer_add_callout_queue( (void *)&ws_process_timer_handle,
-						0.005*SEC, ws_process_work_list_1, 0 ); /* 0.005 sec timeout */
+						0.005*SEC, ws_process_work_list, 0 ); /* 0.005 sec timeout */
 }
 
 /* Default handler for incoming packets */
