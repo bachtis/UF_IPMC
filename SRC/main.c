@@ -66,8 +66,9 @@ int main()
 		//ws_process_work_list_0();
 		//usleep(500000);
 		//ws_process_work_list_1();
-		usleep(1000);
+		//usleep(500000);
 		timer_process_callout_queue();
+		usleep(1000);
 	}
 
 	i2c_deinitialize();

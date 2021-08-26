@@ -53,6 +53,7 @@ FRU_FAN_INFO fru_fan[MAX_FRU_DEV_ID + 1];
 PICMG_ADDRESS_INFO picmg_address_info_table[NUM_PICMG_ADDRESS_INFO_TABLE_ENTRIES] = { { 0, 0, 0, 0, 0 } };
 uchar controller_fru_dev_id = 0; // fru dev id for the BMC
 extern SENSOR_DATA sd[];
+extern unsigned int fru_ipmb_a_b_event_set;
 
 #define NUM_IPMB_SENSORS			1
 struct {
@@ -1614,11 +1615,13 @@ picmg_set_ipmb_state( IPMI_PKT *pkt )
 	if ( req->ipmb_a_state == 0 )
 	{
 		sd[2].ipmb_a_disabled_ipmb_b_enabled = 1;
+		fru_ipmb_a_b_event_set = 1;
 	}
 
 	if ( req->ipmb_b_state == 0 )
 	{
 		sd[2].ipmb_a_enabled_ipmb_b_disabled = 1;
+		fru_ipmb_a_b_event_set = 1;
 	}
 
 	if ( req->ipmb_a_link_id != 0 && req->ipmb_b_link_id != 0 )
@@ -1626,12 +1629,14 @@ picmg_set_ipmb_state( IPMI_PKT *pkt )
 		resp->completion_code = CC_INVALID_CMD;
 		sd[2].ipmb_a_disabled_ipmb_b_enabled = 0;
 		sd[2].ipmb_a_enabled_ipmb_b_disabled = 0;
+		fru_ipmb_a_b_event_set = 0;
 	}
 	if ( req->ipmb_a_state == 0 && req->ipmb_b_state == 0 )
 	{
 		resp->completion_code = CC_NOT_SUPPORTED;
 		sd[2].ipmb_a_disabled_ipmb_b_enabled = 0;
 		sd[2].ipmb_a_enabled_ipmb_b_disabled = 0;
+		fru_ipmb_a_b_event_set = 0;
 	}
 	pkt->hdr.resp_data_len = sizeof( SET_IPMB_STATE_CMD_RESP ) - 1;
 }

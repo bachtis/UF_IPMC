@@ -25,6 +25,7 @@
 #include "debug.h"
 #include "ws.h"
 #include "timer.h"
+#include <unistd.h>
 
 extern unsigned long long int lbolt;
 
@@ -149,12 +150,9 @@ ws_set_state( IPMI_WS * ws, unsigned state )
  * 	Go through the active list, calling the ipmi handler for
  * 	incoming entries and transport handler for outgoing entries.
  *==============================================================*/
-void ws_process_work_list_0( unsigned char *arg ) 
+void ws_process_work_list_0( void )
 {
     IPMI_WS *ws;
-		unsigned char ws_process_0_timer_handle;
-
-    //repeat = 0;
 
     i2c_slave_read_0();
 	ws = ws_get_elem( WS_ACTIVE_IN );
@@ -193,18 +191,11 @@ void ws_process_work_list_0( unsigned char *arg )
 				break;
 		}
 	}
-
-	// Re-start the timer
-	timer_add_callout_queue( (void *)&ws_process_0_timer_handle,
-		       	0.01*SEC, ws_process_work_list_0, 0 ); /* 0.01 sec timeout */
 }
 
-void ws_process_work_list_1( unsigned char *arg )
+void ws_process_work_list_1( void )
 {
     IPMI_WS *ws;
-		unsigned char ws_process_1_timer_handle;
-
-    //repeat = 0;
 
     i2c_slave_read_1();
 	ws = ws_get_elem( WS_ACTIVE_IN );
@@ -243,10 +234,19 @@ void ws_process_work_list_1( unsigned char *arg )
 				break;
 		}
 	}
+}
+
+void ws_process_work_list( unsigned char *arg )
+{
+	unsigned char ws_process_timer_handle;
+
+	ws_process_work_list_0();
+	usleep(2500);
+	ws_process_work_list_1();
 
 	// Re-start the timer
-	timer_add_callout_queue( (void *)&ws_process_1_timer_handle,
-		       	0.01*SEC, ws_process_work_list_1, 0 ); /* 0.01 sec timeout */
+	timer_add_callout_queue( (void *)&ws_process_timer_handle,
+						0.005*SEC, ws_process_work_list_1, 0 ); /* 0.005 sec timeout */
 }
 
 /* Default handler for incoming packets */

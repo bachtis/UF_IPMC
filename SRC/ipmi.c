@@ -811,12 +811,10 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 
 			dputstr( DBG_IPMI | DBG_LVL1, "ipmi_process_app_req: IPMI_CMD_GET_WATCHDOG_TIMER\n" );
 
-			wd_timer.timer_use_exp_fl = 0x20;
-
 			gwd_resp->completion_code = CC_NORMAL;
 			gwd_resp->dont_log = wd_timer.dont_log;
 			gwd_resp->dont_stop_timer = wd_timer.timer_running;
-			gwd_resp->timer_use = wd_timer.timer_use;
+			//gwd_resp->timer_use = wd_timer.timer_use;             TODO: to clear properly 
 			gwd_resp->pre_timeout_intr = wd_timer.pre_timeout_intr;
 			gwd_resp->timeout_action = wd_timer.timeout_action;
 			gwd_resp->pre_timeout_interval = wd_timer.pre_timeout_interval;

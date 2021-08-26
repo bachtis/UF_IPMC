@@ -16,7 +16,7 @@ rsv1 = 0					#[3:2] reserved
 sensor_owner_lun = 0				#[1:0] sensor_owner_lun
 
 sensor_number = 0x3				#8 sensor number
-entity_id = 0x0E				#9 entity_id
+entity_id = 0xA0				#9 entity_id
 
 #BYTE 10
 entity_type = 0					#0b = treat entity as a physical entity

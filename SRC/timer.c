@@ -36,7 +36,7 @@
 #define TIMER_FREQUENCY 100000
 //#define TIMER_FREQUENCY 1
 
-#define CQ_ARRAY_SIZE 64
+#define CQ_ARRAY_SIZE 32
 
 unsigned long long int lbolt;
 
@@ -289,10 +289,10 @@ cq_alloc( void )
 			break;
 		}
 	}
-	
+
 	if ( !found )
 	{
-		cq_alloc();	
+		cq_alloc();
 	}
 //	ENABLE_INTERRUPTS( interrupt_mask );
 	return cqe;

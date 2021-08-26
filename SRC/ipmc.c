@@ -51,6 +51,7 @@
 
 unsigned int hot_swap_handle_last_state;
 unsigned int fru_ipmb_a_b_last_state = 0x00;
+unsigned int fru_ipmb_a_b_event_set = 0x00;
 
 extern unsigned long long int lbolt;
 extern FRU_CACHE fru_inventory_cache[];
@@ -352,8 +353,7 @@ module_init( void )
 	/* I2C message handlers																					*/
 	/*==============================================================*/
 
-	ws_process_work_list_0( 0 );
-	ws_process_work_list_1( 0 );
+	ws_process_work_list( 0 );
 
 	// ====================================================================
 	// Handle current state of Hot Swap Handle
@@ -1884,6 +1884,23 @@ read_ipmb_0_status( void )
 	status_0 = (reg_read(devmem_ptr, ha_offset)>>8)&0x01;
 	status_1 = (reg_read(devmem_ptr, ha_offset)>>9)&0x01;
 
+	if ( fru_ipmb_a_b_event_set )
+	{
+		if ( sd[2].ipmb_a_enabled_ipmb_b_disabled == 1 )
+		{
+			status_0 = 1;
+			status_1 = 0;
+		}
+
+		if ( sd[2].ipmb_a_disabled_ipmb_b_enabled == 1 )
+		{
+			status_0 = 0;
+			status_1 = 1;
+		}
+
+		fru_ipmb_a_b_event_set = 0;
+	}
+
 	sd[2].std_ipmi_byte = 0xC0;
 
 	if (status_0)
@@ -1915,7 +1932,7 @@ read_ipmb_0_status( void )
 			msg.evt_direction = 0x6F;
 		} else
 		{
-			sd[2].ipmb_a_enabled_ipmb_b_disabled =1;
+			sd[2].ipmb_a_enabled_ipmb_b_disabled = 1;
 			msg.offset = 0x01;
 			msg.evt_direction = 0x6F;
 
@@ -1958,7 +1975,7 @@ read_ipmb_0_status( void )
 	msg.oem = 0x0A;
 	msg.ch_num = 0x00;
 
-	msg.ipmb_a_local_status = sd[2].ipmb_a_enabled_ipmb_b_enabled;
+	msg.ipmb_a_local_status = sd[2].ipmb_a_local_status;
 	msg.ipmb_a_override_state = sd[2].ipmb_a_override_state;
 	msg.ipmb_b_local_status = sd[2].ipmb_b_local_status;
 	msg.ipmb_b_override_state = sd[2].ipmb_b_override_state;
@@ -1974,9 +1991,9 @@ read_ipmb_0_status( void )
 	    || sd[2].ipmb_a_disabled_ipmb_b_disabled)
 	{
 		ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_IPMB_0_EVENT_MSG_REQ), 0);
-		fru_ipmb_a_b_last_state = 1;
 	}
 
+	sd[2].ipmb_a_enabled_ipmb_b_enabled = 0;
 	sd[2].ipmb_a_enabled_ipmb_b_disabled = 0;
 	sd[2].ipmb_a_disabled_ipmb_b_enabled = 0;
 	sd[2].ipmb_a_disabled_ipmb_b_disabled = 0;

@@ -28,7 +28,7 @@ dev_sup_sdr_rep = 1					#1b = SDR Repository Device
 dev_sup_sensor = 1					#1b = Sensor Device
 
 rsv = [0,0,0]						#rsv[3] - reserved
-entity_id = 0x0E					#entity_id
+entity_id = 0xA0					#entity_id
 entity_instance = 0x60					#entity_instance
 oem = 0							#Reserved for OEM use
 dev_id_typ_len = 0xC7					#ASCII | 7 bytes
