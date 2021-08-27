@@ -32,10 +32,10 @@ void logger(const char* tag, const char* fmt, ...) {
 	fp = fopen("/tmp/uf_ipmc.log", "a+");
 	if (fp != NULL) {
 		va_list argp;
-		
+
 		va_start(argp, fmt);
 		fprintf(fp, "\n\n%s [%s]:\n ", ctime(&now), tag);
-		fprintf(fp, fmt, argp);
+		vfprintf(fp, fmt, argp);
 		va_end(argp);
 		fflush(fp);
 		fclose(fp);
