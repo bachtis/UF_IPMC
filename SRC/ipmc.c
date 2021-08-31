@@ -1860,7 +1860,8 @@ fru_hot_swap_state_poll( unsigned char *arg )
 {
 	unsigned char fru_hot_swap_timer_handle;
 
-	if ( fru[fru_inventory_cache[0].fru_dev_id].state != FRU_STATE_M4_ACTIVE )
+	if ( fru[fru_inventory_cache[0].fru_dev_id].state != FRU_STATE_M4_ACTIVE &&
+	     fru[fru_inventory_cache[0].fru_dev_id].state != FRU_STATE_M1_INACTIVE )
 	{
 		module_rearm_events();
 	}
