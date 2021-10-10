@@ -20,7 +20,7 @@
     You should have received a copy of the GNU General Public License
     along with UF_IPMC.  If not, see <https://www.gnu.org/licenses/>.
 */
-#define SEC 10000
+#define SEC 100
 //#define SEC 1
 #define CQE_FREE	0
 #define CQE_ACTIVE	1
@@ -30,7 +30,7 @@ extern void timer_initialize(void);
 extern void timer_process_callout_queue( void );
 extern int timer_add_callout_queue(
 	void *handle,
-	unsigned long long int ticks, 
+	unsigned long long int ticks,
 	void(*func)( unsigned char *),
 	unsigned char *arg );
 extern void timer_remove_callout_queue( void *handle );

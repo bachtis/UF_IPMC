@@ -30,7 +30,7 @@
 #include "toml.h"
 #include "sensor.h"
 #include "logger.h"
-#include "user-payload.h"
+#include "user-payload-octopus-qsfpdd.h"
 #include "user-sensor-octopus-qsfpdd.h"
 #include "semaphore.h"
 #include <stdio.h>
@@ -79,7 +79,7 @@ void user_module_payload_on( void )
 void
 user_module_payload_off( void )
 {
-  lock(1);	
+  lock(1);
   unsigned int payload_read;
   payload_read = reg_read(devmem_ptr, qbv_on_off);
   payload_read &= ~0x20;

@@ -33,7 +33,7 @@
 #include <assert.h>
 #include <sys/wait.h>
 
-#define TIMER_FREQUENCY 100000
+#define TIMER_FREQUENCY 10000000
 //#define TIMER_FREQUENCY 1
 
 #define CQ_ARRAY_SIZE 32
@@ -115,8 +115,6 @@ timer_initialize( void )
     assert(ret == 0);
 
 	cq_init();
-
-    //exit(EXIT_SUCCESS);
 }
 
 /*==============================================================
@@ -153,9 +151,7 @@ timer_remove_callout_queue(
 {
 	CQE *ptr;
 	unsigned i;
-//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-//	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		ptr = &cq_array[i];
@@ -164,7 +160,6 @@ timer_remove_callout_queue(
 			break;
 		}
 	}
-//	ENABLE_INTERRUPTS( interrupt_mask );
 }
 
 /*==============================================================
@@ -179,9 +174,7 @@ timer_reset_callout_queue(
 {
 	CQE *cqe;
 	unsigned i;
-//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-//	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		cqe = &cq_array[i];
@@ -190,7 +183,6 @@ timer_reset_callout_queue(
 			break;
 		}
 	}
-//	ENABLE_INTERRUPTS( interrupt_mask );
 }
 
 
@@ -233,7 +225,6 @@ timer_process_callout_queue( void )
 
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
-		//if( ( cqe = cq_get_expired_elem( lbolt ) ) ) {
 			cqe = &cq_array[i];
 			if( ( cqe->state == CQE_ACTIVE ) && ( cqe->tick )
 					&& ( lbolt >= cqe->tick ) ) {
@@ -241,7 +232,6 @@ timer_process_callout_queue( void )
 				(*cqe->func)( cqe->arg );
 				cq_free( cqe );
 			}
-		//}
 	}
 }
 
@@ -275,9 +265,7 @@ cq_alloc( void )
 	CQE *cqe = 0;
 	CQE *ptr = cq_array;
 	unsigned i, found = 0;
-//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-//	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		ptr = &cq_array[i];
@@ -294,7 +282,6 @@ cq_alloc( void )
 	{
 		cq_alloc();
 	}
-//	ENABLE_INTERRUPTS( interrupt_mask );
 	return cqe;
 }
 
@@ -317,9 +304,7 @@ cq_get_expired_elem( unsigned long long int current_tick )
 	CQE *cqe = 0;
 	CQE *ptr = cq_array;
 	unsigned i;
-//	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-//	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		ptr = &cq_array[i];
@@ -329,7 +314,6 @@ cq_get_expired_elem( unsigned long long int current_tick )
 			break;
 		}
 	}
-//	ENABLE_INTERRUPTS( interrupt_mask );
 	return cqe;
 }
 

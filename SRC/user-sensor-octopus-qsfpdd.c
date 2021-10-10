@@ -30,7 +30,7 @@
 #include "sensor.h"
 #include "logger.h"
 #include "user-sensor-octopus-qsfpdd.h"
-#include "user-payload.h"
+#include "user-payload-octopus-qsfpdd.h"
 #include "semaphore.h"
 #include <stdio.h>
 #include <stdint.h>
@@ -89,7 +89,7 @@ void user_sensor_state_poll(void) {
     temp_vup_state_poll( 0 );
     temp_k7_state_poll( 0 );
     temp_rail_2v7_intermediate_state_poll( 0 );
-    temp_mgt_vup_state_poll( 0 );    
+    temp_mgt_vup_state_poll( 0 );
     temp_qsfpdd_state_poll( 0 );
     optics_state_poll( 0 );
     //temp_rail_0v85_vccint_vup_state_poll( 0 );
@@ -122,17 +122,17 @@ void user_module_sensor_init(void) {
 
 void read_sensor_pgood_remote(void) {
     lock(1);
-    
+
     //  Debug info
     char line[1000];
 	int res = 0;
-	
+
     //  Wrapper parameters
     u8 i2c_ch = 0x01;
 	u8 dev_addr = 0x69;
 	u8 reg_addr = 0x04;
 	u8 reg_val = 0x00;
-	
+
     //  Sensor Data Record
     u8 sensor_N = 4;
 
@@ -162,7 +162,7 @@ void read_sensor_pgood_remote(void) {
             sd[sensor_N].sensor_scanning_enabled = 1;
             sd[sensor_N].event_messages_enabled = 1;
             sd[sensor_N].unavailable = 0;
-           
+
             // Check if PGOOD value is less than cutoff
             u8 sensor_cutoff = 0xf5;
             if (sd[sensor_N].last_sensor_reading < sensor_cutoff) {
@@ -187,7 +187,7 @@ void read_sensor_pgood_remote(void) {
 /*==============================================================*/
 void read_sensor_temp_vup_remote(void) {
 	lock(1);
-    
+
     //	Debug info
 	char line[1000];
 	int res = 0;
@@ -292,7 +292,7 @@ void read_sensor_temp_vup_remote(void) {
 /*==============================================================*/
 void read_sensor_temp_k7_remote(void) {
 	lock(1);
-    
+
     //	Debug info
 	char line[1000];
 	int res = 0;
@@ -396,7 +396,7 @@ void read_sensor_temp_k7_remote(void) {
 /*==============================================================*/
 void read_sensor_temp_rail_2v7_intermediate_remote(void) {
 	lock(1);
-    
+
     //	Debug info
 	char line[1000];
 	int res = 0;
@@ -413,7 +413,7 @@ void read_sensor_temp_rail_2v7_intermediate_remote(void) {
     if (check_power_up()) {
         //	Read the temp
         float temp_f = readTemperature(i2c_fd_snsr[i2c_ch], rail, number, local);
-        
+
         //	Convert float to byte and get precision
         u8 temp_b = (u8)(temp_f);
 
@@ -504,7 +504,7 @@ void read_sensor_temp_rail_2v7_intermediate_remote(void) {
 /*==============================================================*/
 void read_sensor_temp_mgt_vup_remote(void) {
 	lock(1);
-    
+
     //	Debug info
 	char line[1000];
 	int res = 0;
@@ -721,7 +721,7 @@ void read_sensor_temp_qsfpdd(void) {
         sd[sensor_N].event_messages_enabled = 0;
         sd[sensor_N].unavailable = 1;
     }
-    
+
     unlock(1);
 }
 
@@ -734,7 +734,7 @@ void read_sensor_optics(void) {
     //	Debug info
 	char line[1000];
 	int res = 0;
-    
+
     //  Wrapper parameters
     u8 i2c_ch = 0x01;
 
@@ -750,7 +750,7 @@ void read_sensor_optics(void) {
             ORIGINAL_OPTICS = detect_optics(i2c_fd_snsr[i2c_ch]);
             update_leds(i2c_fd_snsr[i2c_ch],0,ORIGINAL_OPTICS);
         } else {
-        
+
             int current = detect_optics(i2c_fd_snsr[i2c_ch]);
             int current_buff = current;
 
@@ -796,7 +796,7 @@ void read_sensor_optics(void) {
 /*
 void read_sensor_temp_rail_0v85_vccint_vup_remote(void) {
 	lock(1);
-    
+
     //	Debug info
 	char line[1000];
 	int res = 0;
@@ -890,7 +890,7 @@ void read_sensor_temp_rail_0v85_vccint_vup_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-            
+
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 0;
         }
