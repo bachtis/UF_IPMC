@@ -86,11 +86,11 @@ void user_sensor_state_poll(void) {
 	/* 		State Poll Functions call			*/
 	/*==============================================================*/
 	pgood_state_poll ( 0 );
-    temp_vup_state_poll( 0 );
-    temp_k7_state_poll( 0 );
-    temp_rail_2v7_intermediate_state_poll( 0 );
-    temp_mgt_vup_state_poll( 0 );
-    temp_qsfpdd_state_poll( 0 );
+//    temp_vup_state_poll( 0 );
+//    temp_k7_state_poll( 0 );
+//    temp_rail_2v7_intermediate_state_poll( 0 );
+//    temp_mgt_vup_state_poll( 0 );
+//    temp_qsfpdd_state_poll( 0 );
     optics_state_poll( 0 );
     //temp_rail_0v85_vccint_vup_state_poll( 0 );
 
