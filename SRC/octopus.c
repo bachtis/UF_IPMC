@@ -786,14 +786,18 @@ void power_down_octopus(int i2c_fd_snsr) {
 }
 void activate_vcc_int_channel(int i2c_fd_snsr,u8 addr,u8 channel) {
   int res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x00,channel,0);
+  res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x01,0x00,0);
+  res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0xd4,0xc6,0);
   res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x01,0x80,0);
   res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x03,0x00,0);
   res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x00,0x00,0);
+
 }
 
 void deactivate_vcc_int_channel(int i2c_fd_snsr,u8 addr,u8 channel) {
   int res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x00,channel,0);
   res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x01,0x00,0);
+  res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0xd4,0xc6,0);
   res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x03,0x00,0);
   res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x00,0x00,0);
 
@@ -897,13 +901,14 @@ void power_up_octopus(int i2c_fd_snsr) {
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x3f);
   usleep(100000);
 
-  //Deactivate 2 out of 6 LTM4700 channels for now (4d,4f)
+  //Activate all VCCINT channels
   activate_vcc_int_channel(i2c_fd_snsr,0x4d,0);
-  deactivate_vcc_int_channel(i2c_fd_snsr,0x4d,1);
+  activate_vcc_int_channel(i2c_fd_snsr,0x4d,1);
   activate_vcc_int_channel(i2c_fd_snsr,0x4e,0);
   activate_vcc_int_channel(i2c_fd_snsr,0x4e,1);
   activate_vcc_int_channel(i2c_fd_snsr,0x4f,0);
-  deactivate_vcc_int_channel(i2c_fd_snsr,0x4f,1);
+  activate_vcc_int_channel(i2c_fd_snsr,0x4f,1);
+  
   usleep(300000);
 
 
@@ -1159,8 +1164,8 @@ void update_leds(int i2c_fd_snsr,int original,int current) {
   u8 command;
   u8 cage;
   for (cage=0;cage<15;++cage) {
-    u8 wasThere =original & (1<<cage);
-    u8 isThere  =current & (1<<cage);
+    int wasThere =original & (1<<cage);
+    int isThere  =current & (1<<cage);
     command=0;
     if (wasThere==0 && isThere!=0)
       command=0x4;
