@@ -672,14 +672,14 @@ float  readVoltage(int i2c_fd_snsr,u8 sensor) {
     u8 not_ready=1;
     int res=i2c_read_octopus_bus(i2c_fd_snsr,bus,addr, 0xc,&not_ready,0);
     while (not_ready) {
-      usleep(10000);
+      usleep(1000);
       int res=i2c_read_octopus_bus(i2c_fd_snsr,bus,addr, 0xc,&not_ready,0);
     }
     res=i2c_write_octopus_bus(i2c_fd_snsr,bus,addr, 0x9,1,0);
     not_ready=1;  
     res+=i2c_read_octopus_bus(i2c_fd_snsr,bus,addr, 0xc,&not_ready,0);
     while (not_ready) {
-      usleep(10000);
+      usleep(1000);
       res+=i2c_read_octopus_bus(i2c_fd_snsr,bus,addr, 0xc,&not_ready,0);
     }
     int result;
@@ -690,13 +690,13 @@ float  readVoltage(int i2c_fd_snsr,u8 sensor) {
     u8 not_ready=1;
     int res=i2c_read_optical_bus(i2c_fd_snsr,bus,addr, 0xc,&not_ready,0);
     while (not_ready) {
-      usleep(10000);
+      usleep(1000);
       res=i2c_read_optical_bus(i2c_fd_snsr,bus,addr, 0xc,&not_ready,0);
     }
     res=i2c_write_optical_bus(i2c_fd_snsr,bus,addr, 0x9,1,0);
     res=i2c_read_optical_bus(i2c_fd_snsr,bus,addr, 0xc,&not_ready,0);
     while (not_ready) {
-      usleep(10000);
+      usleep(1000);
       res=i2c_read_optical_bus(i2c_fd_snsr,bus,addr, 0xc,&not_ready,0);
     }
     int result;
@@ -712,7 +712,7 @@ float  readVoltage(int i2c_fd_snsr,u8 sensor) {
 }
 
 void check_rail(int i2c_fd_snsr,u8 sensor,float min,float max) {
-  usleep(500000);
+  //usleep(500000);
   float v = readVoltage(i2c_fd_snsr,sensor);
   if (v<min||v>max) {
     emergency_power_down_octopus(i2c_fd_snsr);
@@ -748,41 +748,41 @@ void power_down_octopus(int i2c_fd_snsr) {
   //disable latches
   int res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,10,1);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x1f);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0xf);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x7);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x3);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x1);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x0);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0xf);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0x7);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0x3);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0x1);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0x0);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x3f);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x1f);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0xf);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x7);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x3);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x1);
-  usleep(100000);
+  //usleep(100000);
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x0);
-  usleep(100000);
+  //usleep(100000);
 }
 void activate_vcc_int_channel(int i2c_fd_snsr,u8 addr,u8 channel) {
   int res=i2c_write_octopus_bus(i2c_fd_snsr,SOUTH_BUS,addr, 0x00,channel,0);
@@ -829,77 +829,77 @@ void power_up_octopus(int i2c_fd_snsr) {
   //power up
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x1);
-  usleep(100000);
+  //usleep(100000);
 
  
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x7);
-  usleep(100000);
+  //usleep(100000);
 
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0xf);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x1f);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x3f);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0x7f);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,7,0xff);
-  usleep(100000);
+  //usleep(100000);
 
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0x1);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0x3);
-  usleep(100000);
+  //usleep(100000);
 
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0x7);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0xf);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,9,0x1f);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x1);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x3);
-  usleep(100000);
+  //usleep(100000);
 
   
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x7);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0xf);
-  usleep(100000);
+  //usleep(100000);
 
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x1f);
-  usleep(100000);
+  //usleep(100000);
 
   res = i2c_write(i2c_fd_snsr,MACHXO2_ADDR,8,0x3f);
-  usleep(100000);
+  //usleep(100000);
 
   //Activate all VCCINT channels
   activate_vcc_int_channel(i2c_fd_snsr,0x4d,0);
@@ -909,7 +909,7 @@ void power_up_octopus(int i2c_fd_snsr) {
   activate_vcc_int_channel(i2c_fd_snsr,0x4f,0);
   activate_vcc_int_channel(i2c_fd_snsr,0x4f,1);
   
-  usleep(300000);
+  //usleep(300000);
 
 
   //keep internal safety system disabled for now since 
@@ -933,9 +933,9 @@ void power_up_qsfpdd_module(int i2c_fd_snsr) {
   //  check_rail(i2c_fd_snsr,RAIL_OPTICAL_3V3_G2,3.1,3.4);  
   //  check_rail(i2c_fd_snsr,RAIL_OPTICAL_3V3_G3,3.1,3.4);  
   //  check_rail(i2c_fd_snsr,RAIL_OPTICAL_3V3_G4,3.1,3.4);  
-  usleep(100000);
+  //usleep(100000);
   configure_optical_io(i2c_fd_snsr);
-  usleep(100000);
+  //usleep(100000);
 
 }
 
