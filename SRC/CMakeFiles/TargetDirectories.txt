@@ -1,3 +1,0 @@
-/root/UF_IPMC/SRC/CMakeFiles/rebuild_cache.dir
-/root/UF_IPMC/SRC/CMakeFiles/IPMC_EXEC.dir
-/root/UF_IPMC/SRC/CMakeFiles/edit_cache.dir
