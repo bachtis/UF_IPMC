@@ -48,15 +48,6 @@ extern int i2c_fd_snsr[];
 extern FULL_SENSOR_RECORD sdr[];
 extern SENSOR_DATA sd[];
 
-/*==============================================================*/
-/* Local Function Prototypes					*/
-/*==============================================================*/
-int user_module_payload_status( void );
-void pgood_state_poll( unsigned char *arg );
-void temp_vup_state_poll( unsigned char *arg );
-void temp_k7_state_poll( unsigned char *arg );
-void temp_rail_2v7_intermediate_state_poll( unsigned char *arg );
-void temp_mgt_vup_state_poll( unsigned char *arg );
 
 /*==============================================================*/
 /* USER SEMAPHORE INITIALIZATION				*/
@@ -79,18 +70,6 @@ void semaphore_initialize(void) {
  * USER SENSOR STATE POLL INITIALIZATION
  *==============================================================*/
 void user_sensor_state_poll(void) {
-	/*==============================================================*/
-	/* 		State Poll Functions call			*/
-	/*==============================================================*/
-  //  pgood_state_poll ( 0 );
-  //temp_vup_state_poll( 0 );
-  //temp_k7_state_poll( 0 );
-  //temp_rail_2v7_intermediate_state_poll( 0 );
-  //temp_mgt_vup_state_poll( 0 );
-//    temp_qsfpdd_state_poll( 0 );
-//    optics_state_poll( 0 );
-    //temp_rail_0v85_vccint_vup_state_poll( 0 );
-
 } // end of user_module_init() function
 
 
@@ -102,7 +81,7 @@ void user_module_sensor_init(void) {
 	/*==============================================================*/
 	/* 		All Sensors											*/
 	/*==============================================================*/
-  sd[4].scan_function = read_sensor_pgood_remote;
+  sd[4].scan_function = read_all_i2c_sensors;
   sd[5].scan_function = read_sensor_temp_vup_remote;
   sd[6].scan_function = read_sensor_temp_k7_remote;
   sd[7].scan_function = read_sensor_temp_rail_2v7_intermediate_remote;
@@ -113,115 +92,117 @@ void user_module_sensor_init(void) {
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * +	OCTOPUS and X20 PGOOD Sensor					      +
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+void read_all_i2c_sensors(void) {
+  //Check that monitoring is done
+  //if not wait for next poll
+  u8 ready=0;
+  u8 pgood=0;
+  lock(1);
+  while(!ready) {
+    i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &ready);
+    ready=((ready &0x40)==0);
+  }
+  if (ready & check_power_up()) {
+    //read PGOOD
+    i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x04, &pgood);
+    sd[4].last_sensor_reading = pgood;
+    sd[4].sensor_scanning_enabled = 1;
+    sd[4].event_messages_enabled = 1;
+    sd[4].unavailable = 0;
+    //PGOOD shutdown
+    if (sd[4].last_sensor_reading != 0xff) {
+      logger("WARNING","PGOOD sensor reading too low");
+      printf("PGOOD sensor reading: %d\n",sd[4].last_sensor_reading);
+      unlock(1);
+      picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
+      lock(1);
+    }
+    //read all temperatures
+    float temp_f=30;
+    u8 i=0;
+    u8 msb=0;
+    u8 lsb=0;
+    u8 tb = 0;
+    for (i=12;i<56;i=i+4) {
+      i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 7+i, &lsb);
+      i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 7+i+1, &msb);
+      int tempint = (lsb>>4)|(msb<<4);
+      float t = twos_complement(tempint,12)*0.0625;
+      tb = t;
+      if (i==44) {
+	sd[5].last_sensor_reading = tb;
+	sd[5].sensor_scanning_enabled = 1;
+	sd[5].event_messages_enabled = 1;
+	sd[5].unavailable = 0;
+      }
+      else if (i==20) {
+	sd[6].last_sensor_reading = tb;
+	sd[6].sensor_scanning_enabled = 1;
+	sd[6].event_messages_enabled = 1;
+	sd[6].unavailable = 0;
+      }
+      else if (i==32) {
+	sd[7].last_sensor_reading = tb;
+	sd[7].sensor_scanning_enabled = 1;
+	sd[7].event_messages_enabled = 1;
+	sd[7].unavailable = 0;
+      }
+      else {
+	if (t>temp_f)
+	  temp_f=t;
+      }
 
-void read_sensor_pgood_remote(void) {
-    lock(1);
+    }
+    tb = temp_f;
+    sd[8].last_sensor_reading = tb;
+    sd[8].sensor_scanning_enabled = 1;
+    sd[8].event_messages_enabled = 1;
+    sd[8].unavailable = 0;
 
-    //  Debug info
-    char line[1000];
-    int res = 0;
-    //  Wrapper parameters
-    u8 reg_val = 0x00;    
-    //  Sensor Data Record
-    u8 sensor_N = 4;
-
-    if (check_power_up()) {
-        //  Get result
-        res = i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x04, &reg_val);
-	printf("Reading PGPOOD = %d\n",reg_val);
-        if (res != 0) {
-            // I2C devices are not accessible on this module
-            // log a message and stop polling
-            sprintf(line, "PGOOD I2C failure: %d. Marking this sensor as invalid\n", res);
-            logger("WARNING", line);
-            sd[sensor_N].last_sensor_reading = 0;
-            sd[sensor_N].sensor_scanning_enabled = 0;
-            sd[sensor_N].event_messages_enabled = 0;
-            sd[sensor_N].unavailable = 1;
-        } else {
-            sd[sensor_N].last_sensor_reading = reg_val;
-            sd[sensor_N].sensor_scanning_enabled = 1;
-            sd[sensor_N].event_messages_enabled = 1;
-            sd[sensor_N].unavailable = 0;
-
-            // Check if PGOOD value is less than cutoff
-            u8 sensor_cutoff = 0xff;
-            if (sd[sensor_N].last_sensor_reading != sensor_cutoff) {
-                logger("WARNING","PGOOD sensor reading too low");
-		printf("PGOOD sensor reading: %d\n",sd[sensor_N].last_sensor_reading);
-	        unlock(1);
-                picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
-                lock(1);
-            }
-        }
-    } else {
-        sd[sensor_N].last_sensor_reading = 0;
-        sd[sensor_N].sensor_scanning_enabled = 0;
-        sd[sensor_N].event_messages_enabled = 0;
-        sd[sensor_N].unavailable = 1;
+    //trigger a new monitoring cycle
+    i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 142, &lsb);
+  }
+  else if(ready) {
+    //not powered up
+    u8 i;
+    for (i=4;i<9;++i) {
+      sd[i].last_sensor_reading = 0;
+      sd[i].sensor_scanning_enabled = 0;
+      sd[i].event_messages_enabled = 0;
+      sd[i].unavailable = 1;
     }
 
-    unlock(1);
+  }
+  unlock(1);
+
 }
+
+
 
 /*==============================================================*/
 /* 		VUP Temp Sensor											*/
 /*==============================================================*/
 void read_sensor_temp_vup_remote(void) {
-    lock(1);
+  //Reading has been done. Deal only with messages here 
     //	Debug info
     char line[1000];
-    int res = 0;
-    //	Sensor Data Record
     u8 sensor_N = 5;
-    u8 base_reading=7+44;
-    u8 lsb=0;
-    u8 msb=0;
-
-
-
     if (check_power_up()) {
-
-
-      u8 ready=0;
-      u8 reg_val=0;
-      while(!ready) {
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &reg_val);
-	ready=((reg_val &0x40)==0);
-      }
-        //	Read the temp
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading, &lsb);
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading+1, &msb);
-	int tempint = (lsb>>4)|(msb<<4);
-	float temp_f = twos_complement(tempint,12)*0.0625;
-        //	Convert float to byte and get precision
-        u8 temp_b = (u8)(temp_f);
-	sd[sensor_N].last_sensor_reading = temp_b;
-	sd[sensor_N].sensor_scanning_enabled = 1;
-	sd[sensor_N].event_messages_enabled = 1;
-	sd[sensor_N].unavailable = 0;
-
         static int first_time = 1;
         static int up_noncrt_assert = 0;
-
         if (first_time) {
             first_time = 0;
         } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_recoverable_threshold) {
             // Transition to M6 for non-recoverable
-            unlock(1);
             picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
             logger("WARNING","Non-recoverable threshold crossed for VUP temperature sensor");
-            lock(1);
         } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_critical_threshold) {
             // Transition to M6 for upper critical
-            unlock(1);
             picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
             logger("WARNING","Critical threshold crossed for VUP temperature sensor");
-            lock(1);
         } else if (up_noncrt_assert == 0 && sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_critical_threshold) {
             // Assertion message for shelf manager
             FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-
             msg.command = 0x02;
             msg.evt_msg_rev = 0x04;
             msg.sensor_type = 0x01;
@@ -232,13 +213,11 @@ void read_sensor_temp_vup_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 1;
         } else if (up_noncrt_assert == 1 && sd[sensor_N].last_sensor_reading < sdr[sensor_N].upper_non_critical_threshold) {
             // Deassertion message for shelf manager
             FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-
             msg.command = 0x02;
             msg.evt_msg_rev = 0x04;
             msg.sensor_type = 0x01;
@@ -249,57 +228,19 @@ void read_sensor_temp_vup_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 0;
-        }
-    } else {
-        sd[sensor_N].last_sensor_reading = 0;
-        sd[sensor_N].sensor_scanning_enabled = 0;
-        sd[sensor_N].event_messages_enabled = 0;
-        sd[sensor_N].unavailable = 1;
+	}
     }
-
-    unlock(1);
 }
 
 /*==============================================================*/
 /* 		K7 Temp Sensor											*/
 /*==============================================================*/
 void read_sensor_temp_k7_remote(void) {
-	lock(1);
-
-	//	Debug info
 	char line[1000];
-	int res = 0;
-
-	//	Sensor Data Record
 	u8 sensor_N = 6;
-
-	u8 base_reading=7+20;
-	u8 lsb=0;
-	u8 msb=0;
     if (check_power_up()) {
-      u8 ready=0;
-      u8 reg_val=0;
-      while(!ready) {
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &reg_val);
-	ready=((reg_val &0x40)==0);
-      }
-
-        //	Read the temp
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading, &lsb);
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading+1, &msb);
-	int tempint = (lsb>>4)|(msb<<4);
-	float temp_f = twos_complement(tempint,12)*0.0625;
-        //	Convert float to byte and get precision
-        u8 temp_b = (u8)(temp_f);
-	sd[sensor_N].last_sensor_reading = temp_b;
-	sd[sensor_N].sensor_scanning_enabled = 1;
-	sd[sensor_N].event_messages_enabled = 1;
-	sd[sensor_N].unavailable = 0;
-
-
         static int first_time = 1;
         static int up_noncrt_assert = 0;
 
@@ -307,20 +248,15 @@ void read_sensor_temp_k7_remote(void) {
             first_time = 0;
         } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_recoverable_threshold) {
             // Transition to M6 for non-recoverable
-            unlock(1);
             picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
             logger("WARNING","Non-recoverable threshold crossed for K7 temperature sensor");
-            lock(1);
         } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_critical_threshold) {
             // Transition to M6 for upper critical
-            unlock(1);
             picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
             logger("WARNING","Critical threshold crossed for K7 temperature sensor");
-            lock(1);
         } else if (up_noncrt_assert == 0 && sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_critical_threshold) {
             // Assertion message for shelf manager
             FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-
             msg.command = 0x02;
             msg.evt_msg_rev = 0x04;
             msg.sensor_type = 0x01;
@@ -331,13 +267,11 @@ void read_sensor_temp_k7_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 1;
         } else if (up_noncrt_assert == 1 && sd[sensor_N].last_sensor_reading < sdr[sensor_N].upper_non_critical_threshold) {
             // Deassertion message for shelf manager
             FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-
             msg.command = 0x02;
             msg.evt_msg_rev = 0x04;
             msg.sensor_type = 0x01;
@@ -348,83 +282,36 @@ void read_sensor_temp_k7_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 0;
         }
-    } else {
-        sd[sensor_N].last_sensor_reading = 0;
-        sd[sensor_N].sensor_scanning_enabled = 0;
-        sd[sensor_N].event_messages_enabled = 0;
-        sd[sensor_N].unavailable = 1;
     }
-
-    unlock(1);
 }
 
 /*==============================================================*/
 /* 		RAIL_2V7_INTERMEDIATE Local=0 Temp Sensor											*/
 /*==============================================================*/
 void read_sensor_temp_rail_2v7_intermediate_remote(void) {
-	lock(1);
-
-	//	Debug info
 	char line[1000];
-	int res = 0;
-
-	//	Sensor Data Record
 	u8 sensor_N = 7;
-	u8 base_reading=7+32;
-	u8 lsb=0;
-	u8 msb=0;
-	u8 reg_val;
     if (check_power_up()) {
-
-      u8 ready=0;
-      u8 reg_val=0;
-      while(!ready) {
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &reg_val);
-	ready=((reg_val &0x40)==0);
-      }
-
-      //	Read the temp
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading, &lsb);
-        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading+1, &msb);
-	int tempint = (lsb>>4)|(msb<<4);
-	float temp_f = twos_complement(tempint,12)*0.0625;
-        //	Convert float to byte and get precision
-        u8 temp_b = (u8)(temp_f);
-	sd[sensor_N].last_sensor_reading = temp_b;
-	sd[sensor_N].sensor_scanning_enabled = 1;
-	sd[sensor_N].event_messages_enabled = 1;
-	sd[sensor_N].unavailable = 0;
-
-
         static int first_time = 1;
         static int up_noncrt_assert = 0;
         static int up_crt_assert = 0;
         static int up_nonrec_assert = 0;
-
-        //logger("EVENT", "Int Temp (reading)  = %d, Int Temp (temp_b) = %d, Int Temp (temp_f) = %f, Threshold = %d",sd[sensor_N].last_sensor_reading,temp_b,temp_f,sdr[sensor_N].upper_non_critical_threshold);
-
         if (first_time) {
             first_time = 0;
         } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_recoverable_threshold) {
             // Transition to M6 for non-recoverable
-            unlock(1);
             picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
             logger("WARNING","Non-recoverable threshold crossed for Intermediate Rail temperature sensor");
-            lock(1);
         } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_critical_threshold) {
             // Transition to M6 for upper critical
-            unlock(1);
             picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
             logger("WARNING","Critical threshold crossed for Intermediate Rail temperature sensor");
-            lock(1);
         } else if (up_noncrt_assert == 0 && sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_critical_threshold) {
             // Assertion message for shelf manager
             FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-
             msg.command = 0x02;
             msg.evt_msg_rev = 0x04;
             msg.sensor_type = 0x01;
@@ -435,13 +322,11 @@ void read_sensor_temp_rail_2v7_intermediate_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 1;
         } else if (up_noncrt_assert == 1 && sd[sensor_N].last_sensor_reading < sdr[sensor_N].upper_non_critical_threshold) {
             // Deassertion message for shelf manager
             FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-
             msg.command = 0x02;
             msg.evt_msg_rev = 0x04;
             msg.sensor_type = 0x01;
@@ -452,87 +337,34 @@ void read_sensor_temp_rail_2v7_intermediate_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 0;
         }
-    } else {
-        sd[sensor_N].last_sensor_reading = 0;
-        sd[sensor_N].sensor_scanning_enabled = 0;
-        sd[sensor_N].event_messages_enabled = 0;
-        sd[sensor_N].unavailable = 1;
     }
-
-    unlock(1);
 }
 
 /*==============================================================*/
 /* 		MGT_VUP Local=0 Temp Sensor								*/
 /*==============================================================*/
 void read_sensor_temp_mgt_vup_remote(void) {
-	lock(1);
-      u8 ready=0;
-      u8 reg_val=0;
-      while(!ready) {
-        i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &reg_val);
-	ready=((reg_val &0x40)==0);
-      }
-
-    //	Debug info
 	char line[1000];
-	int res = 0;
 	u8 sensor_N = 8;
-	u8 index=0;
-	int i=0;
-	u8 lsb=0;
-	u8 msb=0;
-
-
 	if (check_power_up()) {	  
-	  float temp_f=30;
-	  for (i=12;i<56;i=i+4) {
-	    index=(i-12)/4;
-	    if (index==2||index==5||index==8)
-	      continue;
-		//	Read the temp
-	    res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 7+i, &lsb);
-	    res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 7+i+1, &msb);
-	    int tempint = (lsb>>4)|(msb<<4);
-	    float t = twos_complement(tempint,12)*0.0625;
-	    if (t>temp_f)
-	      temp_f=t;
-	  }
-	  //This is the last octopus sensor so let's trigger a monitoring cycle
-	  res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 142, &lsb);
-	  
-	  u8 temp_b = (u8)(temp_f);
-	  printf("Measured temperatures=%f %d\n",temp_f,temp_b);
-	  sd[sensor_N].last_sensor_reading = temp_b;
-	  sd[sensor_N].sensor_scanning_enabled = 1;
-	  sd[sensor_N].event_messages_enabled = 1;
-	  sd[sensor_N].unavailable = 0;
-
 	  static int first_time = 1;
 	  static int up_noncrt_assert = 0;
-
-        if (first_time) {
+	  if (first_time) {
             first_time = 0;
-        } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_recoverable_threshold) {
+	  } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_recoverable_threshold) {
             // Transition to M6 for non-recoverable
-            unlock(1);
             picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
             logger("WARNING","Non-recoverable threshold crossed for MGT VUP Rails temperature sensor");
-            lock(1);
-        } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_critical_threshold) {
+	  } else if (sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_critical_threshold) {
             // Transition to M6 for upper critical
-            unlock(1);
             picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
             logger("WARNING","Critical threshold crossed for MGT VUP Rails temperature sensor");
-            lock(1);
-        } else if (up_noncrt_assert == 0 && sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_critical_threshold) {
+	  } else if (up_noncrt_assert == 0 && sd[sensor_N].last_sensor_reading >= sdr[sensor_N].upper_non_critical_threshold) {
             // Assertion message for shelf manager
             FRU_TEMPERATURE_EVENT_MSG_REQ msg;
-
             msg.command = 0x02;
             msg.evt_msg_rev = 0x04;
             msg.sensor_type = 0x01;
@@ -543,10 +375,9 @@ void read_sensor_temp_mgt_vup_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 1;
-        } else if (up_noncrt_assert == 1 && sd[sensor_N].last_sensor_reading < sdr[sensor_N].upper_non_critical_threshold) {
+	  } else if (up_noncrt_assert == 1 && sd[sensor_N].last_sensor_reading < sdr[sensor_N].upper_non_critical_threshold) {
             // Deassertion message for shelf manager
             FRU_TEMPERATURE_EVENT_MSG_REQ msg;
 
@@ -560,69 +391,16 @@ void read_sensor_temp_mgt_vup_remote(void) {
             msg.evt_reason = 0x07;
             msg.temp_reading = sd[sensor_N].last_sensor_reading;
             msg.threshold = sdr[sensor_N].upper_non_critical_threshold;
-
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 0;
-        }
-	} else {
-        sd[sensor_N].last_sensor_reading = 0;
-        sd[sensor_N].sensor_scanning_enabled = 0;
-        sd[sensor_N].event_messages_enabled = 0;
-        sd[sensor_N].unavailable = 1;
-    }
-
-    unlock(1);
+	  }
+	}
 }
 
 
-void pgood_state_poll(unsigned char *arg) {
-    unsigned char pgood_timer_handle;
 
-	read_sensor_pgood_remote();
 
-	// Re-start the timer
-	timer_add_callout_queue( (void *)&pgood_timer_handle,
-			5*SEC, pgood_state_poll, 0 ); /* 0 sec timeout */
-}
 
-void temp_vup_state_poll( unsigned char *arg ) {
-    unsigned char temp_vup_timer_handle;
 
-	read_sensor_temp_vup_remote();
-
-	// Re-start the timer
-	timer_add_callout_queue( (void *)&temp_vup_timer_handle,
-			5*SEC, temp_vup_state_poll, 0 ); /* 0 sec timeout */
-}
-
-void temp_k7_state_poll( unsigned char *arg ) {
-    unsigned char temp_k7_timer_handle;
-
-	read_sensor_temp_k7_remote();
-
-	// Re-start the timer
-	timer_add_callout_queue( (void *)&temp_k7_timer_handle,
-			5*SEC, temp_k7_state_poll, 0 ); /* 0 sec timeout */
-}
-
-void temp_rail_2v7_intermediate_state_poll( unsigned char *arg ) {
-    unsigned char temp_rail_2v7_intermediate_timer_handle;
-
-	read_sensor_temp_rail_2v7_intermediate_remote();
-
-	// Re-start the timer
-	timer_add_callout_queue( (void *)&temp_rail_2v7_intermediate_timer_handle,
-			5*SEC, temp_rail_2v7_intermediate_state_poll, 0 ); /* 0 sec timeout */
-}
-
-void temp_mgt_vup_state_poll( unsigned char *arg ) {
-    unsigned char temp_mgt_vup_timer_handle;
-
-	read_sensor_temp_mgt_vup_remote();
-
-	// Re-start the timer
-	timer_add_callout_queue( (void *)&temp_mgt_vup_timer_handle,
-			5*SEC, temp_mgt_vup_state_poll, 0 ); /* 0 sec timeout */
-}
 
 
