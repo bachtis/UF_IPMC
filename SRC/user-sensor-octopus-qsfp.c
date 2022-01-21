@@ -82,11 +82,11 @@ void user_sensor_state_poll(void) {
 	/*==============================================================*/
 	/* 		State Poll Functions call			*/
 	/*==============================================================*/
-	pgood_state_poll ( 0 );
-//    temp_vup_state_poll( 0 );
-//    temp_k7_state_poll( 0 );
-//    temp_rail_2v7_intermediate_state_poll( 0 );
-//    temp_mgt_vup_state_poll( 0 );
+  //  pgood_state_poll ( 0 );
+  //temp_vup_state_poll( 0 );
+  //temp_k7_state_poll( 0 );
+  //temp_rail_2v7_intermediate_state_poll( 0 );
+  //temp_mgt_vup_state_poll( 0 );
 //    temp_qsfpdd_state_poll( 0 );
 //    optics_state_poll( 0 );
     //temp_rail_0v85_vccint_vup_state_poll( 0 );
@@ -119,29 +119,16 @@ void read_sensor_pgood_remote(void) {
 
     //  Debug info
     char line[1000];
-	int res = 0;
-
+    int res = 0;
     //  Wrapper parameters
-    u8 i2c_ch = 0x01;
-	u8 dev_addr = 0x69;
-	u8 reg_addr = 0x04;
-	u8 reg_val = 0x00;
-
+    u8 reg_val = 0x00;    
     //  Sensor Data Record
     u8 sensor_N = 4;
 
     if (check_power_up()) {
         //  Get result
-        res += i2c_read(i2c_fd_snsr[i2c_ch], dev_addr, reg_addr, &reg_val);
-
-        //Michalis test
-        //float t = readTemperature(i2c_fd_snsr[i2c_ch],VUP,0,0);
-        //float v = readVoltage(i2c_fd_snsr[i2c_ch],RAIL_3V3_STANDBY);
-
-        //sprintf (line, "FPGA temp=%f and VCCINT=%f\n",t,v);
-        //logger ("WARNING", line);
-
-        //if (lbolt - payload_timeout_init > 1000) {}
+        res = i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x04, &reg_val);
+	printf("Reading PGPOOD = %d\n",reg_val);
         if (res != 0) {
             // I2C devices are not accessible on this module
             // log a message and stop polling
@@ -159,10 +146,11 @@ void read_sensor_pgood_remote(void) {
 
             // Check if PGOOD value is less than cutoff
             u8 sensor_cutoff = 0xff;
-            if (sd[sensor_N].last_sensor_reading < sensor_cutoff) {
-                unlock(1);
-                picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
+            if (sd[sensor_N].last_sensor_reading != sensor_cutoff) {
                 logger("WARNING","PGOOD sensor reading too low");
+		printf("PGOOD sensor reading: %d\n",sd[sensor_N].last_sensor_reading);
+	        unlock(1);
+                picmg_m6_state(fru_inventory_cache[0].fru_dev_id);
                 lock(1);
             }
         }
@@ -180,44 +168,38 @@ void read_sensor_pgood_remote(void) {
 /* 		VUP Temp Sensor											*/
 /*==============================================================*/
 void read_sensor_temp_vup_remote(void) {
-	lock(1);
-
+    lock(1);
     //	Debug info
-	char line[1000];
-	int res = 0;
+    char line[1000];
+    int res = 0;
+    //	Sensor Data Record
+    u8 sensor_N = 5;
+    u8 base_reading=7+44;
+    u8 lsb=0;
+    u8 msb=0;
 
-	//	Wrapper parameters
-	u8 i2c_ch = 0x01;
-	u8 rail = VUP;
-	u8 number = 0;
-	u8 local = 0;
 
-	//	Sensor Data Record
-	u8 sensor_N = 5;
 
     if (check_power_up()) {
 
-        //	Read the temp
-        float temp_f = readTemperature(i2c_fd_snsr[i2c_ch], rail, number, local);
 
+      u8 ready=0;
+      u8 reg_val=0;
+      while(!ready) {
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &reg_val);
+	ready=((reg_val &0x40)==0);
+      }
+        //	Read the temp
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading, &lsb);
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading+1, &msb);
+	int tempint = (lsb>>4)|(msb<<4);
+	float temp_f = twos_complement(tempint,12)*0.0625;
         //	Convert float to byte and get precision
         u8 temp_b = (u8)(temp_f);
-
-        if (res != 0) {
-            // I2C devices are not accessible on this module
-            // log a message and stop polling
-            sprintf (line, "TEMP: SDR%d I2C failure: %d. Marking this sensor as invalid\n", sensor_N, res);
-            logger ("WARNING", line);
-            sd[sensor_N].last_sensor_reading = 0;
-            sd[sensor_N].sensor_scanning_enabled = 0;
-            sd[sensor_N].event_messages_enabled = 0;
-            sd[sensor_N].unavailable = 1;
-        } else {
-            sd[sensor_N].last_sensor_reading = temp_b;
-            sd[sensor_N].sensor_scanning_enabled = 1;
-            sd[sensor_N].event_messages_enabled = 1;
-            sd[sensor_N].unavailable = 0;
-        }
+	sd[sensor_N].last_sensor_reading = temp_b;
+	sd[sensor_N].sensor_scanning_enabled = 1;
+	sd[sensor_N].event_messages_enabled = 1;
+	sd[sensor_N].unavailable = 0;
 
         static int first_time = 1;
         static int up_noncrt_assert = 0;
@@ -287,41 +269,36 @@ void read_sensor_temp_vup_remote(void) {
 void read_sensor_temp_k7_remote(void) {
 	lock(1);
 
-    //	Debug info
+	//	Debug info
 	char line[1000];
 	int res = 0;
-
-	//	Wrapper parameters
-	u8 i2c_ch = 0x01;
-	u8 rail = K7;
-	u8 number = 0;
-	u8 local = 0;
 
 	//	Sensor Data Record
 	u8 sensor_N = 6;
 
+	u8 base_reading=7+20;
+	u8 lsb=0;
+	u8 msb=0;
     if (check_power_up()) {
-        //	Read the temp
-        float temp_f = readTemperature(i2c_fd_snsr[i2c_ch], rail, number, local);
+      u8 ready=0;
+      u8 reg_val=0;
+      while(!ready) {
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &reg_val);
+	ready=((reg_val &0x40)==0);
+      }
 
+        //	Read the temp
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading, &lsb);
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading+1, &msb);
+	int tempint = (lsb>>4)|(msb<<4);
+	float temp_f = twos_complement(tempint,12)*0.0625;
         //	Convert float to byte and get precision
         u8 temp_b = (u8)(temp_f);
+	sd[sensor_N].last_sensor_reading = temp_b;
+	sd[sensor_N].sensor_scanning_enabled = 1;
+	sd[sensor_N].event_messages_enabled = 1;
+	sd[sensor_N].unavailable = 0;
 
-        if (res != 0) {
-            // I2C devices are not accessible on this module
-            // log a message and stop polling
-            sprintf (line, "TEMP: SDR%d I2C failure: %d. Marking this sensor as invalid\n", sensor_N, res);
-            logger ("WARNING", line);
-            sd[sensor_N].last_sensor_reading = 0;
-            sd[sensor_N].sensor_scanning_enabled = 0;
-            sd[sensor_N].event_messages_enabled = 0;
-            sd[sensor_N].unavailable = 1;
-        } else {
-            sd[sensor_N].last_sensor_reading = temp_b;
-            sd[sensor_N].sensor_scanning_enabled = 1;
-            sd[sensor_N].event_messages_enabled = 1;
-            sd[sensor_N].unavailable = 0;
-        }
 
         static int first_time = 1;
         static int up_noncrt_assert = 0;
@@ -391,41 +368,37 @@ void read_sensor_temp_k7_remote(void) {
 void read_sensor_temp_rail_2v7_intermediate_remote(void) {
 	lock(1);
 
-    //	Debug info
+	//	Debug info
 	char line[1000];
 	int res = 0;
 
-	//	Wrapper parameters
-	u8 i2c_ch = 0x01;
-	u8 rail = RAIL_2V7_INTERMEDIATE;
-	u8 number = 0;
-	u8 local = 0;
-
 	//	Sensor Data Record
 	u8 sensor_N = 7;
-
+	u8 base_reading=7+32;
+	u8 lsb=0;
+	u8 msb=0;
+	u8 reg_val;
     if (check_power_up()) {
-        //	Read the temp
-        float temp_f = readTemperature(i2c_fd_snsr[i2c_ch], rail, number, local);
 
+      u8 ready=0;
+      u8 reg_val=0;
+      while(!ready) {
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &reg_val);
+	ready=((reg_val &0x40)==0);
+      }
+
+      //	Read the temp
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading, &lsb);
+        res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, base_reading+1, &msb);
+	int tempint = (lsb>>4)|(msb<<4);
+	float temp_f = twos_complement(tempint,12)*0.0625;
         //	Convert float to byte and get precision
         u8 temp_b = (u8)(temp_f);
+	sd[sensor_N].last_sensor_reading = temp_b;
+	sd[sensor_N].sensor_scanning_enabled = 1;
+	sd[sensor_N].event_messages_enabled = 1;
+	sd[sensor_N].unavailable = 0;
 
-        if (res != 0) {
-            // I2C devices are not accessible on this module
-            // log a message and stop polling
-            sprintf (line, "TEMP: SDR%d I2C failure: %d. Marking this sensor as invalid\n", sensor_N, res);
-            logger ("WARNING", line);
-            sd[sensor_N].last_sensor_reading = 0;
-            sd[sensor_N].sensor_scanning_enabled = 0;
-            sd[sensor_N].event_messages_enabled = 0;
-            sd[sensor_N].unavailable = 1;
-        } else {
-            sd[sensor_N].last_sensor_reading = temp_b;
-            sd[sensor_N].sensor_scanning_enabled = 1;
-            sd[sensor_N].event_messages_enabled = 1;
-            sd[sensor_N].unavailable = 0;
-        }
 
         static int first_time = 1;
         static int up_noncrt_assert = 0;
@@ -498,66 +471,49 @@ void read_sensor_temp_rail_2v7_intermediate_remote(void) {
 /*==============================================================*/
 void read_sensor_temp_mgt_vup_remote(void) {
 	lock(1);
+      u8 ready=0;
+      u8 reg_val=0;
+      while(!ready) {
+        i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 0x03, &reg_val);
+	ready=((reg_val &0x40)==0);
+      }
 
     //	Debug info
 	char line[1000];
 	int res = 0;
-
-	//	Wrapper parameters
-	u8 i2c_ch = 0x01;
-	u8 rail_1 = RAIL_0V9_MGTAVCC_VUP_N;
-	u8 rail_2 = RAIL_1V2_MGTAVTT_VUP_N;
-	u8 rail_3 = RAIL_0V9_MGTAVCC_VUP_S;
-	u8 rail_4 = RAIL_1V2_MGTAVTT_VUP_S;
-	u8 number_a = 0;
-	u8 number_b = 1;
-	u8 local = 0;
-
-	//	Sensor Data Record
 	u8 sensor_N = 8;
+	u8 index=0;
+	int i=0;
+	u8 lsb=0;
+	u8 msb=0;
 
-    if (check_power_up()) {
-        //	Read the temps and store in array
-        float temp_f1 = readTemperature(i2c_fd_snsr[i2c_ch], rail_1, number_a, local);
-        float temp_f2 = readTemperature(i2c_fd_snsr[i2c_ch], rail_1, number_b, local);
-        float temp_f3 = readTemperature(i2c_fd_snsr[i2c_ch], rail_2, number_a, local);
-        float temp_f4 = readTemperature(i2c_fd_snsr[i2c_ch], rail_2, number_b, local);
-        float temp_f5 = readTemperature(i2c_fd_snsr[i2c_ch], rail_3, number_a, local);
-        float temp_f6 = readTemperature(i2c_fd_snsr[i2c_ch], rail_3, number_b, local);
-        float temp_f7 = readTemperature(i2c_fd_snsr[i2c_ch], rail_4, number_a, local);
-        float temp_f8 = readTemperature(i2c_fd_snsr[i2c_ch], rail_4, number_b, local);
-        float temps_f[8] = {temp_f1,temp_f2,temp_f3,temp_f4,temp_f5,temp_f6,temp_f7,temp_f8};
 
-        // Find max temp
-        float temp_f = temps_f[0];
-        int i;
-        for (i=1; i < 8; i++) {
-            if (temps_f[i] > temp_f) {
-                temp_f = temps_f[i];
-            }
-        }
+	if (check_power_up()) {	  
+	  float temp_f=30;
+	  for (i=12;i<56;i=i+4) {
+	    index=(i-12)/4;
+	    if (index==2||index==5||index==8)
+	      continue;
+		//	Read the temp
+	    res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 7+i, &lsb);
+	    res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 7+i+1, &msb);
+	    int tempint = (lsb>>4)|(msb<<4);
+	    float t = twos_complement(tempint,12)*0.0625;
+	    if (t>temp_f)
+	      temp_f=t;
+	  }
+	  //This is the last octopus sensor so let's trigger a monitoring cycle
+	  res += i2c_read(i2c_fd_snsr[OCTOPUS_I2C_BUS], MACHXO2_ADDR, 142, &lsb);
+	  
+	  u8 temp_b = (u8)(temp_f);
+	  printf("Measured temperatures=%f %d\n",temp_f,temp_b);
+	  sd[sensor_N].last_sensor_reading = temp_b;
+	  sd[sensor_N].sensor_scanning_enabled = 1;
+	  sd[sensor_N].event_messages_enabled = 1;
+	  sd[sensor_N].unavailable = 0;
 
-        //	Convert float to byte and get precision
-        u8 temp_b = (u8)(temp_f);
-
-        if (res != 0) {
-            // I2C devices are not accessible on this module
-            // log a message and stop polling
-            sprintf (line, "TEMP: SDR%d I2C failure: %d. Marking this sensor as invalid\n", sensor_N, res);
-            logger ("WARNING", line);
-            sd[sensor_N].last_sensor_reading = 0;
-            sd[sensor_N].sensor_scanning_enabled = 0;
-            sd[sensor_N].event_messages_enabled = 0;
-            sd[sensor_N].unavailable = 1;
-        } else {
-            sd[sensor_N].last_sensor_reading = temp_b;
-            sd[sensor_N].sensor_scanning_enabled = 1;
-            sd[sensor_N].event_messages_enabled = 1;
-            sd[sensor_N].unavailable = 0;
-        }
-
-        static int first_time = 1;
-        static int up_noncrt_assert = 0;
+	  static int first_time = 1;
+	  static int up_noncrt_assert = 0;
 
         if (first_time) {
             first_time = 0;
@@ -608,7 +564,7 @@ void read_sensor_temp_mgt_vup_remote(void) {
             ipmi_send_event_req(( unsigned char * )&msg, sizeof(FRU_TEMPERATURE_EVENT_MSG_REQ), 0);
             up_noncrt_assert = 0;
         }
-    } else {
+	} else {
         sd[sensor_N].last_sensor_reading = 0;
         sd[sensor_N].sensor_scanning_enabled = 0;
         sd[sensor_N].event_messages_enabled = 0;

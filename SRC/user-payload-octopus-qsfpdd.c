@@ -57,22 +57,23 @@ static int power_up_done = 0;
 void user_module_payload_on( void )
 {
 	unsigned int payload_read;
-
+	power_up_done=0;
 	lock(1);
 	payload_read = reg_read(devmem_ptr, qbv_on_off);
 	payload_read |= 0x20;
 	reg_write(devmem_ptr, qbv_on_off, payload_read);
-	//printf("Octopus done\n");
 	payload_timeout_init = lbolt;
-	power_up_octopus(i2c_fd_snsr[1]);
-	power_up_qsfpdd_module(i2c_fd_snsr[1]);
-    logger("PAYLOAD", "On");
+	u8 result=power_up_octopus(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
+	if(!result) {
+	  unlock(1);
+	  return;
+	}
+	power_up_qsfpdd_module(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
+	logger("PAYLOAD", "On");
 	power_up_done = 1;
-    printf("Optics Detected = %d\n",detect_optics(i2c_fd_snsr[1]));
-	//logger("PAYLOAD", "On, lbolt = %llu, payload = %llu",lbolt,payload_timeout_init);
+	printf("Optics Detected = %d\n",detect_optics(i2c_fd_snsr[OCTOPUS_I2C_BUS]));
 	printf("lbolt = %llu, payload = %llu\n",lbolt,payload_timeout_init);
-
-    unlock(1);
+	unlock(1);
 
 }
 
@@ -83,13 +84,12 @@ user_module_payload_off( void )
   unsigned int payload_read;
   payload_read = reg_read(devmem_ptr, qbv_on_off);
   payload_read &= ~0x20;
-  power_down_octopus(i2c_fd_snsr[1]);
-  power_down_qsfpdd_module(i2c_fd_snsr[1]);
+  power_down_octopus(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
+  power_down_qsfpdd_module(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
   power_up_done = 0;
   reg_write(devmem_ptr, qbv_on_off, payload_read);
   logger("PAYLOAD", "Off");
   unlock(1);
-
 }
 
 void

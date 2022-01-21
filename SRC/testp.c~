@@ -1,0 +1,5 @@
+#include "octopus.h"
+
+int main() {
+  power_up_octopus(1,100);
+}
