@@ -63,18 +63,27 @@ void user_module_payload_on( void )
 	payload_read |= 0x20;
 	reg_write(devmem_ptr, qbv_on_off, payload_read);
 	payload_timeout_init = lbolt;
-	u8 result=power_up_octopus(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
-	if(!result) {
-	  unlock(1);
-	  return;
+	//disable latches for both boards
+	while (i2c_write(i2c_fd_snsr[OCTOPUS_I2C_BUS],MACHXO2_ADDR,10,1)!=0)
+	  ;
+	i2c_write_octopus_bus(i2c_fd_snsr[OCTOPUS_I2C_BUS],OPTICAL_BUS,OPTICAL_ADDR, 8, 0x1,0);
+	//power them down
+	power_down_octopus(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
+	power_down_qsfpdd_module(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
+	//configure sensors
+	configure_octopus(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
+	configure_qsfpdd_module(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
+	//power_up
+	u8 octopus_on;
+	u8 optical_on;
+	octopus_on=power_up_octopus(i2c_fd_snsr[OCTOPUS_I2C_BUS],100);
+	optical_on=power_up_qsfpdd_module(i2c_fd_snsr[OCTOPUS_I2C_BUS],100);
+	power_up_done=octopus_on&optical_on;
+	if(!power_up_done) {
+	  power_down_octopus(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
+	  power_down_qsfpdd_module(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
 	}
-	power_up_qsfpdd_module(i2c_fd_snsr[OCTOPUS_I2C_BUS]);
-	logger("PAYLOAD", "On");
-	power_up_done = 1;
-	printf("Optics Detected = %d\n",detect_optics(i2c_fd_snsr[OCTOPUS_I2C_BUS]));
-	printf("lbolt = %llu, payload = %llu\n",lbolt,payload_timeout_init);
 	unlock(1);
-
 }
 
 void

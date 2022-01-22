@@ -16,6 +16,7 @@
 #define SOUTH_BUS   0x1
 #define CLOCK_BUS   0x2
 #define OPTICAL_BUS 0x3
+#define OPTICS_BUS  0x4
 
 int twos_complement(int val,u8 bits);
 int i2c_read_octopus_bus(int i2c_fd_snsr, u8 octopus_bus,u8 slave_addr, u8 reg, u8 *result,u8 reg16b);
@@ -90,7 +91,11 @@ int i2c_write_optical_bus(int i2c_fd_snsr,u8 optical_bus,u8 slave_addr, u8 reg, 
 //temperature. sensor from above , num is the number of the regulator or FPGA if there are more
 u8 power_up_octopus(int i2c_fd_snsr,u8 timeout);
 void power_down_octopus(int i2c_fd_snsr);
-u8 power_up_qsfpdd_module(int i2c_fd_snsr);
+u8 power_up_qsfpdd_module(int i2c_fd_snsr,u8 timeout);
 void power_down_qsfpdd_module(int i2c_fd_snsr);
-float qsfpddTemperature(int i2c_fd_snsr);
+int optics_temperature(int i2c_fd_snsr,int mask);
 void  configure_octopus(int i2c_fd_snsr);
+void  configure_qsfpdd_module(int i2c_fd_snsr);
+int optics_presence(int i2c_fd_snsr);
+void set_led(int i2c_fd_snsr,u8 cage,u8 r,u8 g,u8 b);
+int optics_powered;

@@ -200,14 +200,11 @@ void configure_octopus_voltage_sensor(int i2c_fd_snsr,u8 bus,u8 addr,const float
   res+=i2c_write_octopus_bus(i2c_fd_snsr,bus,addr, 0x8,mask,0);
   res+=i2c_write_octopus_bus(i2c_fd_snsr,bus,addr, 0xb,2,0);
   for (i=0;i<8;i=i+1) {
-    if (v[i]<0.0) {
+    if (v[i]>0.0) {
       u8 maxV = (256.0*v[i]*(1.0+margin[i])/(factor[i]*2.56));
       u8 minV = (256.0*v[i]*(1.0-margin[i])/(factor[i]*2.56));
       i2c_write_octopus_bus(i2c_fd_snsr,bus,addr, 0x2a+2*i,maxV,0);
       i2c_write_octopus_bus(i2c_fd_snsr,bus,addr, 0x2a+2*i+1,minV,0);
-      u8 r1,r2;
-      i2c_read_octopus_bus(i2c_fd_snsr,bus,addr, 0x2a+2*i,&r1,0);
-      i2c_read_octopus_bus(i2c_fd_snsr,bus,addr, 0x2a+2*i+1,&r2,0);
     }
   }
   res+=i2c_write_octopus_bus(i2c_fd_snsr,bus,addr, 0x0,3,0);
@@ -231,7 +228,7 @@ void configure_optical_voltage_sensor(int i2c_fd_snsr,u8 bus,u8 addr,const float
   res+=i2c_write_optical_bus(i2c_fd_snsr,bus,addr, 0x8,mask,0);
   res+=i2c_write_optical_bus(i2c_fd_snsr,bus,addr, 0xb,2,0);
   for (i=0;i<8;i=i+1) {
-    if (v[i]<0.0) {
+    if (v[i]>0.0) {
       u8 maxV = (256.0*v[i]*(1.0+margin[i])/(factor[i]*2.56));
       u8 minV = (256.0*v[i]*(1.0-margin[i])/(factor[i]*2.56));
       i2c_write_optical_bus(i2c_fd_snsr,bus,addr, 0x2a+2*i,maxV,0);
@@ -393,10 +390,9 @@ void  configure_qsfpdd_module(int i2c_fd_snsr) {
   configure_optical_temperature_sensor(i2c_fd_snsr,RAIL_3V3_OPTICAL_G3,0,70,90,1.008);
   configure_optical_temperature_sensor(i2c_fd_snsr,RAIL_3V3_OPTICAL_G4,0,70,90,1.008);
 
-  const float nominal_0[8] = {12.0,3.3,3.3,3.3,3.3,3.3,3.3,-1.0};
-  const float factor_0[8]  = {11.0,11.0,11.0,11.0,11.0,11.0,11.0,-1.0};
-  const float margin_0[8]  = {0.1,0.1,0.1,0.1,0.1,0.1,0.1,-1.0};
-
+  const float nominal_0[8] = {-1.0,12.0,3.3,3.3,3.3,3.3,3.3,3.3};
+  const float factor_0[8]  = {-1.0,11.0,11.0,11.0,11.0,11.0,11.0,11.0};
+  const float margin_0[8]  = {-1.0,0.1,0.1,0.1,0.1,0.1,0.1,0.1};
   configure_optical_voltage_sensor(i2c_fd_snsr,OPTICAL_BUS_0,0x1d,nominal_0,margin_0,factor_0);
 }
 
@@ -464,8 +460,7 @@ u8 trackVoltage(int i2c_fd_snsr, u8 octopus_bus,u8 slave_addr, u8 ch,float facto
   u8 t=0;
   while ((!success) && (t<timeout)) { 
       usleep(10000);
-      while(i2c_read_word_octopus_bus(i2c_fd_snsr,octopus_bus,slave_addr,0x20+ch, &result,0)!=0)
-	;
+      i2c_read_word_octopus_bus(i2c_fd_snsr,octopus_bus,slave_addr,0x20+ch, &result,0);
       converted = 2.56*result*factor/65536.0;
       //OV
       if (converted>v*(1.0+margin)) {
@@ -492,7 +487,8 @@ u8 trackOpticalVoltage(int i2c_fd_snsr, u8 octopus_bus,u8 slave_addr, u8 ch,floa
   res=i2c_read_word_optical_bus(i2c_fd_snsr,octopus_bus,slave_addr,0x20+ch, &result,0);
   float converted = 2.56*result*factor/65536.0;
   if (converted>(v*(1.0+margin))) {
-      power_down_qsfpdd_module(i2c_fd_snsr);
+    printf("Optical Module Overvoltage detected\n");
+    power_down_qsfpdd_module(i2c_fd_snsr);
       return 0;
   }
   u8 success = converted>(v*(1.0-margin));
@@ -500,11 +496,13 @@ u8 trackOpticalVoltage(int i2c_fd_snsr, u8 octopus_bus,u8 slave_addr, u8 ch,floa
   u8 t=0;
   while ((!success) && (t<timeout)) { 
       usleep(10000);
-      while(i2c_read_word_optical_bus(i2c_fd_snsr,octopus_bus,slave_addr,0x20+ch, &result,0)!=0)
-	;
+      printf("Rereading\n");
+      i2c_read_word_optical_bus(i2c_fd_snsr,octopus_bus,slave_addr,0x20+ch, &result,0);
       converted = 2.56*result*factor/65536.0;
+      printf("Voltage Nominal=%f Margin=%f Readout=%f success=%d\n",v,margin,converted,success);
       //OV
       if (converted>v*(1.0+margin)) {
+	printf("Optical Module Overvoltage detected\n");
 	power_down_qsfpdd_module(i2c_fd_snsr);
 	return 0;
       }
@@ -618,9 +616,20 @@ u8 power_up_octopus(int i2c_fd_snsr,u8 timeout) {
   return (alerts==0xff);
 }
 
+int optics_presence(int i2c_fd_snsr) {
+  u8 msb=0;
+  u8 lsb=0;
+  i2c_read_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR,5, &msb,0);
+  i2c_read_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR,4, &lsb,0);
+  return (msb<<8)|lsb;
+}
+void set_led(int i2c_fd_snsr,u8 cage,u8 r,u8 g,u8 b) {
+  u8 mode = ((b&3) << 4) | ((g&3) << 2) | (r&3);
+  i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR,15+cage, mode,0);
+}
 
 
-u8 power_up_qsfpdd_module(int i2c_fd_snsr) {
+u8 power_up_qsfpdd_module(int i2c_fd_snsr,u8 timeout) {
   u8 verbose=1;
   int res=0;
   if(!trackOpticalVoltage(i2c_fd_snsr, OPTICAL_BUS_0,0x1d, 1,11.0,12.0,0.05,100,verbose))
@@ -639,10 +648,40 @@ u8 power_up_qsfpdd_module(int i2c_fd_snsr) {
   if(!trackOpticalVoltage(i2c_fd_snsr, OPTICAL_BUS_0,0x1d, 6,11.0,3.3,0.05,100,verbose))
     return 0;
   clear_interrupts_optical(i2c_fd_snsr);
+  u8 alerts;
+  res = i2c_read_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR,3,&alerts,0);
+  u8 t=0;
+  while((t<=timeout) && (alerts!=0xff)) {
+    usleep(1000);
+    res = i2c_read_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR,3,&alerts,0);
+    t=t+1;
+    printf("Optical Alert=%d\n",alerts);
+  }
+  if (t>timeout) {
+    printf("Timeout reached for Optical Module boot, shutting down\n");
+    power_down_qsfpdd_module(i2c_fd_snsr);    
+    return 0;
+  }
+  //enable latches
+  res = i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR, 8, 0x0,0);
+  //Set LPMode for Optics
+  res = i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR, 11, 0x0,0);
+  res = i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR, 12, 0x0,0);
+  //reset Optics
+  res = i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR, 9, 0x0,0);
+  res = i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR, 10, 0x0,0);
+  usleep(30000);
+  res = i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR, 9, 0xff,0);
+  res = i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR, 10, 0xff,0);
+  //disco mode
+  u8 i=0;
+  for (i=0;i<15;++i) {
+    set_led(i2c_fd_snsr,i,3,3,3);
+  }
+  optics_powered=optics_presence(i2c_fd_snsr);
 
-
-
-
+  return 1;
+  
 }
 
 void power_down_qsfpdd_module(int i2c_fd_snsr) {
@@ -651,3 +690,52 @@ void power_down_qsfpdd_module(int i2c_fd_snsr) {
 
 
 
+void select_cage(int i2c_fd_snsr,u8 cage) {
+  int i= 1<<cage;
+  i=i^0x7fff;
+  i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR,13,0xff& i,0);
+  i2c_write_octopus_bus(i2c_fd_snsr,OPTICAL_BUS,OPTICAL_ADDR,14, 0xff & (i>>8),0);
+}
+
+
+int optics_temperature(int i2c_fd_snsr,int mask) {
+  u8 i=0;
+  float t=20.0;
+  for(i=0;i<15;++i) {
+    if ((mask&(1<<i))==0) {
+      //found cage 
+      select_cage(i2c_fd_snsr,i);
+      //check what version it is
+      u8 id=0;
+      u8 msb=0;
+      u8 lsb=0;
+      //use while because the optics take 2s to start sometimes!
+      i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,0,&id,0);
+      if (id==17) { //QSFP
+	i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,22,&msb,0);
+	i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,23,&lsb,0);
+      }
+      else if (id==24) { //QSFP-DD
+	u8 version=0;
+	i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,1,&version,0);
+	if (version>=0x40) {
+	  i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,14,&msb,0);	    
+	  i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,15,&lsb,0);
+	}
+	else {
+	  i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,0x1a,&msb,0);
+	  i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,0x1b,&lsb,0);
+	}
+      }
+      int raw = (msb<<8)|lsb;
+      int temp_d = twos_complement(raw,16);
+      printf("MSB=%d LSB=%d RAW=%d TEMPD =%d \n",msb,lsb,raw,temp_d);
+      float temp_f = temp_d/256.0;
+      if(temp_f>t)
+	t=temp_f;
+    }
+
+  }
+  return t;
+}
+      
