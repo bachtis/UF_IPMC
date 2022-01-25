@@ -420,7 +420,7 @@ void read_sensor_optics(void) {
 	  u8 wasThere = (optics_powered&(1<<i))==0;
 	  u8 isThere  = (mask&(1<<i))==0;
 	  //if problem appeared set LED state to point to the issue
-	  if ((optics_powered^mask)!=0) {
+	  if ((optics_powered&0x7fff)!=(mask&0x7fff)) {
 	    if (wasThere &isThere)
 	      set_led(i2c_fd_snsr[OCTOPUS_I2C_BUS],i,0,1,0);
 	    else if (wasThere &!isThere)
