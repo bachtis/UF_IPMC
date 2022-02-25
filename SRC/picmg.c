@@ -526,7 +526,7 @@ picmg_m1_state( unsigned fru_id )
 	/* dispatch message */
 	ipmi_send_event_req( ( unsigned char * )&msg, sizeof( FRU_HOT_SWAP_EVENT_MSG_REQ ), 0 );
 
-	//user_module_payload_off();
+	user_module_payload_off();
 
 	//usleep(3000000);
 	//picmg_m2_state( 0 );

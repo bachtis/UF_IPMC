@@ -389,13 +389,13 @@ i2c_master_write_0( IPMI_WS *ws )
 
     if (ioctl(i2c_fd_0, I2C_RDWR, &msgset) < 0)
     {
-        perror("ioctl(I2C_RDWR) in i2c_master_write");
+        perror("ioctl(I2C_RDWR) in i2c_master_write_0()");
 
 				//logger("i2c-cadence master write error", strerror(errno));
 
 				//usleep(100000);
 
-				if (errno != EBUSY && errno != EAGAIN) {
+				/*if (errno != EBUSY && errno != EAGAIN) {
 						if (msgs[0].buf != NULL)
 						{
 								free(msgs[0].buf);
@@ -403,7 +403,7 @@ i2c_master_write_0( IPMI_WS *ws )
 						}
 
 						i2c_master_write_0( ws );
-				} else {
+				} else {*/
 						if (msgs[0].buf != NULL)
 						{
 								free(msgs[0].buf);
@@ -411,7 +411,7 @@ i2c_master_write_0( IPMI_WS *ws )
 						}
 
 						i2c_master_write_1( ws );
-				}
+				//}
     } else {
 				if (ws->pkt_out[0] == 0x14 && ws->pkt_out[4] == 0x00) {
 						logger("Event Message","Set Event Receiver(Events Rearming)");
@@ -477,13 +477,13 @@ i2c_master_write_1( IPMI_WS *ws )
 
     if (ioctl(i2c_fd_1, I2C_RDWR, &msgset) < 0)
     {
-        perror("ioctl(I2C_RDWR) in i2c_master_write");
+        perror("ioctl(I2C_RDWR) in i2c_master_write_1()");
 
 				//logger("i2c-xilinx master write error", strerror(errno));
 
 				//usleep(100000);
 
-				if (errno != EBUSY && errno != EAGAIN) {
+				/*if (errno != EBUSY && errno != EAGAIN) {
 						if (msgs[0].buf != NULL)
 						{
 								free(msgs[0].buf);
@@ -491,7 +491,7 @@ i2c_master_write_1( IPMI_WS *ws )
 						}
 
 						i2c_master_write_1( ws );
-				} else {
+				} else {*/
 						if (msgs[0].buf != NULL)
 						{
 								free(msgs[0].buf);
@@ -499,7 +499,7 @@ i2c_master_write_1( IPMI_WS *ws )
 						}
 
 						i2c_master_write_0( ws );
-				}
+				//}
     } else {
 				if (ws->pkt_out[0] == 0x14 && ws->pkt_out[4] == 0x00) {
 				logger("Event message","Set Event Receiver(Events Rearming)");

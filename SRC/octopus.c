@@ -345,7 +345,7 @@ void  configure_ltm4700(int i2c_fd_snsr,u8 bus,u8 addr) {
 
 
 void  configure_octopus(int i2c_fd_snsr) {
-  configure_octopus_temperature_sensor(i2c_fd_snsr,RAIL_2V7_INTERMEDIATE,0,90,95,1.008);
+  configure_octopus_temperature_sensor(i2c_fd_snsr,RAIL_2V7_INTERMEDIATE,0,90,105,1.008);
   configure_octopus_temperature_sensor(i2c_fd_snsr,RAIL_0V9_MGTAVCC_VUP_N,0,90,95,1.008);
   configure_octopus_temperature_sensor(i2c_fd_snsr,RAIL_0V9_MGTAVCC_VUP_N,1,90,95,1.008);
   configure_octopus_temperature_sensor(i2c_fd_snsr,RAIL_1V2_MGTAVTT_VUP_N,0,90,95,1.008);
