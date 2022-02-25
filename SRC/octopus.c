@@ -711,7 +711,7 @@ int optics_temperature(int i2c_fd_snsr,int mask) {
       u8 lsb=0;
       //use while because the optics take 2s to start sometimes!
       i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,0,&id,0);
-      if (id==17) { //QSFP
+      if (id==17||id==13||id==12) { //QSFP
 	i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,22,&msb,0);
 	i2c_read_octopus_bus(i2c_fd_snsr,OPTICS_BUS,0x50,23,&lsb,0);
       }
